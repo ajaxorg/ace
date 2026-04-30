@@ -966,7 +966,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
@@ -974,7 +974,7 @@
   ["keyword.operator.attribute-equals.xml","="],
   ["string.attribute-value.xml","\"a lot"]
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["string.attribute-value.xml","---"]
 ],[
    ["#tmp","html",{}],
@@ -2202,7 +2202,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"div","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"div","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","div"],
   ["text.tag-whitespace.xml"," "],
@@ -2841,7 +2841,7 @@
    "paragraph",
   ["text","<!["],
   ["constant","CDATA"],
-  ["string","["]
+  ["text","["]
 ],[
    "paragraph",
   ["text","function matchwo(a,b)"]
@@ -3135,15 +3135,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3163,13 +3164,11 @@
   ["constant","foo"],
   ["text","]:"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
-  ["text","      "],
-  ["markup.underline","/url"]
+   "paragraph",
+  ["text","      /url"]
 ],[
    "paragraph",
-  ["text","           "],
-  ["string","'the title'"]
+  ["text","           'the title'"]
 ],[
    "start"
 ],[
@@ -3215,13 +3214,13 @@
   ["constant","Foo bar"],
   ["text","]:"]
 ],[
-   "paragraph",
+   ["#tmp","linkDestination","linkLabel","paragraph"],
   ["punctuation","<"],
   ["markup.underline","my url"],
   ["punctuation",">"]
 ],[
    "paragraph",
-  ["text","'title'"]
+  ["markup.underline","'title'"]
 ],[
    "start"
 ],[
@@ -3238,7 +3237,7 @@
 ],[
    "start"
 ],[
-   ["#tmp","string","linkLabel","paragraph"],
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
@@ -3246,19 +3245,19 @@
   ["text"," "],
   ["string","'"]
 ],[
-   ["#tmp","string","linkLabel","paragraph"],
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"],
   ["string","title"]
 ],[
-   ["#tmp","string","linkLabel","paragraph"],
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"],
   ["string","line1"]
 ],[
-   ["#tmp","string","linkLabel","paragraph"],
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"],
   ["string","line2"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["string","'"]
 ],[
-   "start"
+   "paragraph"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3273,20 +3272,21 @@
 ],[
    "start"
 ],[
-   ["#tmp","string","linkLabel","paragraph"],
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","'title"]
+  ["string","'"],
+  ["string","title"]
+],[
+   ["linkTitleSingle",{"kind":"scope","type":"begin","state":"linkTitleSingle","outerScope":"string","innerScope":"string","contentToken":"string","token":"string","source":"'","flags":"","captures":[]},"linkTitle","linkLabel","paragraph"]
+],[
+   ["#tmp","linkTitle","linkLabel","paragraph"],
+  ["string","with blank line'"]
 ],[
    "paragraph"
-],[
-   "paragraph",
-  ["text","with blank line'"]
-],[
-   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3306,10 +3306,10 @@
   ["constant","foo"],
   ["text","]:"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3329,12 +3329,14 @@
   ["constant","foo"],
   ["text","]:"]
 ],[
-   ["#tmp","linkDestination","linkLabel","paragraph"]
+   "paragraph"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
-  ["markup.underline","[foo]"]
+   ["#tmp","start","linkLabel","paragraph"],
+  ["text","["],
+  ["constant","foo"],
+  ["text","]"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 169"],
@@ -3342,13 +3344,14 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkDestination","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
-  ["punctuation","<>"]
+  ["punctuation","<"],
+  ["punctuation",">"]
 ],[
-   "start"
+   "paragraph"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3370,7 +3373,7 @@
   ["punctuation","<"],
   ["markup.underline","bar"],
   ["punctuation",">"],
-  ["text","(baz)"]
+  ["markup.underline","(baz)"]
 ],[
    "start"
 ],[
@@ -3387,17 +3390,18 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url\\bar\\*baz"],
   ["text"," "],
-  ["string","\"foo"],
+  ["string","\""],
+  ["string","foo"],
   ["constant.language.escape","\\\""],
   ["string","bar\\baz\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3419,13 +3423,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 173"],
@@ -3440,19 +3444,19 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","first"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","second"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 174"],
@@ -3460,13 +3464,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","FOO"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3481,13 +3485,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","ΑΓΩ"],
   ["text","]: "],
   ["markup.underline","/φου"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3502,13 +3506,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 177"],
@@ -3542,7 +3546,8 @@
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""],
+  ["string","\""],
+  ["string","title\""],
   ["text"," ok"]
 ],[
    "start"
@@ -3553,15 +3558,14 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
    "paragraph",
-  ["string","\"title\""],
-  ["text"," ok"]
+  ["text","\"title\" ok"]
 ],[
    "start"
 ],[
@@ -3616,13 +3620,13 @@
    "paragraph",
   ["text","Foo"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/baz"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -3644,7 +3648,7 @@
   ["constant","Foo"],
   ["text","]"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","header","header","paragraph"],
+   ["#tmp","paragraph","linkLabel","header","header","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
@@ -3661,7 +3665,7 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
@@ -3686,7 +3690,7 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
@@ -3708,31 +3712,31 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/foo-url"],
   ["text"," "],
-  ["string","\"foo\""]
+  ["string","\""],
+  ["string","foo\""]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/bar-url"]
 ],[
    "paragraph",
-  ["text","  "],
-  ["string","\"bar\""]
+  ["text","  \"bar\""]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","baz"],
   ["text","]: "],
   ["markup.underline","/baz-url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","["],
@@ -3764,14 +3768,14 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","blockquote","linkLabel","paragraph"],
+   ["#tmp","blockquote","linkLabel","paragraph"],
   ["string.blockquote","> "],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","blockquote","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 188"],
@@ -3779,13 +3783,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 189"],
@@ -6081,10 +6085,10 @@
   ["paren.lpar","("],
   ["markup.underline","/bar\\*"],
   ["text"," "],
-  ["string","\"ti"],
-  ["constant.language.escape","\\*"],
-  ["string","tle"],
   ["string","\""],
+  ["string","ti"],
+  ["constant.language.escape","\\*"],
+  ["string","tle\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -6102,17 +6106,18 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/bar\\*"],
   ["text"," "],
-  ["string","\"ti"],
+  ["string","\""],
+  ["string","ti"],
   ["constant.language.escape","\\*"],
   ["string","tle\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 310"],
@@ -6244,8 +6249,8 @@
   ["paren.lpar","("],
   ["markup.underline","/f&ouml;&ouml;"],
   ["text"," "],
-  ["string","\"f&ouml;&ouml;"],
   ["string","\""],
+  ["string","f&ouml;&ouml;\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -6263,15 +6268,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/f&ouml;&ouml;"],
   ["text"," "],
-  ["string","\"f&ouml;&ouml;\""]
+  ["string","\""],
+  ["string","f&ouml;&ouml;\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 320"],
@@ -8363,8 +8369,8 @@
   ["paren.lpar","("],
   ["markup.underline","/uri"],
   ["text"," "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8457,7 +8463,7 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline1","linkLabel","paragraph"],
+   ["#tmp","linkDestinationInner","linkLabel","paragraph"],
   ["text","["],
   ["constant","link"],
   ["text","]"],
@@ -8465,7 +8471,8 @@
   ["markup.underline","foo"]
 ],[
    "paragraph",
-  ["text","bar)"]
+  ["markup.underline","bar"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -8475,7 +8482,7 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["linkDestinationInnerAngle",{"kind":"scope","type":"begin","state":"linkDestinationInnerAngle","outerScope":"punctuation","innerScope":"markup.underline","contentToken":"markup.underline","token":"punctuation","source":">","flags":"","captures":[]},"linkDestinationInner","linkLabel","paragraph"],
   ["text","["],
   ["constant","link"],
   ["text","]"],
@@ -8484,7 +8491,9 @@
   ["markup.underline","foo"]
 ],[
    "paragraph",
-  ["text","bar>)"]
+  ["markup.underline","bar"],
+  ["punctuation",">"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -8512,7 +8521,7 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["linkDestinationInnerAngle",{"kind":"scope","type":"begin","state":"linkDestinationInnerAngle","outerScope":"punctuation","innerScope":"markup.underline","contentToken":"markup.underline","token":"punctuation","source":">","flags":"","captures":[]},"linkDestinationInner","linkLabel","paragraph"],
   ["text","["],
   ["constant","link"],
   ["text","]"],
@@ -8522,7 +8531,7 @@
   ["constant.language.escape","\\>"],
   ["markup.underline",")"]
 ],[
-   "start"
+   ["linkDestinationInnerAngle",{"kind":"scope","type":"begin","state":"linkDestinationInnerAngle","outerScope":"punctuation","innerScope":"markup.underline","contentToken":"markup.underline","token":"punctuation","source":">","flags":"","captures":[]},"linkDestinationInner","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 491"],
@@ -8530,7 +8539,7 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["linkDestinationInnerAngle",{"kind":"scope","type":"begin","state":"linkDestinationInnerAngle","outerScope":"punctuation","innerScope":"markup.underline","contentToken":"markup.underline","token":"punctuation","source":">","flags":"","captures":[]},"linkDestinationInner","linkLabel","paragraph"],
   ["text","["],
   ["constant","a"],
   ["text","]"],
@@ -8538,24 +8547,13 @@
   ["punctuation","<"],
   ["markup.underline","b)c"]
 ],[
-   ["#tmp","linkTitleInner","linkLabel","paragraph"],
-  ["text","["],
-  ["constant","a"],
-  ["text","]"],
-  ["paren.lpar","("],
-  ["punctuation","<"],
-  ["markup.underline","b)c"],
+   ["#tmp","linkDestinationInner","linkLabel","paragraph"],
+  ["markup.underline","[a](<b)c"],
   ["punctuation",">"]
 ],[
    "paragraph",
-  ["text","["],
-  ["constant","a"],
-  ["text","]"],
-  ["paren.lpar","("],
-  ["punctuation","<"],
-  ["markup.underline","b"],
-  ["punctuation",">"],
-  ["text","c)"]
+  ["markup.underline","[a](<b>c"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -8638,7 +8636,8 @@
   ["constant","link"],
   ["text","]"],
   ["paren.lpar","("],
-  ["markup.underline","foo\\)\\:"],
+  ["markup.underline","foo\\)"],
+  ["constant.language.escape","\\:"],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8740,8 +8739,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["paren.rpar",")"]
 ],[
    "paragraph",
@@ -8751,8 +8750,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","'title"],
   ["string","'"],
+  ["string","title'"],
   ["paren.rpar",")"]
 ],[
    "paragraph",
@@ -8762,8 +8761,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","(title"],
-  ["string",")"],
+  ["string","("],
+  ["string","title)"],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8781,10 +8780,10 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title "],
-  ["constant.language.escape","\\\""],
-  ["string","&quot;"],
   ["string","\""],
+  ["string","title "],
+  ["constant.language.escape","\\\""],
+  ["string","&quot;\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8802,8 +8801,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8821,10 +8820,9 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title "],
   ["string","\""],
-  ["text","and\" title\""],
-  ["paren.rpar",")"]
+  ["string","title \""],
+  ["text","and\" title\")"]
 ],[
    "start"
 ],[
@@ -8841,8 +8839,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","'title \"and\" title"],
   ["string","'"],
+  ["string","title \"and\" title'"],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -8853,7 +8851,7 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline1","linkLabel","paragraph"],
+   ["#tmp","linkDestinationInner","linkLabel","paragraph"],
   ["text","["],
   ["constant","link"],
   ["text","]"],
@@ -8863,8 +8861,8 @@
 ],[
    "paragraph",
   ["text","  "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["text","  "],
   ["paren.rpar",")"]
 ],[
@@ -9053,15 +9051,20 @@
    "start"
 ],[
    "paragraph",
-  ["text","!["],
-  ["string","["],
-  ["text","["],
+  ["text","![[["],
   ["constant","foo"],
   ["text","]"],
   ["paren.lpar","("],
   ["markup.underline","uri1"],
   ["paren.rpar",")"],
-  ["text","](uri2)](uri3)"]
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","uri2"],
+  ["paren.rpar",")"],
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","uri3"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -9177,15 +9180,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 524 (not supported; working in the editor highlighting way based on general rule)"],
@@ -9206,13 +9210,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 525"],
@@ -9231,13 +9235,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 526"],
@@ -9259,13 +9263,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 527"],
@@ -9286,13 +9290,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 528"],
@@ -9315,13 +9319,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 529 (not supported; working in the editor highlighting way based on general rule)"],
@@ -9345,13 +9349,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 530"],
@@ -9369,13 +9373,13 @@
 ],[
    ["#tmp","start","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"],
+   ["#tmp","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
+   ["#tmp","start","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 531"],
@@ -9393,13 +9397,13 @@
 ],[
    ["#tmp","start","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"linkLabel","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"linkLabel","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"linkLabel","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"linkLabel","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"linkLabel","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 532"],
@@ -9420,13 +9424,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 533"],
@@ -9441,13 +9445,13 @@
 ],[
    "paragraph"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 534"],
@@ -9467,13 +9471,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","ref"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 535"],
@@ -9490,15 +9494,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 536"],
@@ -9515,13 +9520,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","ТОЛПОЙ"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 537"],
@@ -9533,12 +9538,12 @@
   ["text","["],
   ["constant","Foo"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["constant","  bar"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -9564,15 +9569,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 539"],
@@ -9592,15 +9598,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 540"],
@@ -9608,21 +9615,21 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url2"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -9649,13 +9656,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo!"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 542"],
@@ -9696,7 +9703,7 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["text","["],
@@ -9704,7 +9711,7 @@
   ["text","]]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 544"],
@@ -9719,13 +9726,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","[[["],
   ["constant","foo"],
   ["text","]]]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 545"],
@@ -9743,14 +9750,14 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","ref"],
   ["constant.language.escape","\\["],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 546"],
@@ -9758,14 +9765,14 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","bar"],
   ["constant.language.escape","\\\\"],
   ["text","]: "],
   ["markup.underline","/uri"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","["],
@@ -9826,15 +9833,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 550"],
@@ -9850,16 +9858,17 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["string.emphasis","*foo*"],
   ["constant"," bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 551"],
@@ -9874,15 +9883,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 552"],
@@ -9900,15 +9910,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 553"],
@@ -9923,15 +9934,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 554"],
@@ -9947,16 +9959,17 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["string.emphasis","*foo*"],
   ["constant"," bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 555 (not supported; working in the editor highlighting way based on general rule)"],
@@ -9972,16 +9985,17 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["string.emphasis","*foo*"],
   ["constant"," bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 556"],
@@ -9998,13 +10012,13 @@
 ],[
    ["#tmp","start","linkLabel","linkLabel","linkLabel","linkLabel","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","linkLabel","linkLabel","linkLabel","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","linkLabel","linkLabel","linkLabel","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","linkLabel","linkLabel","linkLabel","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","linkLabel","linkLabel","linkLabel","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 557"],
@@ -10019,15 +10033,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 558"],
@@ -10042,13 +10057,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 559"],
@@ -10062,15 +10077,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 560"],
@@ -10078,13 +10094,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo*"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    ["#tmp","start","linkLabel","emphasisAsterisk","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"],
   ["string.emphasis","*"],
@@ -10109,19 +10125,19 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url2"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 562"],
@@ -10136,13 +10152,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 563"],
@@ -10159,13 +10175,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 564"],
@@ -10183,13 +10199,13 @@
 ],[
    "start"
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph"],
+   "paragraph",
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 565"],
@@ -10208,13 +10224,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","baz"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 566"],
@@ -10233,19 +10249,19 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","baz"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url2"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 567"],
@@ -10264,19 +10280,19 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","baz"],
   ["text","]: "],
   ["markup.underline","/url1"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url2"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 568"],
@@ -10291,8 +10307,8 @@
   ["paren.lpar","("],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["paren.rpar",")"]
 ],[
    "start"
@@ -10303,23 +10319,25 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","start","imageLabel","paragraph"],
   ["text","!["],
-  ["constant","foo *bar*"],
+  ["constant","foo "],
+  ["string.emphasis","*bar*"],
   ["text","]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","["],
   ["constant","foo "],
   ["string.emphasis","*bar*"],
   ["text","]: "],
   ["markup.underline","train.jpg"],
   ["text"," "],
-  ["string","\"train & tracks\""]
+  ["string","\""],
+  ["string","train & tracks\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 570 (not supported; nesting image elements should be edge-case)"],
@@ -10329,9 +10347,17 @@
 ],[
    "paragraph",
   ["text","!["],
-  ["constant","foo !"],
-  ["string","["],
-  ["text","bar](/url)](/url2)"]
+  ["constant","foo "],
+  ["text","!["],
+  ["constant","bar"],
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","/url"],
+  ["paren.rpar",")"],
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","/url2"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -10344,8 +10370,16 @@
    "paragraph",
   ["text","!["],
   ["constant","foo "],
-  ["string","["],
-  ["text","bar](/url)](/url2)"]
+  ["text","["],
+  ["constant","bar"],
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","/url"],
+  ["paren.rpar",")"],
+  ["text","]"],
+  ["paren.lpar","("],
+  ["markup.underline","/url2"],
+  ["paren.rpar",")"]
 ],[
    "start"
 ],[
@@ -10357,21 +10391,23 @@
 ],[
    "paragraph",
   ["text","!["],
-  ["constant","foo *bar*"],
+  ["constant","foo "],
+  ["string.emphasis","*bar*"],
   ["text","][]"]
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo "],
   ["string.emphasis","*bar*"],
   ["text","]: "],
   ["markup.underline","train.jpg"],
   ["text"," "],
-  ["string","\"train & tracks\""]
+  ["string","\""],
+  ["string","train & tracks\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 573"],
@@ -10381,22 +10417,24 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"],
   ["text","!["],
-  ["constant","foo *bar*"],
+  ["constant","foo "],
+  ["string.emphasis","*bar*"],
   ["text","]["],
   ["constant","foobar"],
   ["text","]"]
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","FOOBAR"],
   ["text","]: "],
   ["markup.underline","train.jpg"],
   ["text"," "],
-  ["string","\"train & tracks\""]
+  ["string","\""],
+  ["string","train & tracks\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 574"],
@@ -10427,8 +10465,8 @@
   ["paren.lpar","("],
   ["markup.underline","/path/to/train.jpg"],
   ["text","  "],
-  ["string","\"title"],
   ["string","\""],
+  ["string","title\""],
   ["text","   "],
   ["paren.rpar",")"]
 ],[
@@ -10478,13 +10516,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","bar"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 579"],
@@ -10501,13 +10539,13 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","markup.underline","linkLabel","paragraph","linkLabel","paragraph"],
+   ["#tmp","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","BAR"],
   ["text","]: "],
   ["markup.underline","/url"]
 ],[
-   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"]
+   ["#tmp","start","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 580"],
@@ -10522,15 +10560,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 581"],
@@ -10540,21 +10579,23 @@
 ],[
    "paragraph",
   ["text","!["],
-  ["constant","*foo* bar"],
+  ["string.emphasis","*foo*"],
+  ["constant"," bar"],
   ["text","][]"]
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["string.emphasis","*foo*"],
   ["constant"," bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 582"],
@@ -10569,15 +10610,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 583"],
@@ -10585,25 +10627,26 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","start","imageLabel","paragraph"],
   ["text","!["],
   ["constant","foo"],
   ["text","]"]
 ],[
-   "paragraph",
+   ["#tmp","paragraph","imageLabel","paragraph"],
   ["text","[]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 584"],
@@ -10611,22 +10654,23 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","start","imageLabel","paragraph"],
   ["text","!["],
   ["constant","foo"],
   ["text","]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 585"],
@@ -10634,23 +10678,25 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","start","imageLabel","paragraph"],
   ["text","!["],
-  ["constant","*foo* bar"],
+  ["string.emphasis","*foo*"],
+  ["constant"," bar"],
   ["text","]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","["],
   ["string.emphasis","*foo*"],
   ["constant"," bar"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 586"],
@@ -10658,22 +10704,23 @@
 ],[
    "start"
 ],[
-   "paragraph",
-  ["text","!["],
-  ["string","["],
-  ["text","foo]]"]
+   ["#tmp","start","imageLabel","paragraph"],
+  ["text","![["],
+  ["constant","foo"],
+  ["text","]]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","[["],
   ["constant","foo"],
   ["text","]]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 587"],
@@ -10681,22 +10728,23 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","start","imageLabel","paragraph"],
   ["text","!["],
   ["constant","Foo"],
   ["text","]"]
 ],[
-   "start"
+   ["#tmp","start","imageLabel","paragraph"]
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph","imageLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   ["#tmp","paragraph","imageLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 588"],
@@ -10711,15 +10759,16 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["#tmp","linkTitle","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   "start"
+   "paragraph"
 ],[
    "paragraph",
   ["text","  test 589"],
@@ -10735,15 +10784,16 @@
 ],[
    ["#tmp","start","linkLabel","paragraph"]
 ],[
-   ["#tmp","paragraph","linkLabel","paragraph"],
+   ["#tmp","linkTitle","linkLabel","paragraph","linkLabel","paragraph"],
   ["text","["],
   ["constant","foo"],
   ["text","]: "],
   ["markup.underline","/url"],
   ["text"," "],
-  ["string","\"title\""]
+  ["string","\""],
+  ["string","title\""]
 ],[
-   ["#tmp","start","linkLabel","paragraph"]
+   ["#tmp","paragraph","linkLabel","paragraph"]
 ],[
    "paragraph",
   ["text","  test 590"],
@@ -11143,7 +11193,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
@@ -11151,7 +11201,7 @@
   ["keyword.operator.attribute-equals.xml","="],
   ["string.attribute-value.xml","\"hi'> <a href=hi'>"]
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
 ],[
    "paragraph",
   ["text","  test 617"],
@@ -11317,8 +11367,9 @@
    "paragraph",
   ["text","foo <!["],
   ["constant","CDATA"],
-  ["string","["],
-  ["text",">&<]]>"]
+  ["text","["],
+  ["constant",">&<"],
+  ["text","]]>"]
 ],[
    "start"
 ],[
@@ -11366,7 +11417,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
@@ -11374,7 +11425,7 @@
   ["keyword.operator.attribute-equals.xml","="],
   ["string.attribute-value.xml","\"\\\"\">"]
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
 ],[
    "paragraph",
   ["text","  test 630"],
@@ -11508,7 +11559,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
@@ -11528,7 +11579,7 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml8","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],

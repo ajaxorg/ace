@@ -169,6 +169,52 @@ var MarkdownHighlightRules = function () {
             }
         };
     }
+    function createScopedRegionRule(token, regex, state, endRegex, contentToken) {
+        return {
+            token: token,
+            regex: regex,
+            scope: {
+                type: "begin",
+                state: state,
+                name: token,
+                contentName: contentToken || token,
+                regex: endRegex,
+                ruleScope: token
+            }
+        };
+    }
+    function createLinkTitleOpener(regex, stateName) {
+        return createScopedRegionRule("string", regex, stateName, regex.source || regex, "string");
+    }
+    function createLinkLabelState(defaultToken, closeToken) {
+        return [
+            {
+                token: "empty_line",
+                regex: /^\s*$/,
+                next: "pop"
+            }, {include: "basic"}, {
+                token: "text",
+                regex: /\[/,
+                next: "pop"
+            }, {
+                token: ["text", "paren.lpar", "text"],
+                regex: /(\])(\()(\s*)/,
+                next: "linkDestinationInner"
+            }, {
+                token: "text",
+                regex: /\]:\s*/,
+                next: "linkDestination"
+            }, {
+                token: closeToken || "text",
+                regex: /\](?=$)/,
+                next: "start"
+            }, {
+                token: closeToken || "text",
+                regex: /\]/,
+                next: "pop"
+            }, {defaultToken: defaultToken}
+        ];
+    }
 
     function pushTagContext(stack, returnState, tagName, isRaw) {
         stack.unshift({
@@ -632,100 +678,45 @@ var MarkdownHighlightRules = function () {
             }, {include: "containerBlockInlinesBlockquote"}, {include: "basic"}, {defaultToken: "string.blockquote"}
         ],
 
-        "linkLabel": [
-            {
-                token: "empty_line",
-                regex: /^\s*$/,
-                next: "pop"
-            }, {include: "basic"}, {
-                token: "text",
-                regex: /\[/,
-                next: "pop"
-            }, {
-                token: ["text", "paren.lpar", "text"],
-                regex: /(\])(\()(\s*)/,
-                next: "linkDestinationInner"
-            }, {
-                token: "text",
-                regex: /\]:\s*/,
-                next: "linkDestination"
-            }, {
-                token: "text",
-                regex: /\](?=$)/,
-                next: "start"
-            }, {
-                token: "text",
-                regex: /\]/,
-                next: "pop",
-            }, {defaultToken: "constant"}
-        ],
-        "imageLabel": [
-            {
-                token: "empty_line",
-                regex: /^\s*$/,
-                next: "pop"
-            }, {
-                token: "string",
-                regex: /\[/,
-                next: "pop"
-            }, {
-                token: ["text", "paren.lpar", "text"],
-                regex: /(\])(\()(\s*)/,
-                next: "linkDestinationInner"
-            }, {
-                token: "text",
-                regex: /\]:\s*/,
-                next: "linkDestination"
-            }, {
-                token: "text",
-                regex: /\]\s*/,
-                next: "pop"
-            }, {defaultToken: "constant"}
-        ],
+        "linkLabel": createLinkLabelState("constant", "text"),
+        "imageLabel": createLinkLabelState("constant", "text"),
         "linkDestination": [
             {
                 token: "empty_line",
-                regex: /^\\s*$/,
+                regex: /^\s*$/,
                 next: "pop"
             }, {
                 token: "constant.language.escape",
                 regex: escapeSymbols
             }, {
-                token: "punctuation",
-                regex: /</,
-                next: [
-                    {
-                        token: "empty",
-                        regex: /$/,
-                        next: "pop"
-                    }, {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: ["punctuation", "text"],
-                        regex: /(>)(\s+)/,
-                        next: "linkTitle"
-                    }, {
-                        token: "punctuation",
-                        regex: /(>)/,
-                        next: "pop"
-                    }, {defaultToken: "markup.underline"}
-                ]
-            }, {
+                token: "text",
+                regex: /(\s+)/,
+                next: "linkTitle"
+            }, createScopedRegionRule("punctuation", /</, "linkDestinationAngle", />/, "markup.underline"), {
                 token: "markup.underline",
                 regex: /(\S+)/,
-                next: [
-                    {
-                        token: "text",
-                        regex: /(\s+)|^(\s*)/,
-                        next: "linkTitle"
-                    }
-                ]
+                onMatch: function(value) {
+                    return this.token;
+                }
             }, {
                 token: "text",
-                regex: /(\s+)/
-            },//TODO: and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses. (Implementations may impose limits on parentheses nesting to avoid performance issues, but at least three levels of nesting should be supported.)
+                regex: /(?=[^<\s])/,
+                next: "pop"
+            }, {
+                token: "empty",
+                regex: /$/,
+                next: "pop"
+            },
+            //TODO: and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses. (Implementations may impose limits on parentheses nesting to avoid performance issues, but at least three levels of nesting should be supported.)
             {defaultToken: "markup.underline"}
+        ],
+        "linkDestinationAngle": [
+            {
+                token: "constant.language.escape",
+                regex: escapeSymbols
+            }, {
+                defaultToken: "markup.underline"
+            }
         ],
         "linkDestinationInner": [
             {
@@ -740,104 +731,68 @@ var MarkdownHighlightRules = function () {
                 regex: /^\s*$/,
                 next: "pop"
             }, {
-                token: "punctuation",
-                regex: /</,
-                next: [
-                    {
-                        token: "empty",
-                        regex: /$/,
-                        next: "pop"
-                    }, {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: ["punctuation", "text"],
-                        regex: /(>)(\s*)/,
-                        next: "linkTitleInner"
-                    }, {
-                        defaultToken: "markup.underline"
-                    }
-                ]
-            }, {
+                token: "text",
+                regex: /(\s+)/,
+                next: "linkTitleInner"
+            }, createScopedRegionRule("punctuation", /</, "linkDestinationInnerAngle", />/, "markup.underline"), {
                 token: "markup.underline",
                 regex: /([^\s\)]+)/,
-                next: [
-                    {
-                        token: "text",
-                        regex: /(\s+)|^(\s*)/,
-                        next: "linkTitleInner"
-                    }, {
-                        token: "paren.rpar",
-                        regex: /(?<!\\)\)/,
-                        next: "pop"
-                    }, {defaultToken: "markup.underline"}
-                ]
+                onMatch: function(value) {
+                    return this.token;
+                }
             }, {
                 token: "text",
-                regex: /(\s+)/
-            },//TODO: and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses. (Implementations may impose limits on parentheses nesting to avoid performance issues, but at least three levels of nesting should be supported.)
+                regex: /(?=[^<\s\)])/,
+                next: "pop"
+            },
+            //TODO: and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses. (Implementations may impose limits on parentheses nesting to avoid performance issues, but at least three levels of nesting should be supported.)
             {defaultToken: "markup.underline"}
+        ],
+        "linkDestinationInnerAngle": [
+            {
+                token: "constant.language.escape",
+                regex: escapeSymbols
+            }, {
+                defaultToken: "markup.underline"
+            }
         ],
         "linkTitle": [
             {
                 token: "empty_line",
                 regex: /^\s*$/,
                 next: "pop"
-            }, {
-                token: "string",
-                regex: /(')/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: "string",
-                        regex: /'|^'/,
-                        next: "pop"
-                    }, {defaultToken: "string"}
-                ]
-            }, {
-                token: "string",
-                regex: /(")/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: "string",
-                        regex: /"|^"/,
-                        next: "pop"
-                    }, {defaultToken: "string"}
-                ]
-            }, {
-                token: "string",
-                regex: /(\()/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: "string",
-                        regex: /\)|^\)/,
-                        next: "pop"
-                    }, {defaultToken: "string"}
-                ]
-            }, {
+            }, createScopedRegionRule("string", /'/, "linkTitleSingle", /'/, "string"), createScopedRegionRule("string", /"/, "linkTitleDouble", /"/, "string"), createScopedRegionRule("string", /\(/, "linkTitleParen", /\)/, "string"), {
                 token: "text",
-                regex: /(?=[^"'(\s]+)/,
+                regex: /(?=[^"'(\s])/,
                 next: "pop"
+            }, {
+                token: "empty",
+                regex: /$/,
+                next: "pop"
+            }
+        ],
+        "linkTitleSingle": [
+            {
+                token: "constant.language.escape",
+                regex: escapeSymbols
+            }, {
+                defaultToken: "string"
+            }
+        ],
+        "linkTitleDouble": [
+            {
+                token: "constant.language.escape",
+                regex: escapeSymbols
+            }, {
+                defaultToken: "string"
+            }
+        ],
+        "linkTitleParen": [
+            {
+                token: "constant.language.escape",
+                regex: escapeSymbols
+            }, {
+                defaultToken: "string"
             }
         ],
         "linkTitleInner": [
@@ -849,90 +804,13 @@ var MarkdownHighlightRules = function () {
                 token: "empty_line",
                 regex: /^\s*$/,
                 next: "pop"
-            }, {
-                token: "string",
-                regex: /(')/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: ["string", "text"],
-                        regex: /(')(\s*)/,
-                        next: [
-                            {
-                                token: ["text", "paren.rpar"],
-                                regex: /(\s*)(\))/,
-                                next: "pop"
-                            }, {
-                                token: "empty_line",
-                                regex: /^\s*$/,
-                                next: "pop"
-                            }
-                        ]
-                    }, {defaultToken: "string"}
-                ]
-            }, {
-                token: "string",
-                regex: /(")/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: ["string", "text"],
-                        regex: /(")(\s*)/,
-                        next: [
-                            {
-                                token: ["text", "paren.rpar"],
-                                regex: /(\s*)(\))/,
-                                next: "pop"
-                            }, {
-                                token: "empty_line",
-                                regex: /^\s*$/,
-                                next: "pop"
-                            }
-                        ]
-                    }, {defaultToken: "string"}
-                ]
-            }, {
-                token: "string",
-                regex: /(\()/,
-                next: [
-                    {
-                        token: "constant.language.escape",
-                        regex: escapeSymbols
-                    }, {
-                        token: "empty_line",
-                        regex: /^\s*$/,
-                        next: "pop"
-                    }, {
-                        token: ["string", "text"],
-                        regex: /(\))(\s*)/,
-                        next: [
-                            {
-                                token: ["text", "paren.rpar"],
-                                regex: /(\s*)(\))/,
-                                next: "pop"
-                            }, {
-                                token: "empty_line",
-                                regex: /^\s*$/,
-                                next: "pop"
-                            }
-                        ]
-                    }, {defaultToken: "string"}
-                ]
+            }, createScopedRegionRule("string", /'/, "linkTitleSingle", /'/, "string"), createScopedRegionRule("string", /"/, "linkTitleDouble", /"/, "string"), createScopedRegionRule("string", /\(/, "linkTitleParen", /\)/, "string"), {
+                token: ["text", "paren.rpar"],
+                regex: /(\s*)(\))/,
+                next: "pop"
             }, {
                 token: "text",
-                regex: /(?=[^"'(\s]+)/,
+                regex: /(?=[^"'(\s])/,
                 next: "pop"
             }, {defaultToken: "text"}
         ],
