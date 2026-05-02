@@ -219,6 +219,27 @@ module.exports = {
         div.dispatchEvent(event);
         assert.equal(divMousedown, 3);
         assert.equal(windowMousedown, 1);
+    },
+    "test innerHTML": function() {
+        var div = document.createElement("div");
+        div.innerHTML = "<span>test&gt;&#115;p&#x61;n&lt;</span>";
+        assert.equal(div.children.length, 1);
+        assert.equal(div.children[0].textContent, "test>span<");
+
+        var parser = new window.DOMParser();
+        var doc = parser.parseFromString("<span>test&gt;span&lt;</span>", "text/html");
+        assert.equal(doc.body.children.length, 1);
+        assert.equal(doc.body.children[0].textContent, "test>span<");
+
+        doc = parser.parseFromString(`
+            <root>
+                <!-- This is a comment -->
+                <x:u><![CDATA[<span>]]></x:u>
+            </root>    
+        `, "text/xml");
+        var u = doc.documentElement.children[0];
+        assert.equal(u.firstChild.data, "<span>");
+        assert.equal(u.firstChild.textContent, "<span>");
     }
 };
 
