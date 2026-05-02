@@ -1,5 +1,5 @@
 "use strict";
-
+/*global globalThis*/
 require("ace/lib/fixoldbrowsers");
 
 var runner = require("./run");
@@ -31,9 +31,11 @@ window.addEventListener('unhandledrejection', (event) => {
     }
 });
 
+var hideLog = localStorage.getItem("hideLog") === "true";
 var hidePassed = localStorage.getItem("hidePassedTests") === "true";
 runner.pauseOnError = localStorage.getItem("pauseTestsOnError") === "true";
 log.classList.toggle("hide-passed", hidePassed);
+log.classList.toggle("compact-log", hideLog);
 var testNames = require("./test_list").filter(name => !/_test\/highlight_rules_test/.test(name));
 
 var html = [
@@ -55,6 +57,16 @@ var html = [
         checked: hidePassed ? "checked" : undefined
     }],
     ["label", {for: "hide-passed"}, "Hide passed tests"], 
+    ["input", {type: "checkbox", id: "hide-log", 
+        onchange: function() {
+            hideLog = this.checked;
+            log.classList.toggle("compact-log", hideLog);
+            localStorage.setItem("hideLog", hideLog);
+        },
+        checked: hideLog ? "checked" : undefined
+    }],
+    ["label", {for: "hide-log"}, "Hide log"],
+    ["br"], 
     ["input", {type: "checkbox", id: "wait-on-error", onchange: function() {
         runner.pauseOnError = this.checked;
         localStorage.setItem("pauseTestsOnError", runner.pauseOnError);
@@ -242,3 +254,35 @@ require(selectedTests, async function() {
 
     resumeOrRetry();
 });
+
+
+function showMockdom(mockNode) {
+    if (!mockNode) mockNode = document.body;
+    var global = globalThis;
+    var el = global.document.createElementOrig.bind(global.document);
+    var text = global.document.createTextNodeOrig.bind(global.document);
+    function cloneNode(node) {
+        if (node.nodeType == 3) {
+            return text(node.data);
+        }
+        var newNode = el(node.localName);
+        node.attributes.forEach(function(attr) {
+            newNode.setAttribute(attr.name, attr.value);
+        });
+        node.childNodes.forEach(function(ch) {
+            newNode.appendChild(cloneNode(ch));
+        });
+        var rect = node.getBoundingClientRect(); // to compute sizes
+        newNode.style.top = rect.top + "px";
+        newNode.style.left = rect.left + "px";
+        newNode.style.height = rect.height + "px";
+        newNode.style.width = rect.width + "px";
+        newNode.style.position = "fixed";
+        return newNode;
+    }
+    var result = cloneNode(mockNode || global.document.documentElement);
+    return global.__origBody__.appendChild(result);
+
+}
+
+globalThis.showMockdom = showMockdom;

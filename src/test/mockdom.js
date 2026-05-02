@@ -1,5 +1,5 @@
 "use strict";
-/*global Uint8ClampedArray, globalThis*/
+/*global Uint8ClampedArray*/
 
 var dom = require("../lib/dom");
 
@@ -157,7 +157,7 @@ function Context2d(w, h) {
     };
 }).call(Context2d.prototype);
 
-function getBoundingClientRect(target, fromChild, ignoreTransforms, childOffset) {
+function getBoundingClientRect(target, fromChild, ignoreTransforms) {
     function textWidth(str) {
         return str.replace(/\t/g, "    ").replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH * fontSize;
     }
@@ -191,13 +191,6 @@ function getBoundingClientRect(target, fromChild, ignoreTransforms, childOffset)
     }
     else if (target.nodeType == 3 || target.localName == "span" || /^inline/.test(target.style.display)) {
         var text = target.textContent;
-        var offsetLeft = 0;
-        if (childOffset != null) {
-            if (target.nodeType == 3) {
-                offsetLeft = textWidth(text.substring(0, childOffset));
-                text = "";
-            }
-        }
         width = textWidth(text);
         height = fontSize * CHAR_HEIGHT;
         if (!height) height = CHAR_HEIGHT;
@@ -217,7 +210,6 @@ function getBoundingClientRect(target, fromChild, ignoreTransforms, childOffset)
                 }
             }
         }
-        left += offsetLeft;
     }
     else if (target.parentNode) {
         var isFixed = target.style.position == "fixed" 
@@ -1208,34 +1200,6 @@ exports.unload = function() {
         unloadProperty(name);
     });
     loaded = false;
-};
-
-exports.show = function(mockNode) {
-    var global = globalThis;
-    var el = global.document.createElementOrig.bind(global.document);
-    var text = global.document.createTextNodeOrig.bind(global.document);
-    function cloneNode(node) {
-        if (node.nodeType == 3) {
-            return text(node.data);
-        }
-        var newNode = el(node.localName);
-        node.attributes.forEach(function(attr) {
-            newNode.setAttribute(attr.name, attr.value);
-        });
-        node.childNodes.forEach(function(ch) {
-            newNode.appendChild(cloneNode(ch));
-        });
-        var rect = node.getBoundingClientRect(); // to compute sizes
-        newNode.style.top = rect.top + "px";
-        newNode.style.left = rect.left + "px";
-        newNode.style.height = rect.height + "px";
-        newNode.style.width = rect.width + "px";
-        newNode.style.position = "fixed";
-        return newNode;
-    }
-    var result = cloneNode(mockNode || global.document.documentElement);
-    return global.__origBody__.appendChild(result);
-
 };
 
 exports.load();
