@@ -216,6 +216,10 @@ class FontMetrics {
         return project(tr.MInv, clientPos[0] - tr.t[0], clientPos[1] - tr.t[1]);
     }
 
+    /**
+     * @param {{M: number[], t: number[]}} transform
+     * @param {{left: number, top: number, width: number, height: number}} bbox
+     */
     recoverRect(transform, bbox) {
         var M = transform.M;
         
@@ -254,7 +258,7 @@ class FontMetrics {
             var cx = (m11 * ctx - m01 * cty) / detM;
             var cy = (-m10 * ctx + m00 * cty) / detM;
 
-            return { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
+            return { left: cx - w / 2, top: cy - h / 2, width: w, height: h, right: cx + w / 2, bottom: cy + h / 2 };
         }
 
         return recoverRect(transform, bbox);
@@ -420,7 +424,7 @@ class FontMetrics {
                     if (/[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j)))
                         j++; // skip low surrogate
                     scratchRange.setEnd(node, j + 1);
-                    let rect = scratchRange.getBoundingClientRect();
+                    let rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(scratchRange.getBoundingClientRect());
                     if (hasCssTransform) {
                         rect = self.recoverRect(tr, rect);
                     }
@@ -624,7 +628,7 @@ function recoverRect(transform, bbox) {
             if (w < 0) { x0 += w; w = -w; }
             if (h < 0) { y0 += h; h = -h; }
             if (validateSolution(M, x0, y0, w, h, bbox)) {
-                result = { left: x0, top: y0, width: w, height: h, mappingIdx: i };
+                result = { left: x0, top: y0, width: w, height: h, right: x0 + w, bottom: y0 + h, mappingIdx: i };
                 break;
             }
         }
