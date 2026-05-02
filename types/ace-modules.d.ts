@@ -2,7 +2,12 @@
 
 declare module "ace-code/src/layer/font_metrics" {
     export class FontMetrics {
-        constructor(parentEl: HTMLElement);
+        constructor(parentEl: HTMLElement, textLayer: any, renderer: any);
+        config: {
+            characterWidth: number;
+        };
+        textLayer: any;
+        renderer: any;
         el: HTMLDivElement;
         checkForSizeChanges(size?: {
             height: number;
@@ -12,9 +17,67 @@ declare module "ace-code/src/layer/font_metrics" {
         allowBoldFonts: boolean;
         setPolling(val: boolean): void;
         getCharacterWidth(ch: any): any;
+        getTextWidth(text: any): number;
         destroy(): void;
         els: any[] | HTMLElement | Text;
+        getTransform(): any;
         transformCoordinates(clientPos: any, elPos: any): any[];
+        recoverRect(transform: {
+            M: number[];
+            t: number[];
+        }, bbox: {
+            left: number;
+            top: number;
+            width: number;
+            height: number;
+        }): {
+            left: any;
+            top: any;
+            width: any;
+            height: any;
+            right: any;
+            bottom: any;
+            mappingIdx: number;
+        } | {
+            left: number;
+            top: number;
+            width: number;
+            height: any;
+            right: number;
+            bottom: number;
+        };
+        /**
+         * Calculates the width of the text up to a specific scrrenColumn on a given screen row.
+         *
+         * @param {number} screenRow - The row index on the screen for which the text width is calculated.
+         * @param {number} screenColumn - The column index up to which the text width is measured.
+         * @returns {number} The width of the text in pixels up to the specified column.
+         */
+        textWidth(screenRow: number, screenColumn: number): number;
+        /**
+         * Calculates and returns an array of rectangles representing the visual positions
+         * of a range of text between two screen positions within a text layer.
+         *
+         * @param {Object} startScreenPos - The starting screen position of the range.
+         * @param {number} startScreenPos.row - The row index of the starting position.
+         * @param {number} startScreenPos.column - The column index of the starting position.
+         * @param {Object} endScreenPos - The ending screen position of the range.
+         * @param {number} endScreenPos.row - The row index of the ending position.
+         * @param {number} endScreenPos.column - The column index of the ending position.
+         * @returns {Array<Object>} An array of rectangle objects representing the visual
+         * positions of the text range. Each rectangle object contains:
+         *   - `left` {number}: The left offset of the rectangle relative to the text layer.
+         *   - `width` {number}: The width of the rectangle.
+         * If an error occurs or the line element is not found, a fallback rectangle is returned
+         * based on character width and column positions.
+         */
+        getRects(startScreenPos: {
+            row: number;
+            column: number;
+        }, endScreenPos: {
+            row: number;
+            column: number;
+        }): Array<any>;
     }
     namespace Ace {
         type EventEmitter<T extends {
@@ -523,6 +586,7 @@ declare module "ace-code/src/layer/text" {
         EOL_CHAR_CRLF: string;
         TAB_CHAR: string;
         SPACE_CHAR: string;
+        CJK_SPACE_CHAR: string;
         MAX_LINE_LENGTH: number;
         destroy: {};
         onChangeTabSize: () => void;
@@ -569,6 +633,11 @@ declare module "ace-code/src/layer/cursor" {
         getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
             left: number;
             top: number;
+            width?: undefined;
+        } | {
+            left: any;
+            top: number;
+            width: number;
         };
         isCursorInView(pixelPos: any, config: any): boolean;
         update(config: any): void;
@@ -896,6 +965,7 @@ declare module "ace-code/src/virtual_renderer" {
             lastRow: number;
             lineHeight: number;
             characterWidth: number;
+            fontMetrics: FontMetrics;
             minHeight: number;
             maxHeight: number;
             offset: number;
@@ -3910,13 +3980,6 @@ declare module "ace-code/src/bidihandler" {
          * Resets stored info related to current screen row
         **/
         markAsDirty(): void;
-        /**
-         * Updates array of character widths
-         * @param {Object} fontMetrics metrics
-         *
-        **/
-        updateCharacterWidths(fontMetrics: any): void;
-        characterWidth: any;
         setShowInvisibles(showInvisibles: any): void;
         setEolChar(eolChar: any): void;
         setContentWidth(width: any): void;
@@ -3929,21 +3992,6 @@ declare module "ace-code/src/bidihandler" {
          * @return {Number} horizontal pixel offset of given screen column
          **/
         getPosLeft(col: number): number;
-        /**
-         * Returns 'selections' - array of objects defining set of selection rectangles
-         * @param {Number} startCol the start column position
-         * @param {Number} endCol the end column position
-         *
-         * @return {Object[]} Each object contains 'left' and 'width' values defining selection rectangle.
-        **/
-        getSelections(startCol: number, endCol: number): any[];
-        /**
-         * Converts character coordinates on the screen to respective document column number
-         * @param {Number} posX character horizontal offset
-         *
-         * @return {Number} screen column number corresponding to given pixel offset
-        **/
-        offsetToCol(posX: number): number;
     }
     import bidiUtil = require("ace-code/src/lib/bidiutil");
 }

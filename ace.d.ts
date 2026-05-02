@@ -84,6 +84,16 @@ declare module "ace-code" {
             offset: number;
             height: number;
             gutterOffset: number;
+            fontMetrics: {
+                textWidth: (row: number, column: number) => number;
+                getRects: (start: Position, end: Position) => Rect[];
+            };
+        }
+        interface Rect {
+            left: number;
+            top: number;
+            width: number;
+            height: number;
         }
         interface HardWrapOptions {
             /** First row of the range to process */
