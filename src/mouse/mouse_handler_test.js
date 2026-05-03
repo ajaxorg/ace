@@ -126,8 +126,8 @@ module.exports = {
         editor.renderer.$loop._flush();
         var lines = editor.renderer.$gutterLayer.$lines;
         var toggler = lines.cells[0].element.childNodes[1];
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top}));
         toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top}));
         toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
@@ -166,7 +166,7 @@ module.exports = {
         editor.renderer.$loop._flush();         
         assert.position(editor.getCursorPosition(), 1, 0);
 
-        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top + rect.height}));
+        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top + rect.height - 1}));
         editor.renderer.$loop._flush();
         assert.position(editor.getCursorPosition(), 2, 0);
     },

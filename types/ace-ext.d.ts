@@ -474,7 +474,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         selectionRangeB: any;
         setupScrollbars(): void;
         updateScrollBarDecorators(): void;
-        setProvider(provider: import("ace-code/src/ext/diff").DiffProvider): void;
+        setProvider(provider: import("ace-code/src/ext/diff/providers/default").DiffProvider): void;
         /**
          * scroll locking
          * @abstract
