@@ -390,7 +390,7 @@ class FontMetrics {
     $pixelToColumn(screenRow, screenColumn1, x, blockCursor) {
         var scratchRange = this.$scratchRange;
         var lineElement = this.$findElementForScreenRow(screenRow);
-        if (!lineElement) return screenColumn1;
+        if (!lineElement || screenColumn1 <= 0) return screenColumn1;
 
         var hasCssTransform = this.renderer.$hasCssTransforms;
         var tr = hasCssTransform && this.getTransform();
@@ -419,11 +419,17 @@ class FontMetrics {
         function search(node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 var textLength = node.nodeValue.length;
-                for (var j = 0; j < textLength; j++) {
+                var graphemeWidth = 1;
+                for (var j = 0; j < textLength; j+= graphemeWidth) {
                     scratchRange.setStart(node, j);
-                    if (/[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j)))
-                        j++; // skip low surrogate
-                    scratchRange.setEnd(node, j + 1);
+                    graphemeWidth = 1;
+                    if (
+                        /[\uD800-\uDBFF]/.test(node.nodeValue.charAt(j)) && j + 1 < textLength &&
+                        /[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j + 1))
+                    ) {
+                        graphemeWidth = 2;
+                    }
+                    scratchRange.setEnd(node, j + graphemeWidth);
                     let rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(scratchRange.getBoundingClientRect());
                     if (hasCssTransform) {
                         rect = self.recoverRect(tr, rect);
@@ -431,7 +437,7 @@ class FontMetrics {
                     if (rect.left <= x && x <= rect.left + rect.width) {
                         screenColumn += j;
                         if (!blockCursor && x > rect.left + rect.width / 2) {
-                            screenColumn++;
+                            screenColumn += graphemeWidth;
                         }
                         return screenColumn;
                     }
