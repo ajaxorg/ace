@@ -134,7 +134,17 @@ module.exports = {
             return [(M[0] * px + M[1] * py + M[2]) * k, (M[3] * px + M[4] * py + M[5]) * k];
         }
     },
-    
+    "test pixelposition in surrogate pairs": function() {
+        var renderer = editor.renderer;
+        editor.setValue("ab\ud83d\ude02cd");
+        renderer.onResize(true);
+        var p1 = renderer.textToScreenCoordinates(0, 2);
+        var p2 = renderer.textToScreenCoordinates(0, 4);
+        for (var i = 0.01; i <= 1.1; i+=0.1) {
+            var pos = renderer.pixelToScreenCoordinates((1-i) * p1.pageX+ i * p2.pageX, p1.pageY);
+            assert.position(pos, 0, i < 0.5 ? 2 : 4);
+        }
+    },
     "test scrollmargin + autosize": async function(done) {
         editor.setOptions({
             maxLines: 100,
