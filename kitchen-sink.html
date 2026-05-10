@@ -56,7 +56,10 @@
   <script src="demo/kitchen-sink/require.js" type="text/javascript"></script>
   <script>
     var useLib = /lib=1/.test(location.search);
-    var legacyLintersBuild = "node_modules/ace-legacy-linters/build/src";
+    var useLocal = /local=1/.test(location.search);
+    var legacyLintersBuild = useLocal
+      ? "node_modules/ace-legacy-linters/build/src"
+      : "https://unpkg.com/ace-legacy-linters/build/src";
     var paths = useLib ? {
       ace: "lib/ace",
       demo: "demo/kitchen-sink"

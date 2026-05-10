@@ -11,11 +11,6 @@ var rootDir = __dirname + "/../lib/ace/";
 var SKIP_NPM = false;
 
 var deps = {
-    requirejs: {
-        path: "../../demo/kitchen-sink/require.js",
-        url: "https://raw.github.com/jrburke/requirejs/master/require.js",
-        wrapAmd: false
-    },
     xquery: {
        path: "mode/xquery/xquery_lexer.js",
        browserify: {
@@ -101,23 +96,6 @@ var deps = {
         postProcess: function(src){
             return "function define(f) { module.exports = f() }; define.amd = {};\n"
                 + dereqire(src);
-        }
-    },
-    xmldom: {
-        fetch: function() {
-            var rootHref = "https://raw.githubusercontent.com/iDeBugger/xmldom/master/"
-            var fileMap = {
-               "sax.js": "mode/xml/sax.js",
-               "dom-parser.js": "mode/xml/dom-parser.js",
-               "dom.js": "mode/xml/dom.js"
-            };
-            async.forEach(Object.keys(fileMap), function(x, next) {
-                download(rootHref + x, function(e, d) {
-                    fs.writeFile(rootDir + fileMap[x], d, next)
-                })
-            }, function() {
-                console.log("XmlDOM updating done")
-            });
         }
     },
 };
