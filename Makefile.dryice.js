@@ -177,6 +177,8 @@ function ace() {
     for (var i = 0; i < 4; i++) {
         buildAce({compress: i & 2, noconflict: i & 1, check: true});
     }
+
+    copy.dirs(ACE_HOME + "/node_modules/ace-legacy-linters/build", BUILD_DIR, ["src", "src-min", "src-noconflict", "src-min-noconflict"]);
 }
 
 function correctDeclarationsForBuild(path, additionalDeclarations) {
