@@ -195,8 +195,8 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
         var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -230,8 +230,8 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
         var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -265,8 +265,8 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
         var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -300,8 +300,8 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
         var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -325,8 +325,8 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
         var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -356,8 +356,8 @@ module.exports = {
         assert.equal(lines.cells[1].element.textContent, "2");
         var firstLineGutterElement = lines.cells[0].element;
         var toggler = firstLineGutterElement.querySelector(".ace_fold-widget");
+        toggler.style.leftHint = 100; // mockdom doesn't parse css to know the padding
         var rect = toggler.getBoundingClientRect();
-        if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
