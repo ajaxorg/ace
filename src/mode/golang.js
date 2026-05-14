@@ -1,12 +1,11 @@
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var GolangHighlightRules = require("./golang_highlight_rules").GolangHighlightRules;
-var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+var Range = require("../range").Range;
 
 var Mode = function() {
     this.HighlightRules = GolangHighlightRules;
-    this.$outdent = new MatchingBraceOutdent();
     this.foldingRules = new CStyleFoldMode();
     this.$behaviour = this.$defaultBehaviour;
 };
@@ -39,11 +38,24 @@ oop.inherits(Mode, TextMode);
     };//end getNextLineIndent
 
     this.checkOutdent = function(state, line, input) {
-        return this.$outdent.checkOutdent(line, input);
+        if (!/^\s+$/.test(line))
+            return false;
+
+        return /^\s*[})]/.test(input);
     };
 
-    this.autoOutdent = function(state, doc, row) {
-        this.$outdent.autoOutdent(doc, row);
+    this.autoOutdent = function (state, doc, row) {
+        var line = doc.getLine(row);
+        var match = line.match(/^(\s*[})])/);
+        if (!match) return 0;
+        var column = match[1].length;
+        var openBracePos = doc.findMatchingBracket({
+            row: row,
+            column: column
+        });
+        if (!openBracePos || openBracePos.row == row) return 0;
+        var indent = this.$getIndent(doc.getLine(openBracePos.row));
+        doc.replace(new Range(row, 0, row, column - 1), indent);
     };
 
     this.$id = "ace/mode/golang";
