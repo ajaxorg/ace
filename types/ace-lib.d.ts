@@ -99,6 +99,7 @@ declare module "ace-code/src/lib/lang" {
         cancel(): void;
         isPending(): any;
     };
+    export function sleep(ms: number): Promise<void>;
     export function supportsLookbehind(): boolean;
     export function skipEmptyMatch(line: any, last: any, supportsUnicodeFlag: any): 1 | 2;
 }

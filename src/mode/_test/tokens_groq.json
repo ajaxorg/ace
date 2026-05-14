@@ -1,0 +1,655 @@
+[[
+   "start",
+  ["comment.line","// Fetch all published articles, ordered by date"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"article\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["paren.lparen","("],
+  ["identifier","_id"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["support.function","path"],
+  ["paren.lparen","("],
+  ["string.quoted.double","\"drafts.**\""],
+  ["paren.rparen","))]"],
+  ["text"," "],
+  ["keyword.operator.pipe","|"],
+  ["text"," "],
+  ["support.function","order"],
+  ["paren.lparen","("],
+  ["identifier","publishedAt"],
+  ["text"," "],
+  ["keyword.control","desc"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","_id"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","title"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"slug\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["identifier","slug"],
+  ["punctuation.accessor","."],
+  ["identifier","current"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","publishedAt"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"authorName\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["identifier","author"],
+  ["keyword.operator.dereference","->"],
+  ["identifier","name"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"categoryTitles\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["identifier","categories"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["keyword.operator.dereference","->"],
+  ["identifier","title"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","body"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.operator.spread","..."],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"image\""],
+  ["text"," "],
+  ["keyword.operator.arrow","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["string.quoted.double","\"url\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["identifier","asset"],
+  ["keyword.operator.dereference","->"],
+  ["identifier","url"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Count documents by type"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"articles\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","count"],
+  ["paren.lparen","("],
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"article\""],
+  ["paren.rparen","])"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"authors\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","count"],
+  ["paren.lparen","("],
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"author\""],
+  ["paren.rparen","])"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"total\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","count"],
+  ["paren.lparen","("],
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Text search with scoring and boosting"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"article\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","title"],
+  ["text"," "],
+  ["keyword.control","match"],
+  ["text"," "],
+  ["string.quoted.double","\"serverless\""],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator.pipe","|"],
+  ["text"," "],
+  ["support.function","score"],
+  ["paren.lparen","("],
+  ["support.function","boost"],
+  ["paren.lparen","("],
+  ["identifier","title"],
+  ["text"," "],
+  ["keyword.control","match"],
+  ["text"," "],
+  ["string.quoted.double","\"serverless\""],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["punctuation",","],
+  ["text"," "],
+  ["identifier","body"],
+  ["text"," "],
+  ["keyword.control","match"],
+  ["text"," "],
+  ["string.quoted.double","\"serverless\""],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator.pipe","|"],
+  ["text"," "],
+  ["support.function","order"],
+  ["paren.lparen","("],
+  ["identifier","_score"],
+  ["text"," "],
+  ["keyword.control","desc"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["keyword.operator.range",".."],
+  ["constant.numeric","9"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","title"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","_score"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"excerpt\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["entity.name.tag","string"],
+  ["punctuation.namespace","::"],
+  ["support.function","split"],
+  ["paren.lparen","("],
+  ["entity.name.tag","pt"],
+  ["punctuation.namespace","::"],
+  ["support.function","text"],
+  ["paren.lparen","("],
+  ["identifier","body"],
+  ["paren.rparen",")"],
+  ["punctuation",","],
+  ["text"," "],
+  ["string.quoted.double","\".\""],
+  ["paren.rparen",")"],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["paren.rparen","]"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Using parameters"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["variable","$type"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["support.function","defined"],
+  ["paren.lparen","("],
+  ["identifier","publishedAt"],
+  ["paren.rparen",")]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.operator.spread","..."],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"relatedCount\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","count"],
+  ["paren.lparen","("],
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["variable.language","^"],
+  ["punctuation.accessor","."],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["support.function","references"],
+  ["paren.lparen","("],
+  ["variable.language","^"],
+  ["punctuation.accessor","."],
+  ["identifier","_id"],
+  ["paren.rparen",")])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Conditional projections with select"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"product\""],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","title"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"label\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","select"],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","price"],
+  ["text"," < "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator.arrow","=>"],
+  ["text"," "],
+  ["string.quoted.double","\"budget\""],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","price"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","price"],
+  ["text"," < "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["keyword.operator.arrow","=>"],
+  ["text"," "],
+  ["string.quoted.double","\"mid-range\""],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","price"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["keyword.operator.arrow","=>"],
+  ["text"," "],
+  ["string.quoted.double","\"premium\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen",")"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"discount\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","round"],
+  ["paren.lparen","("],
+  ["identifier","price"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","0.85"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Boolean, null, and numeric literals"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"post\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","featured"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.language","true"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","deletedAt"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.language","null"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","title"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"views\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","coalesce"],
+  ["paren.lparen","("],
+  ["identifier","viewCount"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"rating\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","round"],
+  ["paren.lparen","("],
+  ["identifier","score"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["constant.numeric","100"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Date filtering"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"event\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["support.function","dateTime"],
+  ["paren.lparen","("],
+  ["identifier","startDate"],
+  ["paren.rparen",")"],
+  ["text"," > "],
+  ["support.function","dateTime"],
+  ["paren.lparen","("],
+  ["support.function","now"],
+  ["paren.lparen","("],
+  ["paren.rparen","))"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","60"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","60"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","24"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","7"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator.pipe","|"],
+  ["text"," "],
+  ["support.function","order"],
+  ["paren.lparen","("],
+  ["identifier","startDate"],
+  ["text"," "],
+  ["keyword.control","asc"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// String functions"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"author\""],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"displayName\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["support.function","upper"],
+  ["paren.lparen","("],
+  ["identifier","name"],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["paren.rparen","])"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["support.function","lower"],
+  ["paren.lparen","("],
+  ["identifier","name"],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["keyword.operator.range",".."],
+  ["paren.rparen","])"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","// Dereference and identity"]
+],[
+   "start",
+  ["constant.language.wildcard","*"],
+  ["paren.lparen","["],
+  ["identifier","_type"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.quoted.double","\"comment\""],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","post"],
+  ["keyword.operator.dereference","->"],
+  ["identifier","author"],
+  ["punctuation.accessor","."],
+  ["identifier","_ref"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["support.function","identity"],
+  ["paren.lparen","("],
+  ["paren.rparen",")]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","text"],
+  ["punctuation",","]
+],[
+   "start",
+  ["text","  "],
+  ["string.quoted.double","\"postTitle\""],
+  ["punctuation",":"],
+  ["text"," "],
+  ["identifier","post"],
+  ["keyword.operator.dereference","->"],
+  ["identifier","title"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

@@ -1,0 +1,67 @@
+// Fetch all published articles, ordered by date
+*[_type == "article" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  "authorName": author->name,
+  "categoryTitles": categories[]->title,
+  body[]{
+    ...,
+    _type == "image" => {
+      "url": asset->url
+    }
+  }
+}
+
+// Count documents by type
+{
+  "articles": count(*[_type == "article"]),
+  "authors": count(*[_type == "author"]),
+  "total": count(*[])
+}
+
+// Text search with scoring and boosting
+*[_type == "article" && title match "serverless"] | score(boost(title match "serverless", 3), body match "serverless") | order(_score desc) [0..9] {
+  title,
+  _score,
+  "excerpt": string::split(pt::text(body), ".")[0]
+}
+
+// Using parameters
+*[_type == $type && defined(publishedAt)] {
+  ...,
+  "relatedCount": count(*[_type == ^._type && references(^._id)])
+}
+
+// Conditional projections with select
+*[_type == "product"] {
+  title,
+  "label": select(
+    price < 10 => "budget",
+    price >= 10 && price < 100 => "mid-range",
+    price >= 100 => "premium"
+  ),
+  "discount": round(price * 0.85, 2)
+}
+
+// Boolean, null, and numeric literals
+*[_type == "post" && featured == true && deletedAt == null] {
+  title,
+  "views": coalesce(viewCount, 0),
+  "rating": round(score * 100) / 100
+}
+
+// Date filtering
+*[_type == "event" && dateTime(startDate) > dateTime(now()) - 60 * 60 * 24 * 7] | order(startDate asc)
+
+// String functions
+*[_type == "author"] {
+  "displayName": upper(name[0]) + lower(name[1..])
+}
+
+// Dereference and identity
+*[_type == "comment" && post->author._ref == identity()] {
+  text,
+  "postTitle": post->title
+}

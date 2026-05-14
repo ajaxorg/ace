@@ -14,7 +14,7 @@ var RustHighlightRules = function() {
     var keywordMapper = this.createKeywordMapper({
         "keyword.source.rust": "abstract|alignof|as|async|await|become|box|break|catch|continue|const|crate|"
             + "default|do|dyn|else|enum|extern|for|final|if|impl|in|let|loop|macro|match|mod|move|mut|offsetof|"
-            + "override|priv|proc|pub|pure|ref|return|self|sizeof|static|struct|super|trait|type|typeof|union|"
+            + "override|priv|proc|pub|pure|raw|ref|return|self|sizeof|static|struct|super|trait|type|typeof|union|"
             + "unsafe|unsized|use|virtual|where|while|yield|try",
         "storage.type.source.rust": "Self|isize|usize|char|bool|u8|u16|u32|u64|u128|f16|f32|f64|i8|i16|i32|i64|"
             + "i128|str|option|either|c_float|c_double|c_void|FILE|fpos_t|DIR|dirent|c_char|c_schar|c_uchar|c_short|"

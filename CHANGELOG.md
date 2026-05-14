@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.44.0](https://github.com/ajaxorg/ace/compare/v1.43.6...v1.44.0) (2026-05-11)
+
+
+### Features
+
+* Extension to show whitespaces in selection ([#5844](https://github.com/ajaxorg/ace/issues/5844)) ([9498a7f](https://github.com/ajaxorg/ace/commit/9498a7fc409d18003060dea8f3d2293c1182706c))
+* **mode:** Add Cedar and CedarSchema language modes for Ace Editor ([#5944](https://github.com/ajaxorg/ace/issues/5944)) ([c5c19dc](https://github.com/ajaxorg/ace/commit/c5c19dc4c0c87b0f1e727def6b69f00943c1f5a3))
+* **rust:** Include `raw` borrow operator in keyword list ([#5942](https://github.com/ajaxorg/ace/issues/5942)) ([93581d6](https://github.com/ajaxorg/ace/commit/93581d66f5eaaa7d9cd0bb3afea818fa884745cb))
+* update Flix keywords ([#5931](https://github.com/ajaxorg/ace/issues/5931)) ([f45eb67](https://github.com/ajaxorg/ace/commit/f45eb675b1ba9e56fe5b8cabe6d098e7a8d16f48))
+
+
+### Bug Fixes
+
+* `mode` type to accept both `SyntaxMode` and `string` across definitions and implementations ([#5925](https://github.com/ajaxorg/ace/issues/5925)) ([a6b1cb1](https://github.com/ajaxorg/ace/commit/a6b1cb176af46b84ef62605815f9c98ca3d9a794))
+* row calculation for fractional coords in virtual_renderer ([#5914](https://github.com/ajaxorg/ace/issues/5914)) ([a6724b7](https://github.com/ajaxorg/ace/commit/a6724b73c2806d1aceb3e3624fabe1a53ce332b7))
+
 ### [1.43.6](https://github.com/ajaxorg/ace/compare/v1.43.5...v1.43.6) (2026-01-23)
 
 
