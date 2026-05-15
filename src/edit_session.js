@@ -2102,10 +2102,6 @@ class EditSession {
             // tab
             if (c == 9) {
                 screenColumn += this.getScreenTabSize(screenColumn);
-            }
-            // full width characters
-            else if (c >= 0x1100 && isFullWidth(c)) {
-                screenColumn += 2;
             } else {
                 screenColumn += 1;
             }
@@ -2315,9 +2311,6 @@ class EditSession {
                 }
             }
         }
-
-        if (offsetX !== undefined && this.$bidiHandler.isBidiRow(row + splitIndex, docRow, splitIndex))
-            screenColumn = this.$bidiHandler.offsetToCol(offsetX);
 
         docColumn += this.$getStringScreenWidth(line, screenColumn - wrapIndent)[1];
 
