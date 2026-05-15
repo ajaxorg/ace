@@ -1059,7 +1059,7 @@ declare module "ace-code" {
         env?: any;
         value?: any;
     }) | null, options?: Partial<import("ace-code").Ace.EditorOptions>): Editor;
-    export function createEditSession(text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode): EditSession;
+    export function createEditSession(text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode | string): EditSession;
     import { Editor } from "ace-code/src/editor";
     import { EditSession } from "ace-code/src/edit_session";
     import { Range } from "ace-code/src/range";
