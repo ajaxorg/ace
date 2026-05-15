@@ -293,6 +293,7 @@ declare module "ace-code" {
             behavioursEnabled: boolean;
             wrapBehavioursEnabled: boolean;
             enableAutoIndent: boolean;
+            enableDoubleFindToReplace: boolean;
             enableBasicAutocompletion: boolean | Completer[];
             enableLiveAutocompletion: boolean | Completer[];
             liveAutocompletionDelay: number;
