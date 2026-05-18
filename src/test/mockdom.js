@@ -157,7 +157,191 @@ function Context2d(w, h) {
     };
 }).call(Context2d.prototype);
 
+function getBoundingClientRect(target, fromChild, ignoreTransforms) {
+    function textWidth(str) {
+        return str.replace(/\t/g, "    ").replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH * fontSize;
+    }
 
+    var node = target;
+    var blockParent, fontSize;
+    while (node) {
+        if (fontSize == null && node.style?.fontSize) {
+            fontSize = parseInt(node.style.fontSize) / CHAR_HEIGHT;
+        }
+        if (
+            !blockParent && node != target 
+            && (node.style?.display == "block" || /div|body|html/.test(node.localName))
+        ) {
+            blockParent = node;
+        }
+        node = node.parentNode;
+    }
+    if (fontSize == null) fontSize = 1;
+
+    var width = 0;
+    var height = 0;
+    var top = 0;
+    var left = 0;
+    if (target == document.documentElement) {
+        width = WINDOW_WIDTH;
+        height = WINDOW_HEIGHT;
+    }
+    else if (!document.contains(target) || target.style?.display == "none") {
+        width = height = 0;
+    }
+    else if (target.nodeType == 3 || target.localName == "span" || /^inline/.test(target.style.display)) {
+        var text = target.textContent;
+        width = textWidth(text);
+        height = fontSize * CHAR_HEIGHT;
+        if (!height) height = CHAR_HEIGHT;
+        if (target.style?.leftHint) {
+            left = target.style.leftHint;
+        } else if (blockParent && (target.localName == "span" || /^inline/.test(target.style?.display) || target.nodeType == 3)) {
+            var parentRect = getBoundingClientRect(blockParent, true, true);
+            top = parentRect.top;
+            node = target;
+            left = parentRect.left;
+            while (node && node != blockParent) {
+                if (node.previousSibling) {
+                    left += textWidth(node.previousSibling.textContent);
+                    node = node.previousSibling;
+                } else {
+                    node = node.parentNode;
+                }
+            }
+        }
+    }
+    else if (target.parentNode) {
+        var isFixed = target.style.position == "fixed" 
+            || target.style.positionHint == "fixed"
+            || target.getAttribute("role") == "tooltip";
+        var isAbsolute = target.style.position == "absolute" 
+            || target.style.positionHint == "absolute";
+        // prevent recursion by passing -1
+        var rect = fromChild == -1 || isFixed
+            ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
+            : getBoundingClientRect(target.parentNode, undefined, true);
+        if (isFixed) {
+            rect.height = rect.bottom = WINDOW_HEIGHT;
+            rect.width = rect.right = WINDOW_WIDTH;
+        }
+
+        left = parseCssLength(target.style.left || "0", rect.width);
+        top = parseCssLength(target.style.top || "0", rect.height);
+
+        var margin = target.style.margin;
+        if (margin) {
+            var parts = margin.trim().split(/\s+/);
+            left += parseCssLength(parts[3] || parts[1] || parts[0] || "0", 0);
+            top += parseCssLength(parts[0] || parts[1] || "0", 0);
+        }
+
+        var right = parseCssLength(target.style.right || "0", rect.width);
+        var bottom = parseCssLength(target.style.bottom || "0", rect.width);
+
+        if (target.style.width)
+            width = parseCssLength(target.style.width || "100%", rect.width);
+        else if (target.style.widthHint)
+            width = target.style.widthHint;
+        else if (target.style.right || !isAbsolute)
+            width = rect.width - right - left;
+        
+        if (target.style.height)
+            height = parseCssLength(target.style.height || "100%", rect.height);
+        else if (target.style.heightHint)
+            height = target.style.heightHint;
+        else if (target.style.bottom || !isAbsolute)
+            height = rect.height - top - bottom;
+
+        if (target.style.width == "auto") { 
+            width = textWidth(target.textContent);
+            if ((!target.style.height || target.style.height == "auto") && target.textContent.trim()) {
+                height = CHAR_HEIGHT * fontSize;
+            }
+        }
+
+        var maxWidth = target.style.maxWidth && parseCssLength(target.style.maxWidth, rect.width);
+        var maxHeight = target.style.maxHeight && parseCssLength(target.style.maxHeight, rect.height);
+        
+        if (maxWidth >= 0) width = Math.min(width, maxWidth);
+        if (maxHeight >= 0) height = Math.min(height, maxHeight);
+        
+        if (!height && !target.style.height && target.firstChild && target.firstChild.getBoundingClientRect && !fromChild) {
+            height = getBoundingClientRect(target.firstChild, -1, true).height;
+        }
+
+        if (!target.style.left &&  target.style.right) {
+            left = rect.width - right - width;
+        }
+        if (!target.style.top &&  target.style.bottom) {
+            top = rect.height - bottom - height;
+        }
+        
+        top += rect.top;
+        left += rect.left;
+    }
+
+    var rect = {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+    if (!ignoreTransforms)
+        rect = applyTransforms(rect, target);
+    return rect;
+}
+function applyTransforms(rect, target) {
+    var left = rect.left;
+    var top = rect.top;
+    var width = rect.width;
+    var height = rect.height;
+    // Apply CSS transforms
+    var node = target;
+    var M = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    var points;
+    while (node) {
+        if (node.style?.transform) {
+            var match = node.style.transform.match(/matrix3d\(([^)]+)\)/);
+            if (match) {
+                if (!points) {
+                    points = [[left, top], [left + width, top], [left, top + height], [left + width, top + height]];
+                }
+                var v = match[1].split(",").map(parseFloat);
+                M = [v[0], v[1], v[3], v[4], v[5], v[7], v[12], v[13], v[15]];
+                var origin = node.style.transformOrigin || "50% 50%";
+                var parts = origin.split(" ");
+                var parentRect = node == target ? { top,left,width,height } : getBoundingClientRect(node, true, true);
+                var ox = parseCssLength(parts[0], parentRect.width) + parentRect.left;
+                var oy = parseCssLength(parts[1], parentRect.height) + parentRect.top;
+                var O = [ox, oy];
+                points = points.map(p => project(p, O));
+            }
+        }
+        node = node.parentNode;
+    }
+    function project(p, O) {
+        var x = p[0] - O[0];
+        var y = p[1] - O[1];
+        var w = M[2] * x + M[5] * y + M[8];
+        return [
+            (M[0] * x + M[3] * y + M[6]) / w + O[0],
+            (M[1] * x + M[4] * y + M[7]) / w + O[1]
+        ];
+    }
+    if (points) {
+        var xs = points.map(p => p[0]);
+        var ys = points.map(p => p[1]);
+        left = Math.min.apply(null, xs);
+        top = Math.min.apply(null, ys);
+        width = Math.max.apply(null, xs) - left;
+        height = Math.max.apply(null, ys) - top;
+    }
+
+    return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+}
+function parseCssLength(styleString, parentSize) {
+    // TODO support calc
+    var size = parseFloat(styleString) || 0;
+    if (/%/.test(styleString))
+        size = parentSize * size / 100;
+    return size;
+}
 
 function getItem(i) { return this[i]; }
 
@@ -177,7 +361,7 @@ function Node(name) {
 (function() {
     this.nodeType = 1;
     this.ELEMENT_NODE = 1;
-    this.TEXT_NODE = 1;
+    this.TEXT_NODE = 3;
     this.cloneNode = function(recursive) {
         var clone = new Node(this.localName);
         for (var i in this.$attributes) {
@@ -236,9 +420,11 @@ function Node(name) {
             if (node.previousSibling)
                 node.previousSibling.nextSibling = node;
             node.parentNode = this;
-            i = this.children.indexOf(before);
-            if (i == -1) i = this.children.length + 1;
-            this.children.splice(i, 0, node);
+            if (node.nodeType == 1) {
+                i = this.children.indexOf(before);
+                if (i == -1) i = this.children.length + 1;
+                this.children.splice(i, 0, node);
+            }
         }
         
         return node;
@@ -412,104 +598,25 @@ function Node(name) {
         if (position === "afterbegin") this.insertBefore(element, this.firstChild);
         if (position === "beforebegin") this.parentElement.insertBefore(element, this);
     };
-    this.getBoundingClientRect = function(fromChild) {
-        var width = 0;
-        var height = 0;
-        var top = 0;
-        var left = 0;
-        if (this == document.documentElement) {
-            width = WINDOW_WIDTH;
-            height = WINDOW_HEIGHT;
-        }
-        else if (!document.contains(this) || this.style.display == "none") {
-            width = height = 0;
-        }
-        else if (this.style.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
-            width = this.textContent.length * CHAR_WIDTH;
-            var node = this;
-            while (node) {
-                if (node.style.fontSize) {
-                    height = parseInt(node.style.fontSize);
-                    break;
-                }
-                node = node.parentNode;
-            }
-            if (!height) height = CHAR_HEIGHT;
-        }
-        else if (this.parentNode) {
-            var isFixed = this.style.position == "fixed" 
-                || this.style.positionHint == "fixed"
-                || this.getAttribute("role") == "tooltip";
-            // prevent recursion by passing -1
-            var rect = fromChild == -1 || isFixed
-                ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
-                : this.parentNode.getBoundingClientRect();
-            if (isFixed) {
-                rect.height = rect.bottom = WINDOW_HEIGHT;
-                rect.width = rect.right = WINDOW_WIDTH;
-            }
-
-            left = parseCssLength(this.style.left || "0", rect.width);
-            top = parseCssLength(this.style.top || "0", rect.height);
-            var right = parseCssLength(this.style.right || "0", rect.width);
-            var bottom = parseCssLength(this.style.bottom || "0", rect.width);
-
-            if (this.style.width)
-                width = parseCssLength(this.style.width || "100%", rect.width);
-            else if (this.style.widthHint)
-                width = this.style.widthHint;
-            else
-                width = rect.width - right - left;
-            
-            if (this.style.height)
-                height = parseCssLength(this.style.height || "100%", rect.height);
-            else if (this.style.heightHint)
-                height = this.style.heightHint;
-            else
-                height = rect.height - top - bottom;
-
-            var maxWidth = this.style.maxWidth && parseCssLength(this.style.maxWidth, rect.width);
-            var maxHeight = this.style.maxHeight && parseCssLength(this.style.maxHeight, rect.height);
-            
-            if (maxWidth >= 0) width = Math.min(width, maxWidth);
-            if (maxHeight >= 0) height = Math.min(height, maxHeight);
-            
-            if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
-                height = this.firstChild.getBoundingClientRect(-1).height;
-            }
-
-            if (!this.style.left &&  this.style.right) {
-                left = rect.width - right - width;
-            }
-            if (!this.style.top &&  this.style.bottom) {
-                top = rect.height - bottom - height;
-            }
-            
-            top += rect.top;
-            left += rect.left;
-        }
-        return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+    this.getClientRects = function() {
+        var rect = this.getBoundingClientRect();
+        return [rect];
+    };
+    this.getBoundingClientRect = function() {
+        return getBoundingClientRect(this);
     };
 
-    function parseCssLength(styleString, parentSize) {
-        // TODO support calc
-        var size = parseFloat(styleString) || 0;
-        if (/%/.test(styleString))
-            size = parentSize * size / 100;
-        return size;
-    }
-
     this.__defineGetter__("clientHeight", function() {
-        return this.getBoundingClientRect().height;
+        return getBoundingClientRect(this, undefined, true).height;
     });
     this.__defineGetter__("clientWidth", function() {
-        return this.getBoundingClientRect().width;
+        return getBoundingClientRect(this, undefined, true).width;
     });
     this.__defineGetter__("offsetHeight", function() {
-        return this.getBoundingClientRect().height;
+        return getBoundingClientRect(this, undefined, true).height;
     });
     this.__defineGetter__("offsetWidth", function() {
-        return this.getBoundingClientRect().width;
+        return getBoundingClientRect(this, undefined, true).width;
     });
 
     this.__defineGetter__("lastChild", function() {
@@ -518,7 +625,7 @@ function Node(name) {
     this.__defineGetter__("firstChild", function() {
         return this.childNodes[0];
     });
-    // TODO this is a waorkaround for scrollHeight usage in virtualRenderer
+    // TODO this is a workaround for scrollHeight usage in virtualRenderer
     this.scrollHeight = 1;
 
 
@@ -609,6 +716,7 @@ function Node(name) {
             node.parentNode = null;
         });
         node.childNodes.length = 0;
+        node.children.length = 0;
         if (!document.contains(document.activeElement))
             document.activeElement = document.body;
     }
@@ -803,7 +911,7 @@ function TextNode(value) {
 (function() {
     this.nodeType = 3;
     this.ELEMENT_NODE = 1;
-    this.TEXT_NODE = 1;
+    this.TEXT_NODE = 3;
     this.cloneNode = function() {
         return new TextNode(this.data);
     };
@@ -814,6 +922,9 @@ function TextNode(value) {
         return this.data;
     });
 }).call(TextNode.prototype);
+
+Node.ELEMENT_NODE = TextNode.ELEMENT_NODE = 1;
+Node.TEXT_NODE = TextNode.TEXT_NODE = 3;
 
 var window = {
     get innerHeight() {
@@ -843,6 +954,70 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
     };
     document.createDocumentFragment = function() {
         return new Node("#fragment");
+    };
+    document.createTreeWalker = function(root, whatToShow, filter) {
+        var nodes = [];
+        walk(root, function(node) {
+            if ((whatToShow & (1 << (node.nodeType - 1))) && (!filter || filter.acceptNode(node) == 1))
+                nodes.push(node);
+        });
+        var index = -1;
+        return {
+            nextNode: function() {
+                if (index < nodes.length - 1)
+                    return this.currentNode = nodes[++index];
+            },
+            previousNode: function() {
+                if (index > 0)
+                    return this.currentNode = nodes[--index];
+            }
+        };
+    };
+    document.createRange = function() {
+        return {
+            setStart: function(node, offset) {
+                this.startContainer = node;
+                this.startOffset = offset;
+            },
+            setEnd: function(node, offset) {
+                this.endContainer = node;
+                this.endOffset = offset;
+            },
+            getBoundingClientRect: function() {
+                var rect1 = getBoundingClientRect(this.startContainer, false, true);
+                if (this.startContainer.nodeType == 3) {
+                    rect1.left += this.startOffset * CHAR_WIDTH;
+                } else {
+                    var child = this.startContainer.childNodes[this.startOffset];
+                    if (!child) {
+                        rect1.left = rect1.right;
+                    } else {
+                        rect1.left = getBoundingClientRect(child, false, true).left;
+                    }
+                }
+                var rect2 = getBoundingClientRect(this.endContainer, false, true);
+                if (this.endContainer.nodeType == 3) {
+                    rect2.right = rect2.left + this.endOffset * CHAR_WIDTH;
+                } else {
+                    var child = this.endContainer.childNodes[this.endOffset];
+                    if (child) {
+                        rect2.right = getBoundingClientRect(child, false, true).right;
+                    }
+                }
+                var rect = {
+                    top: rect1.top,
+                    left: rect1.left,
+                    width: rect2.right - rect1.left,
+                    height: rect2.bottom - rect1.top,
+                    right: rect2.right,
+                    bottom: rect2.bottom
+                };
+                return applyTransforms(rect, this.startContainer);
+            },
+            getClientRects: function() {
+                return [this.getBoundingClientRect()];
+            },
+        };
     };
     document.hasFocus = function() {
         return true;
@@ -879,6 +1054,12 @@ window.DOMParser = function() {
         }
         return document;
     };
+};
+
+window.NodeFilter = {
+    SHOW_ALL: 0xFFFFFFFF,
+    SHOW_ELEMENT: 1,
+    SHOW_TEXT: 4
 };
 
 var document = new window.Document();
@@ -954,6 +1135,8 @@ exports.loadInBrowser = function(global, $setSize) {
     delete global.ResizeObserver;
     global.__origRoot__ = global.document.documentElement;
     global.__origBody__ = global.document.body;
+    global.document.createElementOrig = global.document.createElement;
+    global.document.createTextNodeOrig = global.document.createTextNode;
     Object.keys(window).forEach(function(i) {
         if (i != "document" && i != "window") {
             delete global[i];
@@ -964,7 +1147,6 @@ exports.loadInBrowser = function(global, $setSize) {
         var val = window.document[i];
         if (typeof val == "function") {
             if (i == "createElement") {
-                global.document.createElementOrig = global.document.createElement;
                 val = function(n) {
                     if (n == "script")
                         return global.document.createElementOrig(n);
@@ -995,6 +1177,7 @@ exports.loadInBrowser = function(global, $setSize) {
             );
         }
     }
+    global.__mockdom_ = exports;
     loaded = true;
 };
 
