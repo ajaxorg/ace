@@ -175,10 +175,11 @@ class Cursor {
     /**
      * @param {import("../../ace-internal").Ace.Point} [position]
      * @param {boolean} [onScreen]
+     * @return {{left: number, top: number, width: number}}
      */
     getPixelPosition(position, onScreen) {
         if (!this.config || !this.session)
-            return {left : 0, top : 0};
+            return {left : 0, top : 0, width: 0};
 
         if (!position)
             position = this.session.selection.getCursor();
@@ -188,7 +189,7 @@ class Cursor {
 
         var cursorTop = (pos.row - (onScreen ? this.config.firstRowScreen : 0)) *
             this.config.lineHeight;
-        var cursorWidth = (this.config.fontMetrics.textWidth(pos.row, pos.column + 1) - textWidth) || this.config.characterWidth;
+        var cursorWidth = this.config.fontMetrics.textWidth(pos.row, pos.column + 1) - textWidth;
 
         return {left : cursorLeft, top : cursorTop, width : Math.abs(cursorWidth)};
     }
