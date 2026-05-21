@@ -34,6 +34,7 @@ const editor = ace.edit(null, {
 }); // should not be an error
 editor.setTheme("ace/theme/monokai");
 editor.session.setMode("ace/mode/javascript");
+ace.createEditSession("", "ace/mode/rust"); // should not be an error
 
 function configure(config: ace.Ace.Config) {
     config.setDefaultValues("editor", {
