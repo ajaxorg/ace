@@ -494,7 +494,7 @@ class FontMetrics {
                     this.$scratchRange.setStart(p1.node, p1.offset);
                     this.$scratchRange.setEnd(p2.node, p2.offset);
                     var rangeRects = this.$scratchRange.getClientRects();
-                    var hasCssTransform = true;
+                    var hasCssTransform = this.renderer && this.renderer.$hasCssTransforms;
                     if (hasCssTransform) {
                         var tr = this.getTransform();
                         var rects = [];
