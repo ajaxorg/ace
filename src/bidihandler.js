@@ -51,12 +51,7 @@ class BidiHandler {
     isBidiRow(screenRow, docRow, splitIndex) {
         if (!this.seenBidi)
             return false;
-        if (screenRow !== this.currentRow) {
-            this.currentRow = screenRow;
-            this.updateRowLine(docRow, splitIndex);
-            this.updateBidiMap();
-        }
-        return this.bidiMap.bidiLevels;
+        return true;
     }
 
     /**
@@ -107,65 +102,6 @@ class BidiHandler {
         return splitIndex;
     }
 
-    updateRowLine(docRow, splitIndex) {
-        if (docRow === undefined)
-            docRow = this.getDocumentRow();
-
-        var isLastRow = (docRow === this.session.getLength() - 1),
-            endOfLine = isLastRow ? this.EOF : this.EOL;
-
-        this.wrapIndent = 0;
-        this.line = this.session.getLine(docRow);
-        this.isRtlDir = this.$isRtl || this.line.charAt(0) === this.RLE;
-        if (this.session.$useWrapMode) {
-            var splits = this.session.$wrapData[docRow];
-            if (splits) {
-                if (splitIndex === undefined)
-                    splitIndex = this.getSplitIndex();
-
-                if(splitIndex > 0 && splits.length) {
-                    this.wrapIndent = splits.indent;
-                    this.wrapOffset = this.wrapIndent * this.charWidths[bidiUtil.L];
-                    this.line = (splitIndex < splits.length) ?
-                        this.line.substring(splits[splitIndex - 1], splits[splitIndex]) :
-                            this.line.substring(splits[splits.length - 1]);
-                } else {
-                    this.line = this.line.substring(0, splits[splitIndex]);
-                }
-
-                if (splitIndex == splits.length) {
-                    this.line += (this.showInvisibles) ? endOfLine : bidiUtil.DOT;
-                }
-            }
-        } else {
-            this.line += this.showInvisibles ? endOfLine : bidiUtil.DOT;
-        }
-
-        /* replace tab and wide characters by commensurate spaces */
-        var session = this.session, shift = 0, size;
-        this.line = this.line.replace(/\t|[\u1100-\u2029, \u202F-\uFFE6]/g, function(ch, i){
-            if (ch === '\t' || session.isFullWidth(ch.charCodeAt(0))) {
-                size = (ch === '\t') ? session.getScreenTabSize(i + shift) : 2;
-                shift += size - 1;
-                return lang.stringRepeat(bidiUtil.DOT, size);
-            }
-            return ch;
-        });
-
-        if (this.isRtlDir) {
-            this.fontMetrics.$main.textContent = (this.line.charAt(this.line.length - 1) == bidiUtil.DOT) ? this.line.substr(0, this.line.length - 1) : this.line;
-            this.rtlLineOffset = this.contentWidth - this.fontMetrics.$main.getBoundingClientRect().width;
-        }
-    }
-
-    updateBidiMap() {
-        var textCharTypes = [];
-        if (bidiUtil.hasBidiCharacters(this.line, textCharTypes) || this.isRtlDir) {
-             this.bidiMap = bidiUtil.doBidiReorder(this.line, textCharTypes, this.isRtlDir);
-        } else {
-            this.bidiMap = {};
-        }
-    }
 
     /**
      * Resets stored info related to current screen row
@@ -203,39 +139,6 @@ class BidiHandler {
             else if (isRtlDir && editor.session.getLine(row).charAt(0) !== editor.session.$bidiHandler.RLE)
                 editor.session.doc.insert({column: 0, row: row}, editor.session.$bidiHandler.RLE);
         }
-    }
-
-
-    /**
-     * Returns offset of character at position defined by column.
-     * @param {Number} col the screen column position
-     *
-     * @return {Number} horizontal pixel offset of given screen column
-     **/
-    getPosLeft(col) {
-        col -= this.wrapIndent;
-        var leftBoundary = (this.line.charAt(0) === this.RLE) ? 1 : 0;
-        var logicalIdx = (col > leftBoundary) ? (this.session.getOverwrite() ? col : col - 1) : leftBoundary;
-        var visualIdx = bidiUtil.getVisualFromLogicalIdx(logicalIdx, this.bidiMap),
-            levels = this.bidiMap.bidiLevels, left = 0;
-
-        if (!this.session.getOverwrite() && col <= leftBoundary && levels[visualIdx] % 2 !== 0)
-            visualIdx++;
-
-        for (var i = 0; i < visualIdx; i++) {
-            left += this.charWidths[levels[i]];
-        }
-
-        if (!this.session.getOverwrite() && (col > leftBoundary) && (levels[visualIdx] % 2 === 0))
-            left += this.charWidths[levels[visualIdx]];
-
-        if (this.wrapIndent)
-            left += this.isRtlDir ? (-1 * this.wrapOffset) : this.wrapOffset;
-
-        if (this.isRtlDir)
-            left += this.rtlLineOffset;
-
-        return left;
     }
 }
 

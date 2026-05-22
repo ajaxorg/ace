@@ -714,12 +714,7 @@ class Selection {
 
         if (chars === 0) {
             if (rows !== 0) {
-                if (this.session.$bidiHandler.isBidiRow(screenPos.row, this.lead.row)) {
-                    offsetX = this.session.$bidiHandler.getPosLeft(screenPos.column);
-                    screenPos.column = Math.round(offsetX / this.session.$bidiHandler.charWidths[0]);
-                } else {
-                    offsetX = screenPos.column * this.session.$bidiHandler.charWidths[0];
-                }
+                // TODO use fontmetrics
             }
 
             if (this.$desiredColumn)
