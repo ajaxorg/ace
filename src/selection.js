@@ -710,9 +710,15 @@ class Selection {
             this.lead.column
         );
 
+        var offsetX;
+        var fontMetrics = this.session.$fontMetrics;
+        var useFontMetrics = chars === 0 && rows !== 0 && fontMetrics;
+
         if (chars === 0) {
-            if (rows !== 0) {
-                // TODO use fontmetrics
+            if (useFontMetrics && this.$desiredColumn == null) {
+                offsetX = fontMetrics.textWidth(screenPos.row, screenPos.column);
+                if (isFinite(offsetX))
+                    this.$desiredColumn = offsetX / fontMetrics.config.characterWidth;
             }
 
             if (this.$desiredColumn)
@@ -729,16 +735,17 @@ class Selection {
                 rows += widget.rowCount - (widget.rowsAbove || 0);
         }
 
-        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column);
-
-        if (rows !== 0 && chars === 0 && docPos.row === this.lead.row && docPos.column === this.lead.column) {
-
+        var targetScreenRow = screenPos.row + rows;
+        if (useFontMetrics && this.$desiredColumn != null) {
+            offsetX = this.$desiredColumn * fontMetrics.config.characterWidth;
+            var blockCursor = fontMetrics.renderer && fontMetrics.renderer.$blockCursor;
+            screenPos.column = fontMetrics.$pixelToColumn(targetScreenRow, screenPos.column, offsetX, blockCursor, true);
         }
+        var docPos = this.session.screenToDocumentPosition(targetScreenRow, screenPos.column);
 
         // move the cursor and update the desired column
         this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     }
-
     /**
      * Moves the selection to the position indicated by its `row` and `column`.
      * @param {Point} position The position to move to

@@ -272,6 +272,7 @@ class Editor {
             this.session.off("endOperation", this.$onEndOperation);
 
             var selection = this.session.getSelection();
+            this.session.$fontMetrics = null;
             selection.off("changeCursor", this.$onCursorChange);
             selection.off("changeSelection", this.$onSelectionChange);
         }
@@ -281,6 +282,7 @@ class Editor {
             this.$onDocumentChange = this.onDocumentChange.bind(this);
             session.on("change", this.$onDocumentChange);
             this.renderer.setSession(session);
+            session.$fontMetrics = this.renderer.$fontMetrics;
 
             this.$onChangeMode = this.onChangeMode.bind(this);
             session.on("changeMode", this.$onChangeMode);
