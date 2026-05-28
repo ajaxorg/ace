@@ -710,8 +710,6 @@ class Selection {
             this.lead.column
         );
 
-        var offsetX;
-
         if (chars === 0) {
             if (rows !== 0) {
                 // TODO use fontmetrics
@@ -731,7 +729,7 @@ class Selection {
                 rows += widget.rowCount - (widget.rowsAbove || 0);
         }
 
-        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column, offsetX);
+        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column);
 
         if (rows !== 0 && chars === 0 && docPos.row === this.lead.row && docPos.column === this.lead.column) {
 

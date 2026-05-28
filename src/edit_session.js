@@ -2234,13 +2234,12 @@ class EditSession {
      * Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}
      * @param {Number} screenRow The screen row to check
      * @param {Number} screenColumn The screen column to check
-     * @param {Number} [offsetX] screen character x-offset [optional]
      *
      * @returns {Point} The object returned has two properties: `row` and `column`.
      *
      * @related EditSession.documentToScreenPosition
      **/
-    screenToDocumentPosition(screenRow, screenColumn, offsetX) {
+    screenToDocumentPosition(screenRow, screenColumn) {
         if (screenRow < 0)
             return {row: 0, column: 0};
 

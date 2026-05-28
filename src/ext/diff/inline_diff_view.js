@@ -197,8 +197,8 @@ class InlineDiffView extends BaseDiffView {
             var screenPos = ev.editor.renderer.pixelToScreenCoordinates(ev.clientX, ev.clientY);
             var sessionA = this.activeEditor.session;
             var sessionB = this.otherEditor.session;
-            var posA = sessionA.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
-            var posB = sessionB.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
+            var posA = sessionA.screenToDocumentPosition(screenPos.row, screenPos.column);
+            var posB = sessionB.screenToDocumentPosition(screenPos.row, screenPos.column);
         
             var posAx = sessionA.documentToScreenPosition(posA); 
             var posBx = sessionB.documentToScreenPosition(posB); 

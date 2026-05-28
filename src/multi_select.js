@@ -268,13 +268,9 @@ var EditSession = require("./edit_session").EditSession;
         if (xBackwards) {
             var startColumn = screenCursor.column;
             var endColumn = screenAnchor.column;
-            var startOffsetX = screenCursor.offsetX;
-            var endOffsetX = screenAnchor.offsetX;
         } else {
             var startColumn = screenAnchor.column;
             var endColumn = screenCursor.column;
-            var startOffsetX = screenAnchor.offsetX;
-            var endOffsetX = screenCursor.offsetX;
         }
 
         var yBackwards = screenCursor.row < screenAnchor.row;
@@ -297,8 +293,8 @@ var EditSession = require("./edit_session").EditSession;
         var docEnd;
         for (var row = startRow; row <= endRow; row++) {
             var range = Range.fromPoints(
-                this.session.screenToDocumentPosition(row, startColumn, startOffsetX),
-                this.session.screenToDocumentPosition(row, endColumn, endOffsetX)
+                this.session.screenToDocumentPosition(row, startColumn),
+                this.session.screenToDocumentPosition(row, endColumn)
             );
             if (range.isEmpty()) {
                 if (docEnd && isSamePoint(range.end, docEnd))

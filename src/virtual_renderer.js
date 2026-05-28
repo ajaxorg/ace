@@ -1661,7 +1661,7 @@ class VirtualRenderer {
      */
     screenToTextCoordinates(x, y) {
         var screenPos = this.pixelToScreenCoordinates(x, y);
-        return this.session.screenToDocumentPosition(screenPos.row, Math.max(screenPos.column, 0), screenPos.offsetX);
+        return this.session.screenToDocumentPosition(screenPos.row, Math.max(screenPos.column, 0));
     }
 
     /**

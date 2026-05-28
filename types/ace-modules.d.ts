@@ -633,10 +633,6 @@ declare module "ace-code/src/layer/cursor" {
         getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
             left: number;
             top: number;
-            width?: undefined;
-        } | {
-            left: any;
-            top: number;
             width: number;
         };
         isCursorInView(pixelPos: any, config: any): boolean;
@@ -3971,11 +3967,9 @@ declare module "ace-code/src/bidihandler" {
          * @param {Number} [docRow] the document row to be checked [optional]
          * @param {Number} [splitIndex] the wrapped screen line index [ optional]
         **/
-        isBidiRow(screenRow: number, docRow?: number, splitIndex?: number): any;
+        isBidiRow(screenRow: number, docRow?: number, splitIndex?: number): boolean;
         getDocumentRow(): number;
         getSplitIndex(): number;
-        updateRowLine(docRow: any, splitIndex: any): void;
-        updateBidiMap(): void;
         /**
          * Resets stored info related to current screen row
         **/
@@ -3985,13 +3979,6 @@ declare module "ace-code/src/bidihandler" {
         setContentWidth(width: any): void;
         isRtlLine(row: any): boolean;
         setRtlDirection(editor: any, isRtlDir: any): void;
-        /**
-         * Returns offset of character at position defined by column.
-         * @param {Number} col the screen column position
-         *
-         * @return {Number} horizontal pixel offset of given screen column
-         **/
-        getPosLeft(col: number): number;
     }
     import bidiUtil = require("ace-code/src/lib/bidiutil");
 }
@@ -4648,13 +4635,12 @@ declare module "ace-code/src/edit_session" {
          * Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}
          * @param {Number} screenRow The screen row to check
          * @param {Number} screenColumn The screen column to check
-         * @param {Number} [offsetX] screen character x-offset [optional]
          *
          * @returns {Point} The object returned has two properties: `row` and `column`.
          *
          * @related EditSession.documentToScreenPosition
          **/
-        screenToDocumentPosition(screenRow: number, screenColumn: number, offsetX?: number): Point;
+        screenToDocumentPosition(screenRow: number, screenColumn: number): Point;
         /**
          * Converts document coordinates to screen coordinates. {:conversionConsiderations}
          * @param {Number|Point} docRow The document row to check
