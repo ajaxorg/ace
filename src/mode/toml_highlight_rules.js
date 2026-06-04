@@ -18,6 +18,11 @@ var TomlHighlightRules = function() {
         },
         {
             token : "string",
+            regex : '"""',
+            next  : "multistring"
+        },
+        {
+            token : "string",
             regex : '"(?=.)',
             next  : "qqstring"
         },
@@ -55,6 +60,25 @@ var TomlHighlightRules = function() {
         {
             token : "string",
             regex : '"|$',
+            next  : "start"
+        },
+        {
+            defaultToken: "string"
+        }
+    ],
+    "multistring" : [
+        {
+            token : "string",
+            regex : "$",
+            next  : "multistring"
+        },
+        {
+            token : "constant.language.escape",
+            regex : '\\\\[0tnr"\\\\]'
+        },
+        {
+            token : "string",
+            regex : '"""',
             next  : "start"
         },
         {
