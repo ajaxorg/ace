@@ -18,7 +18,7 @@ var TomlHighlightRules = function() {
         },
         {
             token : "string",
-            regex : '"""(?=.)',
+            regex : '"""',
             next  : "multistring"
         },
         {
