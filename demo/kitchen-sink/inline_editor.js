@@ -21,7 +21,7 @@ require("ace/commands/default_commands").commands.push({
             return;
         }
         
-        var rowCount = 10;
+        var rowCount = 5.5;
         var w = {
             row: row, 
            // rowCount: rowCount, 
