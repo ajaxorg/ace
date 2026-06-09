@@ -10,10 +10,6 @@ function Mode() {
 oop.inherits(Mode, jsMode);
 
 (function() {
-    // disable jshint
-    this.createWorker = function() {
-        return null;
-    };
     this.$id = "ace/mode/jsx";
 }).call(Mode.prototype);
 

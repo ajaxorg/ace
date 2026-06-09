@@ -26,6 +26,7 @@ Features
 * Code folding
 * Multiple cursors and selections
 * Live syntax checker (currently JavaScript/CoffeeScript/CSS/XQuery)
+* Full language client support for many languages available via [ace-linters](https://github.com/mkslanc/ace-linters)
 * Cut, copy, and paste functionality
 
 Take Ace for a spin!
