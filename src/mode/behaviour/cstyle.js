@@ -196,6 +196,8 @@ CstyleBehaviour = function(options) {
     });
 
     this.add("brackets", "insertion", function(state, action, editor, session, text) {
+        var cursor = editor.getCursorPosition();
+        var line = session.doc.getLine(cursor.row);
         if (text == '[') {
             initContext(editor);
             var selection = editor.getSelectionRange();
@@ -211,8 +213,6 @@ CstyleBehaviour = function(options) {
             }
         } else if (text == ']') {
             initContext(editor);
-            var cursor = editor.getCursorPosition();
-            var line = session.doc.getLine(cursor.row);
             var rightChar = line.substring(cursor.column, cursor.column + 1);
             if (rightChar == ']') {
                 var matching = session.$findOpeningBracket(']', {column: cursor.column + 1, row: cursor.row});
@@ -224,6 +224,23 @@ CstyleBehaviour = function(options) {
                     };
                 }
             }
+        } else if (text == "\n" || text == "\r\n") {
+            initContext(editor);
+            var rightChar = line.substring(cursor.column, cursor.column + 1);
+            if (rightChar === ']') {
+                var openBracePos = session.findMatchingBracket({row: cursor.row, column: cursor.column + 1}, ']');
+                if (!openBracePos)
+                    return null;
+                var next_indent = this.$getIndent(session.getLine(openBracePos.row));
+            } else {
+                return;
+            }
+            var indent = next_indent + session.getTabString();
+
+            return {
+                text: '\n' + indent + '\n' + next_indent,
+                selection: [1, indent.length, 1, indent.length]
+            };
         }
     });
 
