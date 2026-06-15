@@ -405,7 +405,14 @@ class Text {
             }
         }
 
-        valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
+        var trimmedValue = i ? value.slice(i) : value;
+        if (trimmedValue.length > 256) {
+            for (var j = 0; j < trimmedValue.length; ) {
+                valueFragment.appendChild(this.dom.createTextNode(trimmedValue.slice(j, j += 256), this.element));
+            }
+        } else {
+            valueFragment.appendChild(this.dom.createTextNode(trimmedValue, this.element));
+        }
 
         if (!isTextToken(token.type)) {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
