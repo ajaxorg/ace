@@ -396,27 +396,15 @@ class FontMetrics {
 
         var hasCssTransform = this.renderer.$hasCssTransforms;
         var tr = hasCssTransform && this.getTransform();
-        var textLayerRect = isTextWidthCoordinate && !hasCssTransform && this.textLayer.element.getBoundingClientRect();
-        var leftOffset = isTextWidthCoordinate && hasCssTransform
-            && this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
+        if (isTextWidthCoordinate) {
+            if (!hasCssTransform) {
+                x += this.textLayer.element.getBoundingClientRect().left
+            } else {
+                x += this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
+            }
+        }
 
         var screenColumn = 0;
-        var self = this;
-        function normalizeRect(rect) {
-            if (hasCssTransform)
-                rect = self.recoverRect(tr, rect);
-            if (!isTextWidthCoordinate)
-                return rect;
-            var left = rect.left - (hasCssTransform ? leftOffset : textLayerRect.left);
-            return {
-                left: left,
-                right: left + rect.width,
-                width: rect.width,
-                top: rect.top,
-                bottom: rect.bottom,
-                height: rect.height
-            };
-        }
         var getRects = (node) => {
             var rects = [];
             if (node.nodeType === Node.TEXT_NODE) {
@@ -426,99 +414,35 @@ class FontMetrics {
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 rects = Array.from(node.getClientRects());
             }
-            for (var i = 0; i < rects.length; i++) {
-                rects[i] = normalizeRect(rects[i]);
+            if (hasCssTransform) {
+                var fixedRects = [];
+                for (var i = 0; i < rects.length; i++) {
+                    var rect = rects[i];
+                    fixedRects.push(this.recoverRect(tr, rect));
+                }
+                rects = fixedRects;
             }
             return rects;
         };
-        function isLowSurrogate(node, offset) {
-            return /[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(offset));
-        }
-        function getGraphemeWidth(node, offset) {
-            if (
-                /[\uD800-\uDBFF]/.test(node.nodeValue.charAt(offset)) &&
-                offset + 1 < node.nodeValue.length &&
-                /[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(offset + 1))
-            ) {
-                return 2;
-            }
-            return 1;
-        }
-        function getCollapsedLeft(node, offset) {
-            scratchRange.setStart(node, offset);
-            scratchRange.setEnd(node, offset);
-            var rect = /**@type{{left: number, top: number, width: number, height: number}}*/(scratchRange.getBoundingClientRect());
-            return normalizeRect(rect).left;
-        }
-        function canBinarySearchTextNode(node) {
-            scratchRange.setStart(node, 0);
-            scratchRange.setEnd(node, node.nodeValue.length);
-            return scratchRange.getClientRects().length <= 1;
-        }
-        function findTextNodeColumn(node) {
-            var textLength = node.nodeValue.length;
-            if (textLength < BINARY_SEARCH_TEXT_LENGTH || !canBinarySearchTextNode(node))
-                return null;
-
-            var left = getCollapsedLeft(node, 0);
-            var right = getCollapsedLeft(node, textLength);
-            if (left === right)
-                return null;
-
-            var isRtl = left > right;
-            // This should normally be filtered at the element/text-node rect level.
-            // If it still happens, skip the linear fallback for this text node.
-            if (x < Math.min(left, right) || x > Math.max(left, right))
-                return -1;
-
-            var low = 0;
-            var high = textLength;
-            while (low < high) {
-                var mid = (low + high) >> 1;
-                if (isLowSurrogate(node, mid))
-                    mid--;
-                if (mid < low)
-                    mid = low;
-
-                var midLeft = getCollapsedLeft(node, mid);
-                if (isRtl ? midLeft >= x : midLeft <= x)
-                    low = mid + getGraphemeWidth(node, mid);
-                else
-                    high = mid;
-            }
-
-            var column = Math.max(0, Math.min(low - 1, textLength - 1));
-            if (isLowSurrogate(node, column))
-                column--;
-            var graphemeWidth = getGraphemeWidth(node, column);
-
-            scratchRange.setStart(node, column);
-            scratchRange.setEnd(node, column + graphemeWidth);
-            var rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(normalizeRect(scratchRange.getBoundingClientRect()));
-
-            if (rect.left <= x && x <= rect.left + rect.width) {
-                if (!blockCursor && x > rect.left + rect.width / 2)
-                    column += graphemeWidth;
-                return column;
-            }
-            return null;
-        }
+        var self = this;
         function search(node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 var textLength = node.nodeValue.length;
-                var column = findTextNodeColumn(node);
-                if (column != null && column >= 0) {
-                    screenColumn += column;
-                    return screenColumn;
-                }
-                if (column === -1)
-                    return;
                 var graphemeWidth = 1;
                 for (var j = 0; j < textLength; j+= graphemeWidth) {
                     scratchRange.setStart(node, j);
-                    graphemeWidth = getGraphemeWidth(node, j);
+                    graphemeWidth = 1;
+                    if (
+                        /[\uD800-\uDBFF]/.test(node.nodeValue.charAt(j)) && j + 1 < textLength &&
+                        /[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j + 1))
+                    ) {
+                        graphemeWidth = 2;
+                    }
                     scratchRange.setEnd(node, j + graphemeWidth);
-                    let rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(normalizeRect(scratchRange.getBoundingClientRect()));
+                    let rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(scratchRange.getBoundingClientRect());
+                    if (hasCssTransform) {
+                        rect = self.recoverRect(tr, rect);
+                    }
                     if (rect.left <= x && x <= rect.left + rect.width) {
                         screenColumn += j;
                         if (!blockCursor && x > rect.left + rect.width / 2) {
