@@ -92,6 +92,64 @@ module.exports = {
             editor = null;
         }
     },
+    "test: popup positioning accounts for editor css transforms": function() {
+        var calls = [];
+        var renderer = {
+            $hasCssTransforms: true,
+            layerConfig: {
+                lineHeight: 12,
+                offset: 8
+            },
+            scrollLeft: 12,
+            gutterWidth: 35,
+            margin: {
+                left: 9
+            },
+            $cursorLayer: {
+                getPixelPosition: function(base, onScreen) {
+                    assert.position(base, 3, 2);
+                    assert.equal(onScreen, true);
+                    return {top: 80, left: 120};
+                }
+            },
+            $fontMetrics: {
+                transformCoordinates: function(clientPos, elPos) {
+                    assert.equal(clientPos, null);
+                    return [1000 + elPos[1] * 2, 2000 + elPos[0] * 3];
+                }
+            }
+        };
+        var completer = new Autocomplete();
+        completer.editor = {
+            renderer: renderer,
+            container: {
+                getBoundingClientRect: function() {
+                    return {bottom: 10000};
+                }
+            }
+        };
+        completer.base = {row: 3, column: 2};
+        completer.popup = {
+            getTextLeftOffset: function() {
+                return 7;
+            },
+            tryShow: function(pos, lineHeight, anchor) {
+                calls.push({pos: pos, lineHeight: lineHeight, anchor: anchor});
+                return true;
+            },
+            show: function() {
+                assert.ok(false, "show should not be called when tryShow succeeds");
+            }
+        };
+
+        completer.$updatePopupPosition();
+
+        assert.equal(calls.length, 1);
+        assert.equal(calls[0].anchor, "bottom");
+        assert.equal(calls[0].lineHeight, 36);
+        assert.equal(calls[0].pos.top, 2216);
+        assert.equal(calls[0].pos.left, 1297);
+    },
     "test: highlighting in the popup": async function (done) {
         editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
 
