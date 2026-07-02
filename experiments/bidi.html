@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+</head>
+<body>
+
+ 
+<script type="text/javascript" charset="utf-8">
+
+function renderDomPointsPlot(text) {
+    // 1. Create measurement container
+    var measureDiv = document.createElement('div');
+    measureDiv.style.font = '24px monospace';
+    measureDiv.style.position = 'absolute';
+    measureDiv.style.visibility = 'hidden';
+    measureDiv.innerText = text;
+    document.body.appendChild(measureDiv);
+
+    var range = document.createRange();
+    var textNode = measureDiv.firstChild;
+    var data = [];
+
+    // 2. Measure each character's X position
+    for (let i = 0; i <= text.length; i++) {
+        // Skip measuring the invisible control characters
+        // if (text[i].charCodeAt(0) > 0x2000) continue; 
+        
+        range.setStart(textNode, i);
+        range.setEnd(textNode, i);
+        data.push({
+            char: text[i],
+            x: range.getBoundingClientRect().left
+        });
+    }
+    document.body.removeChild(measureDiv);
+
+    // 3. Create a container for the DOM plot
+    var plotArea = document.createElement('div');
+    plotArea.style.position = 'relative';
+    plotArea.style.width = '100%';
+    plotArea.style.height = '500px';
+    plotArea.style.border = '2px solid #333';
+    plotArea.style.backgroundColor = '#f4f4f9';
+    plotArea.style.margin = '20px 0';
+    plotArea.style.fontFamily = 'sans-serif';
+    plotArea.style.overflow = 'hidden';
+
+    // Add informative header
+    // var header = document.createElement('div');
+    // header.style.padding = '10px';
+    // header.style.fontSize = '13px';
+    // header.style.color = '#333';
+    // header.textContent = text
+    // plotArea.appendChild(header);
+
+    // Scaling variables to fit points nicely inside the 650x250 container
+    var spacingX = 35; 
+    var scaleY = 0.8;  
+
+    // 4. Create DOM elements for each point
+    data.forEach((item, index) => {
+        var point = document.createElement('div');
+        
+        // Style as a dot
+        point.style.position = 'absolute';
+        point.style.width = '12px';
+        point.style.height = '12px';
+        point.style.borderRadius = '50%';
+        point.style.backgroundColor = '#ff5722';
+        point.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+        
+        // Tooltip showing data
+        point.title = `Character: '${item.char}' | Index: ${index} | Visual X: ${item.x.toFixed(1)}px`;
+        
+        // Position: left corresponds to index, bottom corresponds to visual coordinate
+        var leftPos = (index * spacingX) + 25;
+        var bottomPos = (item.x * scaleY) + 30; 
+
+        point.style.left = `${leftPos}px`;
+        point.style.bottom = `${bottomPos}px`;
+
+        // Add the character label directly beneath the point
+        var charLabel = document.createElement('span');
+        charLabel.innerText = item.char;
+        charLabel.style.position = 'absolute';
+        charLabel.style.top = '15px';
+        charLabel.style.left = '20px';
+        charLabel.style.fontSize = '14px';
+        charLabel.style.fontWeight = 'bold';
+        charLabel.style.color = '#333';
+        point.appendChild(charLabel);
+
+        point.className = "point"
+
+
+        vline = document.createElement('div');
+        vline.style.cssText = `
+            position: absolute;
+            width: 100vw;
+            height: 1px;
+            background-color: #007bff;
+            left: -${point.style.left};
+            top: 5px;
+        `;
+        point.appendChild(vline)
+        hline = document.createElement('div');
+        hline.style.cssText = `
+            position: absolute;
+            width: 1px;
+            height: 100vh;
+            background-color: #007bff;
+            top: -${point.style.top};
+            left: 5px;
+        `;
+        point.appendChild(hline)
+
+        plotArea.appendChild(point);
+    });
+
+    // Append the whole plot to the main document body
+    document.body.appendChild(plotArea);
+}
+
+// Execute function with your nested isolate string
+var nestedString = "abc\u2067d123ef\u2066ghk\u2067lmn\u2069\u2069\u2069opqrst";
+var nestedString= 'a 八洲שלום ע1ולם בעברית124e443ジ'
+
+document.body.innerHTML=``
+var ta = document.createElement('textarea');
+ta.id = 'input';
+ta.style.width = '100%';
+document.documentElement.insertBefore(ta, document.body);
+
+
+ta.value = nestedString;
+ta.oninput = () => {
+    document.body.innerHTML=``
+    document.querySelectorAll('.point').forEach(p => p.remove());
+    renderDomPointsPlot(ta.value);
+}
+renderDomPointsPlot(nestedString);
+  
+</script>
+
+</body>
+</html>

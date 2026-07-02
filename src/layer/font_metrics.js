@@ -398,7 +398,7 @@ class FontMetrics {
         var tr = hasCssTransform && this.getTransform();
         if (isTextWidthCoordinate) {
             if (!hasCssTransform) {
-                x += this.textLayer.element.getBoundingClientRect().left
+                x += this.textLayer.element.getBoundingClientRect().left;
             } else {
                 x += this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
             }
@@ -428,29 +428,33 @@ class FontMetrics {
         function search(node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 var textLength = node.nodeValue.length;
-                var graphemeWidth = 1;
-                for (var j = 0; j < textLength; j+= graphemeWidth) {
+                var maxDistance = Number.MAX_VALUE;
+                var index = -1;
+                var value = node.nodeValue;
+                for (var j = 0; j <= textLength; j++) {
                     scratchRange.setStart(node, j);
-                    graphemeWidth = 1;
+                    scratchRange.setEnd(node, j);
                     if (
-                        /[\uD800-\uDBFF]/.test(node.nodeValue.charAt(j)) && j + 1 < textLength &&
-                        /[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j + 1))
+                         j > 0 && j < textLength && /[\uDC00-\uDFFF]/.test(value.charAt(j)) && 
+                        /[\uD800-\uDBFF]/.test(value.charAt(j - 1))
+                        
                     ) {
-                        graphemeWidth = 2;
+                        continue;
                     }
-                    scratchRange.setEnd(node, j + graphemeWidth);
                     let rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(scratchRange.getBoundingClientRect());
                     if (hasCssTransform) {
                         rect = self.recoverRect(tr, rect);
                     }
-                    if (rect.left <= x && x <= rect.left + rect.width) {
-                        screenColumn += j;
-                        if (!blockCursor && x > rect.left + rect.width / 2) {
-                            screenColumn += graphemeWidth;
-                        }
-                        return screenColumn;
+                    var d = Math.abs(x - rect.left);
+                    if (d < maxDistance) {
+                        index = j;
+                        maxDistance = d;
                     }
                 }
+                if (blockCursor) {
+                    // TODO 
+                }
+                return screenColumn = screenColumn + index;
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 var childNodes = node.childNodes;
 

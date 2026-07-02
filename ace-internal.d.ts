@@ -1459,6 +1459,7 @@ declare module "./src/edit_session" {
         _changedWidgets?: any,
         $options: any,
         $wrapMethod?: any,
+        $fontMetrics?: FontMetrics|null,
         $enableVarChar?: any,
         $wrap?: any,
         $navigateWithinSoftTabs?: boolean,
