@@ -284,7 +284,7 @@ class FontMetrics {
     }
     
     /**
-     * Calculates the width of the text up to a specific scrrenColumn on a given screen row.
+     * Calculates the width of the text up to a specific screenColumn on a given screen row.
      *
      * @param {number} screenRow - The row index on the screen for which the text width is calculated.
      * @param {number} screenColumn - The column index up to which the text width is measured.
@@ -462,7 +462,7 @@ class FontMetrics {
                     var rects = getRects(child);
                     for (var j = 0; j < rects.length; j++) {
                         let rect = rects[j];
-                        if (rect.left < x && x < rect.left + rect.width) {
+                        if (rect.left <= x && x <= rect.left + rect.width) {
                             search(child);
                             return screenColumn;
                         }
