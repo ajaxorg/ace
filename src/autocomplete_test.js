@@ -117,6 +117,16 @@ module.exports = {
                     assert.equal(clientPos, null);
                     return [1000 + elPos[1] * 2, 2000 + elPos[0] * 3];
                 }
+            },
+            $ghostText: {
+                position: {
+                    row: 3
+                }
+            },
+            $ghostTextWidget: {
+                el: {
+                    offsetHeight: 18
+                }
             }
         };
         var completer = new Autocomplete();
@@ -147,7 +157,7 @@ module.exports = {
         assert.equal(calls.length, 1);
         assert.equal(calls[0].anchor, "bottom");
         assert.equal(calls[0].lineHeight, 36);
-        assert.equal(calls[0].pos.top, 2216);
+        assert.equal(calls[0].pos.top, 2270);
         assert.equal(calls[0].pos.left, 1297);
     },
     "test: highlighting in the popup": async function (done) {
