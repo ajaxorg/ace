@@ -937,23 +937,11 @@ class VirtualRenderer {
                 }
             }
             config = this.layerConfig;
-            // update scrollbar first to not lose scroll position when gutter calls resize
-            this.$updateScrollBarV();
-            if (changes & this.CHANGE_H_SCROLL)
-                this.$updateScrollBarH();
-
-            dom.translate(this.content, -this.scrollLeft, -config.offset);
-
-            var width = config.width + 2 * this.$padding + "px";
-            var height = config.minHeight + "px";
-
-            dom.setStyle(this.content.style, "width", width);
-            dom.setStyle(this.content.style, "height", height);
         }
 
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
-            dom.translate(this.content, -this.scrollLeft, -config.offset);
+            this.$updateContentTransformAndSize(config, changes);
             this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller " : "ace_scroller ace_scroll-left ";
             if (this.enableKeyboardAccessibility)
                 this.scroller.className += this.keyboardFocusClassName;
@@ -971,6 +959,8 @@ class VirtualRenderer {
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
+            // Ensure content transform and size are applied after rendering text
+            this.$updateContentTransformAndSize(config, changes);
             this.$moveTextAreaToCursor();
             this._signal("afterRender", changes);
             return;
@@ -996,6 +986,8 @@ class VirtualRenderer {
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
+            // Update content transform/size after text rendering
+            this.$updateContentTransformAndSize(config, changes);
             this.$moveTextAreaToCursor();
             this._signal("afterRender", changes);
             return;
@@ -1009,6 +1001,8 @@ class VirtualRenderer {
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
             }
+            // Ensure content transform and size are applied after rendering text
+            this.$updateContentTransformAndSize(config, changes);
         }
         else if (changes & this.CHANGE_LINES) {
             if (this.$updateLines() || (changes & this.CHANGE_GUTTER) && this.$showGutter)
@@ -1084,6 +1078,53 @@ class VirtualRenderer {
     }
 
     /**
+     * Apply content translate and set content element size based on layer config.
+     * Extracted to avoid repeating the same DOM operations in multiple places.
+     * @param {{width:number,minHeight:number,offset:number}} config
+     */
+    $updateContentTransformAndSize(config, changes) {
+        var sm = this.scrollMargin;
+        var longestRendered = this.$getLongestRenderedLine();
+        if (config.width < longestRendered) {
+            config.width = longestRendered;
+        }
+        // Also clamp horizontal scroll using the actual rendered widths when
+        // a session is available. Centralizing this here avoids repeating
+        // the same logic in multiple render branches.
+        if (this.session) {
+            this.session.setScrollLeft(Math.max(-sm.left, Math.min(this.scrollLeft,
+                config.width + 2 * this.$padding - this.$size.scrollerWidth + sm.right)));
+        }
+
+        dom.translate(this.content, -this.scrollLeft, -config.offset);
+        var width = longestRendered + 2 * this.$padding + "px";
+        var height = config.minHeight + "px";
+        dom.setStyle(this.content.style, "width", width);
+        dom.setStyle(this.content.style, "height", height);
+
+        
+        // update scrollbar first to not lose scroll position when gutter calls resize
+        this.$updateScrollBarV();
+        if (changes & this.CHANGE_H_SCROLL)
+            this.$updateScrollBarH();
+    }
+
+
+    $getLongestRenderedLine() {
+        var max = 0;
+        var cells = this.$textLayer.$lines.cells;
+        for (var i = 0; i < cells.length; i++) {
+            var lineElement = cells[i].element;
+            this.$fontMetrics.$scratchRange.setStart(lineElement, 0);
+            this.$fontMetrics.$scratchRange.setEnd(lineElement, lineElement.childNodes.length);
+
+            var w = this.$fontMetrics.$scratchRange.getBoundingClientRect().width;
+            if (w > max) max = w;
+        }
+        return max;
+    }
+
+    /**
 
      * @returns {number}
      */
@@ -1124,8 +1165,9 @@ class VirtualRenderer {
         this.session.setScrollTop(Math.max(-sm.top,
             Math.min(this.scrollTop, maxHeight - size.scrollerHeight + sm.bottom)));
 
-        this.session.setScrollLeft(Math.max(-sm.left, Math.min(this.scrollLeft,
-            longestLine + 2 * this.$padding - size.scrollerWidth + sm.right)));
+        // horizontal scroll clamping is deferred until after the text layer
+        // is rendered so we can measure the actual rendered line widths
+        // using `$getLongestRenderedLine` instead of estimating here.
 
         var vScroll = !hideScrollbars && (this.$vScrollBarAlwaysVisible ||
             size.scrollerHeight - maxHeight + scrollPastEnd < 0 || this.scrollTop > sm.top);
