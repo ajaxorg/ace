@@ -164,7 +164,7 @@ class Marker {
         if (this.session.$bidiHandler.isBidiRow(range.start.row)) {
            var range1 = range.clone();
            range1.end.row = range1.start.row;
-           range1.end.column = this.session.getLine(range1.start.row).length;
+           range1.end.column = Number.MAX_VALUE;
            this.drawBidiSingleLineMarker(stringBuilder, range1, clazz + " ace_br1 ace_start", config, null, extraStyle);
         } else {
             this.elt(
