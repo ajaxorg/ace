@@ -1084,9 +1084,11 @@ class VirtualRenderer {
      */
     $updateContentTransformAndSize(config, changes) {
         var sm = this.scrollMargin;
-        var longestRendered = this.$getLongestRenderedLine();
-        if (config.width < longestRendered) {
-            config.width = longestRendered;
+        if (this.session  && !this.session.getUseWrapMode()) {
+            var longestRendered = this.$getLongestRenderedLine();
+            if (config.width < longestRendered) {
+                config.width = longestRendered;
+            }
         }
         // Also clamp horizontal scroll using the actual rendered widths when
         // a session is available. Centralizing this here avoids repeating
@@ -1097,7 +1099,7 @@ class VirtualRenderer {
         }
 
         dom.translate(this.content, -this.scrollLeft, -config.offset);
-        var width = longestRendered + 2 * this.$padding + "px";
+        var width = config.width + 2 * this.$padding + "px";
         var height = config.minHeight + "px";
         dom.setStyle(this.content.style, "width", width);
         dom.setStyle(this.content.style, "height", height);
@@ -1718,7 +1720,7 @@ class VirtualRenderer {
 
         var x = this.$padding + this.$fontMetrics.textWidth(pos.row, pos.column);
         var y = pos.row * this.lineHeight;
-        if (this.$hasCssTransforms) { //TODO: check
+        if (this.$hasCssTransforms) {
             var pagePos = this.$fontMetrics.transformCoordinates(null, [
                 this.gutterWidth + this.margin.left + x - this.scrollLeft,
                 this.margin.top + y - this.scrollTop

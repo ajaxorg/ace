@@ -8,7 +8,6 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var CHAR_COUNT = 512;
 var USE_OBSERVER = typeof ResizeObserver == "function";
 var L = 200;
-var BINARY_SEARCH_TEXT_LENGTH = 256;
 
 class FontMetrics {
 
@@ -383,16 +382,16 @@ class FontMetrics {
      * Converts a pixel position (x-coordinate) to a screen column index within a given row.
      *
      * @param {number} screenRow - The row index on the screen.
-     * @param {number} screenColumn1 - The initial screen column index.
+     * @param {number} screenColumnMonospace - Screen column if text was monospace.
      * @param {number} x - The x-coordinate (in pixels) to convert to a column index.
      * @param {boolean} blockCursor - Whether the cursor is in block mode.
      * @param {boolean} [isTextWidthCoordinate] - Whether x is in the same coordinate space as textWidth().
      * @returns {number} The calculated screen column index corresponding to the x-coordinate.
      */
-    $pixelToColumn(screenRow, screenColumn1, x, blockCursor, isTextWidthCoordinate) {
+    $pixelToColumn(screenRow, screenColumnMonospace, x, blockCursor, isTextWidthCoordinate) {
         var scratchRange = this.$scratchRange;
         var lineElement = this.$findElementForScreenRow(screenRow);
-        if (!lineElement || screenColumn1 <= 0) return screenColumn1;
+        if (!lineElement || screenColumnMonospace < 0) return screenColumnMonospace;
 
         var hasCssTransform = this.renderer.$hasCssTransforms;
         var tr = hasCssTransform && this.getTransform();
