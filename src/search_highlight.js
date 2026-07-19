@@ -39,10 +39,12 @@ class SearchHighlight {
         var renderedMarkerRanges = {};
         var _search = session.$editor && session.$editor.$search;
         var mtSearch = _search && _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
+        var docLen = session.getValue().length;
+        var cacheInvalid = docLen != this.docLen;
 
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
-            if (ranges == null || session.getValue().length != this.docLen) {
+            if (ranges == null || cacheInvalid) {
                 if (mtSearch) {
                     ranges = [];
                     var match = _search.$multiLineForward(session, this.regExp, i, end);
@@ -78,7 +80,7 @@ class SearchHighlight {
                     html, rangeToAddMarkerTo, this.clazz, config);
             }
         }
-        this.docLen = session.getValue().length;
+        this.docLen = docLen;
     }
 }
 
