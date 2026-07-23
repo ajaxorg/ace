@@ -683,6 +683,28 @@ optionsPanelContainer.insertBefore(
                 editor.setOption("fontFamily", "Tahoma");
                 session.setValue( session.getValue() + "שלום עולם בעברית123" +"\n" + "ジャパン + 八洲", 1);
             }}, "Tahoma"],
+            ["button",  {onclick: function() {
+                var transforms = [
+                    '', 
+                    "scale(0.5)", 
+                    "translate(100%, 100%) rotate(180deg)", 
+                    "rotate(18deg)",
+                    "rotate(-18deg)",
+                    "scale(0.5, 0.9)", 
+                    'matrix3d(\
+                        1.8, 0.3, 0, 0.001,\
+                        -0.2, 2.1, 0, 0.003,\
+                        0, 0, 1, 0,\
+                        10, 20, 0, 1\
+                    )',
+                ];
+                var transform = editor.container.parentElement.style.transform;
+                var i = transforms.indexOf(transform);
+                transform = transforms[(i + 1) % transforms.length];
+                editor.container.parentElement.style.transform = transform;
+                editor.container.parentElement.style.transformOrigin = "0 0 0";
+                editor.setOption("hasCssTransforms", true);
+            }}, "Transform"],
         ]
     ]),
     optionsPanelContainer.children[1]

@@ -158,6 +158,33 @@ module.exports = {
         editor.destroy();
         done();
     },
+    "test: block cursor uses character under cursor": function() {
+        var editor = ace.edit(null, {
+            value: "abc"
+        });
+        document.body.appendChild(editor.container);
+
+        var fontMetrics = editor.renderer.$fontMetrics;
+        var lineElement = document.createElement("div");
+        lineElement.appendChild(document.createTextNode("abc"));
+        document.body.appendChild(lineElement);
+
+        fontMetrics.$findElementForScreenRow = function() {
+            return lineElement;
+        };
+        fontMetrics.textLayer.element.getBoundingClientRect = function() {
+            return {left: 0, top: 0, width: 100, height: 100};
+        };
+        editor.renderer.$blockCursor = true;
+
+        assert.equal(fontMetrics.$pixelToColumn(0, 0, 0, true), 0);
+        assert.equal(fontMetrics.$pixelToColumn(0, 0, 4, true), 0);
+        assert.equal(fontMetrics.$pixelToColumn(0, 0, 8, true), 1);
+        assert.equal(fontMetrics.$pixelToColumn(0, 0, 14, true), 2);
+
+        lineElement.remove();
+        editor.destroy();
+    },
     "test: edit template" : function() {
         var template = document.createElement("template");
         var div = document.createElement("div");

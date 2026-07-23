@@ -82,7 +82,7 @@ module.exports = {
         var m0 = 0.7, m1 = 0.1, m2 = 0.3, m3 = 0.82;
         var t1 = 100, t2 = 20;
         function testTransform() {
-            fontMetrics.config.$transformData = null; //FIXME
+            fontMetrics.config.$transformData = null;
             editor.container.style.transform = `matrix3d(
                 ${m0},  ${m2},    0,   ${H1},
                 ${m1},  ${m3},    0,   ${H2}, 

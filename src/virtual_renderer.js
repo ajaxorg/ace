@@ -1114,13 +1114,18 @@ class VirtualRenderer {
 
     $getLongestRenderedLine() {
         var max = 0;
+        var transform = this.$hasCssTransforms && this.$fontMetrics.getTransform();
         var cells = this.$textLayer.$lines.cells;
         for (var i = 0; i < cells.length; i++) {
             var lineElement = cells[i].element;
             this.$fontMetrics.$scratchRange.setStart(lineElement, 0);
             this.$fontMetrics.$scratchRange.setEnd(lineElement, lineElement.childNodes.length);
-
-            var w = this.$fontMetrics.$scratchRange.getBoundingClientRect().width;
+            
+            var rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/(this.$fontMetrics.$scratchRange.getBoundingClientRect());
+            if (this.$hasCssTransforms) {
+                rect = this.$fontMetrics.recoverRect(transform, rect) || rect;
+            }
+            var w = rect.width;
             if (w > max) max = w;
         }
         return max;

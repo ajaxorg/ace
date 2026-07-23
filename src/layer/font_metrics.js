@@ -429,6 +429,7 @@ class FontMetrics {
                 var textLength = node.nodeValue.length;
                 var maxDistance = Number.MAX_VALUE;
                 var index = -1;
+                var lastSignedDistance = undefined;
                 var value = node.nodeValue;
                 for (var j = 0; j <= textLength; j++) {
                     scratchRange.setStart(node, j);
@@ -444,14 +445,18 @@ class FontMetrics {
                     if (hasCssTransform) {
                         rect = self.recoverRect(tr, rect);
                     }
-                    var d = Math.abs(x - rect.left);
+                    var signedDistance = x - rect.left;
+                    var d = Math.abs(signedDistance);
                     if (d < maxDistance) {
                         index = j;
                         maxDistance = d;
+                        lastSignedDistance = signedDistance;
                     }
                 }
                 if (blockCursor) {
-                    // TODO 
+                    if (lastSignedDistance < 0) {
+                        index = Math.max(0, index - 1);
+                    }
                 }
                 return screenColumn = screenColumn + index;
             } else if (node.nodeType === Node.ELEMENT_NODE) {

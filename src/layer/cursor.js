@@ -191,7 +191,7 @@ class Cursor {
             this.config.lineHeight;
         var cursorWidth = this.config.fontMetrics.textWidth(pos.row, pos.column + 1) - textWidth;
 
-        return {left : cursorLeft, top : cursorTop, width : Math.abs(cursorWidth)};
+        return {left : cursorLeft, top : cursorTop, width : Math.abs(cursorWidth) || this.config.characterWidth };
     }
 
     isCursorInView(pixelPos, config) {
