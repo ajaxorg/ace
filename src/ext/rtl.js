@@ -48,6 +48,7 @@ var Editor = require("../editor").Editor;
 require("../config").defineOptions(Editor.prototype, "editor", {
     rtlText: {
         set: function(val) {
+            this.session.$bidiHandler.$rtlText = val;
             if (val) {
                 this.on("change", onChange);
                 this.on("changeSelection", onChangeSelection);

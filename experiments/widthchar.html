@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>widthchar test harness</title>
+<style>
+    body { margin: 0; font-family: sans-serif; }
+    .ed { height: 260px; border: 1px solid #999; margin: 4px 0 12px; }
+    #ed_prop { font-family: Helvetica, Arial, sans-serif; }
+    h3 { margin: 8px 0 0 4px; font-size: 13px; }
+    #results { white-space: pre; font: 11px Menlo, monospace; padding: 8px; }
+    .toolbar { padding: 4px; position: sticky; top: 0; background: #eee; z-index: 10; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+    <button onclick="window.runChecks().then(r => showResults(r))">run checks</button>
+    <label><input type="checkbox" id="cbInvisibles" onchange="setInvisibles(this.checked)">showInvisibles</label>
+    <span id="status"></span>
+</div>
+<h3>ed_mono (default monospace)</h3>
+<div id="ed_mono" class="ed"></div>
+<h3>ed_prop (Helvetica — proportional)</h3>
+<div id="ed_prop" class="ed"></div>
+<h3>ed_rtl (rtlText line-based switching)</h3>
+<div id="ed_rtl" class="ed" style="height:120px"></div>
+<h3>ed_wrap (soft wrap, limit 14)</h3>
+<div id="ed_wrap" class="ed"></div>
+<div id="results"></div>
+
+<script src="../demo/kitchen-sink/require.js"></script>
+<script>
+require.config({ paths: { "ace": "../src" } });
+
+var LINES = [
+    "hello world basic ascii",
+    "iiiiiiiimmmmmmmmWWWWWWWW",
+    "bmp ✨ star ⌚ watch ✅ done",
+    "smile 😃 face 🤦 pair",
+    "zwj 🚵‍♂️ rider 👨‍👩‍👧‍👦 family",
+    "combining ã̤n̺ ɾ̺ub̰ĩ̈ marks",
+    "中文测试 mixed English 混合",
+    "cjk　space　line",
+    "\ttab\tstops\there",
+    "ⅠⅡⅢⅣⅤⅰⅱⅲⅳⅴ roman numerals",
+    "fu️nction foo(items) {",
+    "⌽iPreview⸨⌽iPreview⸨xx⸩⌽iPreview⸨yy⸩⸩",
+    "这是一段中文文本用于测试选择功能"
+];
+
+var TAB_ROWS = {8: true}; // rows whose rendered text != doc text (skip DOM ground truth)
+
+var WRAP_LINES = [
+    "aaaa bbbb cccc dddd eeee ffff gggg",
+    "emoji 😃😃😃 zwj 👨‍👩‍👧‍👦👨‍👩‍👧‍👦 and 🚵‍♂️🚵‍♂️ wrapping here",
+    "combining ã̤n̺ ɾ̺ub̰ĩ̈ ã̤n̺ ɾ̺ub̰ĩ̈ ã̤n̺ ɾ̺ub̰ĩ̈ marks",
+    "中文测试混合中文测试混合中文测试混合中文测试",
+    "nospacesatall👨‍👩‍👧‍👦rightthroughthecluster",
+    "עברית ארוכה מאוד שנמשכת ונמשכת עוד ועוד מילים בעברית"
+];
+
+var editors = {};
+var rtlEditor, wrapEditor;
+
+require(["ace/ace", "ace/ext/rtl"], function (ace) {
+    ["ed_mono", "ed_prop"].forEach(function (id) {
+        var editor = ace.edit(id, {
+            value: LINES.join("\n"),
+            showPrintMargin: false,
+            highlightActiveLine: false,
+            fontSize: 14
+        });
+        editor.renderer.$cursorLayer.setBlinking(false);
+        editor.renderer.$cursorLayer.setSmoothBlinking(false);
+        editors[id] = editor;
+    });
+    rtlEditor = ace.edit("ed_rtl", {
+        value: "שלום עולם\nabc def",
+        showPrintMargin: false,
+        highlightActiveLine: false,
+        fontSize: 14,
+        rtlText: true
+    });
+    window.rtlEditor = rtlEditor;
+    wrapEditor = ace.edit("ed_wrap", {
+        value: WRAP_LINES.join("\n"),
+        showPrintMargin: false,
+        highlightActiveLine: false,
+        fontSize: 14,
+        wrap: true
+    });
+    wrapEditor.session.setWrapLimitRange(14, 14);
+    window.wrapEditor = wrapEditor;
+    window.editors = editors;
+    document.getElementById("status").textContent = "ready";
+    window.aceReady = true;
+});
+
+function setInvisibles(on) {
+    Object.values(editors).forEach(e => e.setOption("showInvisibles", on));
+}
+
+var segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
+// code-unit offsets of grapheme boundaries, including 0 and line.length
+function graphemeBoundaries(line) {
+    var offsets = [0];
+    for (var s of segmenter.segment(line))
+        offsets.push(s.index + s.segment.length);
+    return offsets;
+}
+
+// find the rendered line element for a doc row (no wrap in this harness)
+function lineElementForRow(editor, row) {
+    var cells = editor.renderer.$textLayer.$lines.cells;
+    for (var i = 0; i < cells.length; i++) {
+        if (cells[i].row === row) return cells[i].element;
+    }
+    return null;
+}
+
+// ground truth: client rect left of the caret boundary at code-unit `col`
+// walks rendered text nodes; only valid when rendered text == doc text
+function glyphBoundaryLeft(lineEl, col) {
+    var walker = document.createTreeWalker(lineEl, NodeFilter.SHOW_TEXT, null);
+    var range = document.createRange();
+    var count = 0, node, last = null;
+    while ((node = walker.nextNode())) {
+        var len = node.nodeValue.length;
+        if (count + len >= col) {
+            range.setStart(node, col - count);
+            range.setEnd(node, col - count);
+            return range.getBoundingClientRect().left;
+        }
+        count += len;
+        last = node;
+    }
+    if (last) {
+        range.setStart(last, last.nodeValue.length);
+        range.setEnd(last, last.nodeValue.length);
+        return range.getBoundingClientRect().left;
+    }
+    return null;
+}
+
+function renderedText(lineEl) {
+    return lineEl ? lineEl.textContent : null;
+}
+
+window.runChecks = async function () {
+    var out = { failures: [], counts: {}, meta: {} };
+    function record(test, ed, row, col, expected, actual, tol) {
+        out.counts[test] = out.counts[test] || { pass: 0, fail: 0 };
+        var delta = (typeof expected === "number" && typeof actual === "number")
+            ? Math.abs(expected - actual) : (expected === actual ? 0 : Infinity);
+        if (delta <= tol) out.counts[test].pass++;
+        else {
+            out.counts[test].fail++;
+            out.failures.push({ test: test, ed: ed, row: row, col: col,
+                expected: expected, actual: actual,
+                delta: typeof delta === "number" ? +delta.toFixed(2) : delta });
+        }
+    }
+
+    for (var id in editors) {
+        var editor = editors[id];
+        editor.focus();
+        var renderer = editor.renderer;
+        var session = editor.session;
+
+        for (var row = 0; row < LINES.length; row++) {
+            var line = LINES[row];
+            var bounds = graphemeBoundaries(line);
+
+            // ---- Test A: cursor DOM element sits on the glyph boundary ----
+            if (!TAB_ROWS[row]) {
+                for (var bi = 0; bi < bounds.length; bi++) {
+                    var col = bounds[bi];
+                    editor.moveCursorTo(row, col);
+                    editor.clearSelection();
+                    renderer.updateFull(true);
+                    var lineEl = lineElementForRow(editor, row);
+                    if (!lineEl) continue;
+                    if (renderedText(lineEl) !== line) {
+                        record("renderedTextMatches", id, row, -1, line, renderedText(lineEl), 0);
+                        break; // rendering is transformed; skip boundary checks for row
+                    }
+                    var truth = glyphBoundaryLeft(lineEl, col);
+                    var cRect = renderer.$cursorLayer.cursor.getBoundingClientRect();
+                    record("cursorAtGlyphBoundary", id, row, col, truth, cRect.left, 1.5);
+                }
+            }
+
+            // ---- Test H: 1 grapheme = 1 screen column ----
+            if (!TAB_ROWS[row]) {
+                var screenCol = editor.session.documentToScreenPosition(row, line.length).column;
+                record("graphemeColumns", id, row, line.length, bounds.length - 1, screenCol, 0);
+            }
+
+            // ---- Test B: textToScreen -> screenToText round trip ----
+            for (var bi = 0; bi < bounds.length; bi++) {
+                var col = bounds[bi];
+                editor.moveCursorTo(row, col);
+                editor.clearSelection();
+                renderer.updateFull(true);
+                var pagePos = renderer.textToScreenCoordinates(row, col);
+                var back = renderer.screenToTextCoordinates(pagePos.pageX, pagePos.pageY + renderer.lineHeight / 2);
+                record("roundTripRow", id, row, col, row, back.row, 0);
+                record("roundTripCol", id, row, col, col, back.column, 0);
+            }
+
+            // ---- Test C: arrow-right walk lands on grapheme boundaries, x increases ----
+            editor.moveCursorTo(row, 0);
+            editor.clearSelection();
+            renderer.updateFull(true);
+            var prevX = renderer.$cursorLayer.cursor.getBoundingClientRect().left;
+            var visited = [0];
+            for (var step = 0; step < line.length + 2; step++) {
+                editor.navigateRight();
+                renderer.updateFull(true);
+                var c = editor.getCursorPosition();
+                if (c.row !== row) break;
+                if (c.column === visited[visited.length - 1]) break; // EOL
+                visited.push(c.column);
+                var x = renderer.$cursorLayer.cursor.getBoundingClientRect().left;
+                if (!TAB_ROWS[row]) {
+                    record("arrowWalkXIncreases", id, row, c.column,
+                        true, x > prevX - 0.5, 0);
+                }
+                prevX = x;
+            }
+            record("arrowWalkStops", id, row, -1,
+                JSON.stringify(bounds), JSON.stringify(visited), 0);
+
+            // ---- Test D: selection marker covers the full line text ----
+            if (!TAB_ROWS[row]) {
+                editor.selection.setRange({
+                    start: {row: row, column: 0},
+                    end: {row: row, column: line.length}
+                });
+                renderer.updateFull(true);
+                var lineEl = lineElementForRow(editor, row);
+                if (lineEl && renderedText(lineEl) === line) {
+                    var textLeft = glyphBoundaryLeft(lineEl, 0);
+                    var textRight = glyphBoundaryLeft(lineEl, line.length);
+                    var markers = editor.container.querySelectorAll(".ace_marker-layer .ace_selection");
+                    var mLeft = Infinity, mRight = -Infinity;
+                    markers.forEach(function (m) {
+                        var r = m.getBoundingClientRect();
+                        if (Math.abs(r.top - lineEl.getBoundingClientRect().top) < renderer.lineHeight) {
+                            mLeft = Math.min(mLeft, r.left);
+                            mRight = Math.max(mRight, r.right);
+                        }
+                    });
+                    record("selectionCoversLineLeft", id, row, 0, textLeft, mLeft, 2);
+                    record("selectionCoversLineRight", id, row, line.length, textRight, mRight, 2);
+                }
+                editor.clearSelection();
+            }
+        }
+    }
+
+    // ---- Test G: soft wrap never splits inside a grapheme cluster ----
+    {
+        let wed = wrapEditor;
+        let session = wed.session;
+        wed.renderer.updateFull(true);
+        for (let row = 0; row < WRAP_LINES.length; row++) {
+            let line = WRAP_LINES[row];
+            let bounds = graphemeBoundaries(line);
+            let boundSet = {};
+            bounds.forEach(function (b) { boundSet[b] = true; });
+            let splits = session.$wrapData[row] || [];
+            let badSplits = splits.filter(function (docCol) { return !boundSet[docCol]; });
+            record("wrapSplitsOnGraphemeBoundary", "ed_wrap", row, -1, "[]", JSON.stringify(badSplits), 0);
+
+            // caret round trip at every grapheme boundary in wrap mode
+            for (let bi = 0; bi < bounds.length; bi++) {
+                let col = bounds[bi];
+                wed.moveCursorTo(row, col);
+                wed.clearSelection();
+                wed.renderer.updateFull(true);
+                let pagePos = wed.renderer.textToScreenCoordinates(row, col);
+                let back = wed.renderer.screenToTextCoordinates(pagePos.pageX, pagePos.pageY + wed.renderer.lineHeight / 2);
+                record("wrapRoundTripRow", "ed_wrap", row, col, row, back.row, 0);
+                record("wrapRoundTripCol", "ed_wrap", row, col, col, back.column, 0);
+            }
+
+            // arrow walk must visit every grapheme boundary (across wrapped rows)
+            wed.moveCursorTo(row, 0);
+            wed.clearSelection();
+            let visited = [0];
+            for (let step = 0; step < line.length + 2; step++) {
+                wed.navigateRight();
+                let c = wed.getCursorPosition();
+                if (c.row !== row) break;
+                if (c.column === visited[visited.length - 1]) break;
+                visited.push(c.column);
+            }
+            record("wrapArrowWalkStops", "ed_wrap", row, -1,
+                JSON.stringify(bounds), JSON.stringify(visited), 0);
+        }
+    }
+
+    // ---- Test E (issue 5423): Enter on forced-RTL line must not render a red invalid dot ----
+    var ed = rtlEditor;
+    // issue 5423 repro state: kitchen-sink with both RTL checkboxes enabled
+    ed.setOption("rtl", true);      // forces $isRtl (disables rtlText as a side effect)
+    ed.setOption("rtlText", true);  // re-enable line-based switching handlers
+    ed.setValue("שלום עולם", -1);
+    ed.moveCursorTo(0, 9);
+    ed.clearSelection();
+    ed.insert("\n");
+    ed.insert("abc");
+    ed.renderer.updateFull(true);
+    var hasRLE = ed.session.getLine(1).charAt(0) === "‫";
+    record("rtlEnterInsertsRLE", "ed_rtl", 1, -1, true, hasRLE, 0);
+    var invalid = ed.container.querySelectorAll(".ace_text-layer .ace_invalid");
+    record("rtlEnterNoRedDot", "ed_rtl", 1, -1, 0, invalid.length, 0);
+
+    // ---- Test F (issue 5436): last visible char on RTL line can be backspaced away ----
+    // line 1 is now "‫abc"; put cursor at end and backspace 3 times
+    ed.moveCursorTo(1, ed.session.getLine(1).length);
+    ed.clearSelection();
+    ed.execCommand("backspace");
+    ed.execCommand("backspace");
+    ed.execCommand("backspace");
+    ed.renderer.updateFull(true);
+    var line1Visible = ed.session.getLine(1).replace(/‫/g, "");
+    record("rtlBackspaceDeletes", "ed_rtl", 1, -1, "", line1Visible, 0);
+    ed.setOption("rtl", false);
+    ed.setOption("rtlText", true);
+    ed.setValue("שלום עולם\nabc def", -1);
+
+    out.meta.userAgent = navigator.userAgent;
+    return out;
+};
+
+function showResults(r) {
+    var lines = [];
+    for (var t in r.counts)
+        lines.push(t + ": " + r.counts[t].pass + " pass, " + r.counts[t].fail + " fail");
+    lines.push("");
+    r.failures.slice(0, 80).forEach(function (f) {
+        lines.push(JSON.stringify(f));
+    });
+    document.getElementById("results").textContent = lines.join("\n");
+    return r;
+}
+window.showResults = showResults;
+</script>
+</body>
+</html>

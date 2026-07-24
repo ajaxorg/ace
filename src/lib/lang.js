@@ -207,3 +207,139 @@ exports.supportsLookbehind = function () {
 exports.skipEmptyMatch = function(line, last, supportsUnicodeFlag) {
     return supportsUnicodeFlag && line.codePointAt(last) > 0xffff ? 2 : 1;
 };
+
+/*global Intl*/
+var clusterRe;
+try {
+    // marks, ZWJ, variation selectors, astral code points, conjoining jamo,
+    // prepend characters (arabic number signs, malayalam dot reph) and the
+    // spacing marks segmenters attach to a base (thai/lao AM);
+    // with the u flag paired surrogates match as code points, so astral
+    // chars need the explicit \u{10000}-\u{10FFFF} range
+    clusterRe = new RegExp("[\\p{M}\\u200C\\u200D\\uFE00-\\uFE0F\\u{10000}-\\u{10FFFF}\\u1100-\\u11FF\\uA960-\\uA97F\\uD7B0-\\uD7FF"
+        + "\\u0600-\\u0605\\u06DD\\u070F\\u0890\\u0891\\u08E2\\u0D4E\\u0E33\\u0EB3\\uFF9E\\uFF9F]", "u");
+} catch (e) {
+    clusterRe = /[\u0300-\uFFFF]/;
+}
+
+/**
+ * Quick test whether `text` may contain grapheme clusters spanning more than
+ * one code unit. False guarantees every code unit is its own cluster.
+ * @param {string} text
+ * @returns {boolean}
+ */
+exports.mayContainGraphemeClusters = function(text) {
+    return clusterRe.test(text);
+};
+
+var graphemeSegmenter;
+function getSegmenter() {
+    if (graphemeSegmenter === undefined) {
+        graphemeSegmenter = typeof Intl == "object" && Intl["Segmenter"]
+            ? new Intl["Segmenter"](undefined, {granularity: "grapheme"}) : null;
+    }
+    return graphemeSegmenter;
+}
+
+/**
+ * Returns the [start, end) code unit offsets of the grapheme cluster containing
+ * `column`, or null if `Intl.Segmenter` is unavailable or `column` is outside the text.
+ * @param {string} text
+ * @param {number} column
+ * @returns {{start: number, end: number} | null}
+ */
+exports.getGraphemeCluster = function(text, column) {
+    var segmenter = getSegmenter();
+    if (!segmenter) return null;
+    var segment = segmenter.segment(text).containing(column);
+    if (!segment) return null;
+    return {start: segment.index, end: segment.index + segment.segment.length};
+};
+
+/**
+ * Calls `callback(start, end)` for each grapheme cluster of `text` in order,
+ * where [start, end) are code unit offsets. Iteration stops early if the
+ * callback returns `false`. Lazy: segmentation cost is proportional to how
+ * far the iteration gets, not to text length. Falls back to surrogate pair
+ * boundaries when `Intl.Segmenter` is unavailable.
+ * @param {string} text
+ * @param {(start: number, end: number) => boolean|void} callback
+ */
+exports.forEachGrapheme = function(text, callback) {
+    var segmenter = getSegmenter();
+    if (segmenter) {
+        var iterator = segmenter.segment(text)[Symbol.iterator]();
+        var step;
+        while (!(step = iterator.next()).done) {
+            if (callback(step.value.index, step.value.index + step.value.segment.length) === false)
+                return;
+        }
+    } else {
+        for (var i = 0; i < text.length; i++) {
+            var start = i;
+            if (/[\uD800-\uDBFF]/.test(text.charAt(i)) && /[\uDC00-\uDFFF]/.test(text.charAt(i + 1)))
+                i++;
+            if (callback(start, i + 1) === false)
+                return;
+        }
+    }
+};
+
+/**
+ * Returns the number of grapheme clusters in `text` without materializing
+ * a boundaries array.
+ * @param {string} text
+ * @returns {number}
+ */
+exports.countGraphemes = function(text) {
+    var segmenter = getSegmenter();
+    var count = 0;
+    if (segmenter) {
+        var iterator = segmenter.segment(text)[Symbol.iterator]();
+        while (!iterator.next().done)
+            count++;
+    } else {
+        for (var i = 0; i < text.length; i++) {
+            if (/[\uD800-\uDBFF]/.test(text.charAt(i)) && /[\uDC00-\uDFFF]/.test(text.charAt(i + 1)))
+                i++;
+            count++;
+        }
+    }
+    return count;
+};
+
+// memo of the most recent segmentations: cursor rendering and doc<->screen
+// mapping repeatedly segment content-equal line prefixes
+var boundariesCache = new Map();
+var BOUNDARIES_CACHE_SIZE = 8;
+
+/**
+ * Returns the grapheme cluster boundaries of `text` as code unit offsets,
+ * including 0 and text.length. Falls back to surrogate pair boundaries
+ * when `Intl.Segmenter` is unavailable.
+ * Callers must not mutate the returned array; it may be cached.
+ * @param {string} text
+ * @returns {number[]}
+ */
+exports.getGraphemeBoundaries = function(text) {
+    var cached = boundariesCache.get(text);
+    if (cached) return cached;
+    var boundaries = [0];
+    var segmenter = getSegmenter();
+    if (segmenter) {
+        var iterator = segmenter.segment(text)[Symbol.iterator]();
+        var step;
+        while (!(step = iterator.next()).done)
+            boundaries.push(step.value.index + step.value.segment.length);
+    } else {
+        for (var i = 0; i < text.length; i++) {
+            if (/[\uD800-\uDBFF]/.test(text.charAt(i)) && /[\uDC00-\uDFFF]/.test(text.charAt(i + 1)))
+                i++;
+            boundaries.push(i + 1);
+        }
+    }
+    if (boundariesCache.size >= BOUNDARIES_CACHE_SIZE)
+        boundariesCache.delete(boundariesCache.keys().next().value);
+    boundariesCache.set(text, boundaries);
+    return boundaries;
+};

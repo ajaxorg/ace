@@ -38,6 +38,26 @@ module.exports = {
         assert.position(selection.getCursor(), 0, 0);
     },
 
+    "test: moveCursorTo snaps to grapheme cluster boundaries" : function() {
+        // 👨‍👩‍👧‍👦 spans doc columns 1..12
+        var session = new EditSession("a\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466}b");
+        var selection = session.getSelection();
+
+        // moving into the middle of the cluster snaps to its end
+        selection.moveCursorTo(0, 5);
+        assert.position(selection.getCursor(), 0, 12);
+
+        // stepping left from just past the cluster snaps to its start
+        selection.moveCursorTo(0, 13);
+        selection.moveCursorTo(0, 12);
+        selection.moveCursorTo(0, 11);
+        assert.position(selection.getCursor(), 0, 1);
+
+        // boundaries themselves are untouched
+        selection.moveCursorTo(0, 1);
+        assert.position(selection.getCursor(), 0, 1);
+    },
+
     "test: move selection lead to end of file" : function() {
         var session = this.createSession(200, 10);
         var selection = session.getSelection();

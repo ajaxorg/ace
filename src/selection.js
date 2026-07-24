@@ -770,8 +770,15 @@ class Selection {
 
         this.$keepDesiredColumnOnChange = true;
         var line = this.session.getLine(row);
-        // do not allow putting cursor in the middle of surrogate pairs
-        if (/[\uDC00-\uDFFF]/.test(line.charAt(column)) && line.charAt(column - 1)) {
+        // do not allow putting cursor in the middle of grapheme clusters
+        // (surrogate pairs, combining marks, emoji sequences)
+        var cluster = lang.getGraphemeCluster(line, column);
+        if (cluster && cluster.start < column && column < cluster.end) {
+            if (this.lead.row == row && this.lead.column == column + 1)
+                column = cluster.start;
+            else
+                column = cluster.end;
+        } else if (!cluster && /[\uDC00-\uDFFF]/.test(line.charAt(column)) && line.charAt(column - 1)) {
             if (this.lead.row == row && this.lead.column == column + 1)
                 column = column - 1;
             else

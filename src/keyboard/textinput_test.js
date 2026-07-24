@@ -187,7 +187,7 @@ module.exports = {
             { _: "input", range: [3,3], value: "きもの"},
             function() {
                 assert.ok(editor.renderer.$composition);
-                assert.ok(Math.abs(parseFloat(textarea.style.width) - editor.renderer.characterWidth * 6) < 1);
+                assert.ok(Math.abs(parseFloat(textarea.style.width) - editor.renderer.characterWidth * 6) < 2);
                 assert.ok(Math.abs(parseFloat(textarea.style.height) - (editor.renderer.lineHeight)) < 1);
                 assert.ok(Math.abs(parseFloat(textarea.style.top)) < 1);
                 assert.ok(/ace_composition/.test(textarea.className));

@@ -350,7 +350,15 @@ class Text {
 
     $renderToken(parent, screenColumn, token, value) {
         var self = this;
-        var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069\u2060\u2061\u2062\u2063\u2064\u206A\u206B\u206B\u206C\u206D\u206E\u206F]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
+        // \u200D (zero width joiner) is excluded to keep emoji sequences intact
+        var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200C\u200E\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069\u2060\u2061\u2062\u2063\u2064\u206A\u206B\u206B\u206C\u206D\u206E\u206F]+)|(\u3000+)/g;
+
+        // screen columns count grapheme clusters, not code units;
+        // segment the value at most once and reuse for tab stop lookups
+        var boundaries = lang.mayContainGraphemeClusters(value)
+            ? lang.getGraphemeBoundaries(value) : null;
+        var screenLength = boundaries ? boundaries.length - 1 : value.length;
+        var boundaryIndex = 0;
 
         var valueFragment = this.dom.createFragment(this.element);
 
@@ -361,7 +369,6 @@ class Text {
             var simpleSpace = m[2];
             var controlCharacter = m[3];
             var cjkSpace = m[4];
-            var cjk = m[5];
 
             if (!self.showSpaces && simpleSpace)
                 continue;
@@ -375,7 +382,15 @@ class Text {
             }
 
             if (tab) {
-                var tabSize = self.session.getScreenTabSize(screenColumn + m.index);
+                var columnsBefore = m.index;
+                if (boundaries) {
+                    // matches arrive in ascending order and a tab is always its
+                    // own cluster, so a monotonic cursor into boundaries suffices
+                    while (boundaries[boundaryIndex] < m.index)
+                        boundaryIndex++;
+                    columnsBefore = boundaryIndex;
+                }
+                var tabSize = self.session.getScreenTabSize(screenColumn + columnsBefore);
                 var text = self.$tabStrings[tabSize].cloneNode(true);
                 text["charCount"] = 1;
                 valueFragment.appendChild(text);
@@ -390,26 +405,30 @@ class Text {
                     valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
             } else if (controlCharacter) {
-                var span = this.dom.createElement("span");
-                span.className = "ace_invisible ace_invisible_space ace_invalid";
-                span.textContent = lang.stringRepeat(self.SPACE_CHAR, controlCharacter.length);
-                valueFragment.appendChild(span);
+                var bidiHandler = self.session.$bidiHandler;
+                // line-start RLE markers managed by the rtl extension are legitimate;
+                // render them as plain text instead of invalid dots (issue #5423).
+                // This hides a smuggled RLE on an LTR line too, but the rtl
+                // extension right-aligns and reverses any RLE-prefixed line, so
+                // the manipulation stays clearly visible.
+                if (controlCharacter == "\u202B" && screenColumn + m.index === 0 && bidiHandler
+                    && (bidiHandler.$isRtl || bidiHandler.$rtlText)) {
+                    valueFragment.appendChild(this.dom.createTextNode(controlCharacter, this.element));
+                } else {
+                    var span = this.dom.createElement("span");
+                    span.className = "ace_invisible ace_invisible_space ace_invalid";
+                    span.textContent = lang.stringRepeat(self.SPACE_CHAR, controlCharacter.length);
+                    valueFragment.appendChild(span);
+                }
             } else if (cjkSpace) {
-                // U+3000 is both invisible AND full-width, so must be handled uniquely
-                screenColumn += 1;
-
-                var span = this.dom.createElement("span");
-                span.style.width = (self.config.characterWidth * 2) + "px";
-                span.className = self.showSpaces ? "ace_cjk ace_invisible ace_invisible_space" : "ace_cjk";
-                span.textContent = self.showSpaces ? self.SPACE_CHAR : cjkSpace;
-                valueFragment.appendChild(span);
-            } else if (cjk) {
-                screenColumn += 1;
-                var span = this.dom.createElement("span");
-                span.style.width = (self.config.characterWidth * 2) + "px";
-                span.className = "ace_cjk";
-                span.textContent = cjk;
-                valueFragment.appendChild(span);
+                if (self.showSpaces) {
+                    var span = this.dom.createElement("span");
+                    span.className = "ace_invisible ace_invisible_space";
+                    span.textContent = lang.stringRepeat(self.CJK_SPACE_CHAR, cjkSpace.length);
+                    valueFragment.appendChild(span);
+                } else {
+                    valueFragment.appendChild(this.dom.createTextNode(cjkSpace, this.element));
+                }
             }
         }
 
@@ -432,7 +451,7 @@ class Text {
             parent.appendChild(valueFragment);
         }
 
-        return screenColumn + value.length;
+        return screenColumn + screenLength;
     }
 
     renderIndentGuide(parent, value, max) {
@@ -662,6 +681,50 @@ class Text {
         parent.appendChild(overflowEl);
     }
 
+    /**
+     * Moves code units across token boundaries so that no boundary falls
+     * inside a grapheme cluster (a tokenizer may split e.g. keycap emoji
+     * "1️⃣" after the ascii digit). Returns the original array
+     * when nothing needs to change; affected tokens are copied because the
+     * input comes from the session's token cache.
+     * @param {import("../../ace-internal").Ace.Token[]} tokens
+     */
+    $alignTokensToClusters(tokens) {
+        var line = "";
+        for (var i = 0; i < tokens.length; i++)
+            line += tokens[i].value;
+        if (!lang.mayContainGraphemeClusters(line))
+            return tokens;
+
+        var boundaries = lang.getGraphemeBoundaries(line);
+        var boundarySet = Object.create(null);
+        for (var i = 0; i < boundaries.length; i++)
+            boundarySet[boundaries[i]] = true;
+
+        var end = 0, misaligned = false;
+        for (var i = 0; i < tokens.length - 1; i++) {
+            end += tokens[i].value.length;
+            if (!boundarySet[end]) { misaligned = true; break; }
+        }
+        if (!misaligned) return tokens;
+
+        // rebuild, snapping each token end back to the nearest cluster
+        // boundary; the cluster's units all move into the following token
+        var result = [];
+        var start = 0;
+        end = 0;
+        for (var i = 0; i < tokens.length; i++) {
+            end += tokens[i].value.length;
+            var cut = end;
+            if (i === tokens.length - 1) cut = line.length;
+            else while (cut > start && !boundarySet[cut]) cut--;
+            if (cut > start)
+                result.push({type: tokens[i].type, value: line.slice(start, cut)});
+            start = cut;
+        }
+        return result;
+    }
+
     // row is either first row of foldline or not in fold
     $renderLine(parent, row, foldLine) {
         if (!foldLine && foldLine != false)
@@ -671,6 +734,8 @@ class Text {
             var tokens = this.$getFoldLineTokens(row, foldLine);
         else
             var tokens = this.session.getTokens(row);
+
+        tokens = this.$alignTokensToClusters(tokens);
 
         var lastLineEl = parent;
         if (tokens.length) {
@@ -785,6 +850,7 @@ Text.prototype.EOL_CHAR_CRLF = "\xa4";
 Text.prototype.EOL_CHAR = Text.prototype.EOL_CHAR_LF;
 Text.prototype.TAB_CHAR = "\u2014"; //"\u21E5";
 Text.prototype.SPACE_CHAR = "\xB7";
+Text.prototype.CJK_SPACE_CHAR = "\u30FB";
 Text.prototype.$padding = 0;
 Text.prototype.MAX_LINE_LENGTH = 10000;
 Text.prototype.showInvisibles = false;

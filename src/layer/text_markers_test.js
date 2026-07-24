@@ -152,10 +152,7 @@ module.exports = {
         });
         assert.equal(markedText, "试function测");
 
-        var result = normalize(`<span class="ace_identifier"><span class="ace_cjk" style="width: 20px;">测</span>
-            <span class="ace_cjk cjk-marker" style="width: 20px;">试</span><span class=" cjk-marker">function</span>
-            <span class="ace_cjk cjk-marker" style="width: 20px;">测</span>
-            <span class="ace_cjk" style="width: 20px;">试</span></span>`);
+        var result = normalize(`<spanclass="ace_identifier">测<spanclass="cjk-marker">试function测</span>试</span>`);
         var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
     },

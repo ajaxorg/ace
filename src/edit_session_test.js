@@ -207,7 +207,7 @@ module.exports = {
 
         assert.equal(session.getScreenLastRowColumn(0), 4);
         assert.equal(session.getScreenLastRowColumn(1), 10);
-        assert.equal(session.getScreenLastRowColumn(2), 5);
+        assert.equal(session.getScreenLastRowColumn(2), 3);
     },
 
     "test: convert document to screen coordinates" : function() {
@@ -252,7 +252,7 @@ module.exports = {
         assert.position(session.documentToScreenPosition(0, 3), 0, 3);
         assert.position(session.documentToScreenPosition(1, 3), 1, 4);
         assert.position(session.documentToScreenPosition(1, 4), 1, 8);
-        assert.position(session.documentToScreenPosition(2, 2), 2, 4);
+        assert.position(session.documentToScreenPosition(2, 2), 2, 2);
     },
 
     "test: documentToScreen with soft wrap": function() {
@@ -326,9 +326,9 @@ module.exports = {
         session.setUseWrapMode(true);
         session.adjustWrapLimit(80);
 
-        assert.position(session.screenToDocumentPosition(0, 1), 0, 0);
-        assert.position(session.screenToDocumentPosition(0, 2), 0, 1);
-        assert.position(session.screenToDocumentPosition(0, 3), 0, 2);
+        assert.position(session.screenToDocumentPosition(0, 1), 0, 1);
+        assert.position(session.screenToDocumentPosition(0, 2), 0, 2);
+        assert.position(session.screenToDocumentPosition(0, 3), 0, 3);
         assert.position(session.screenToDocumentPosition(0, 4), 0, 3);
         assert.position(session.screenToDocumentPosition(0, 5), 0, 3);
     },
@@ -414,6 +414,56 @@ module.exports = {
         computeAndAssert("\t\tfoo bar fooooooooooobooooooo", [6, 10, 16, 22, 28]);
         computeAndAssert("\t\t\tfoo bar fooooooooooobooooooo", [3, 7, 11, 17, 23, 29]);
         computeAndAssert("\tfoo \t \t   \t \t bar", [6, 12]); // 14
+    },
+
+    "test: wrapLine split never breaks grapheme clusters" : function() {
+        function computeSplits(line, wrapLimit) {
+            var tokens = EditSession.prototype.$getDisplayTokens(line);
+            return EditSession.prototype.$computeWrapSplits(tokens, wrapLimit, 4);
+        }
+        EditSession.prototype.$wrapAsCode = true;
+        EditSession.prototype.$indentedSoftWrap = false;
+
+        var family = "\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466}"; // 👨‍👩‍👧‍👦, 11 code units
+        var line = "ab " + family + " cd";
+        for (var wrapLimit = 2; wrapLimit <= 14; wrapLimit++) {
+            var splits = computeSplits(line, wrapLimit);
+            splits.forEach(function(col) {
+                assert.ok(col <= 3 || col >= 3 + family.length,
+                    "wrapLimit " + wrapLimit + " split at " + col + " inside cluster");
+            });
+        }
+
+        // combining marks stay attached to their base character;
+        // each cluster occupies one screen column, so three clusters
+        // at wrapLimit 2 wrap once, after the second cluster
+        var splits = computeSplits("a\u0300e\u0301o\u0302", 2);
+        assert.equal(splits.join(","), "4");
+
+        // surrogate pairs
+        splits = computeSplits("\u{1F600}\u{1F600}\u{1F600}", 2);
+        assert.equal(splits.join(","), "4");
+
+        // full width chars wider than the wrap limit are placed whole
+        splits = computeSplits("\u6F22\u6F22\u6F22", 1);
+        assert.equal(splits.join(","), "1,2");
+        // trailing wide cluster ends the line without further splits
+        splits = computeSplits("a\u6F22", 1);
+        assert.equal(splits.join(","), "1");
+    },
+
+    "test: getStringScreenWidth counts grapheme clusters" : function() {
+        var session = new EditSession("");
+        session.setTabSize(4);
+        var w = session.$getStringScreenWidth.bind(session);
+
+        // cluster-per-column without tabs (fast path)
+        assert.equal(w("\u{1F600}b\u{1F600}")[0], 3);
+        // tab stops computed from grapheme columns (full walk)
+        assert.equal(w("\u{1F600}\tx").join(","), [5, 4].join(","));
+        assert.equal(w("a\u0300\tb").join(","), [5, 4].join(","));
+        // bounded walk exits early at the overflowing cluster
+        assert.equal(w("ab\u{1F600}cd", 2).join(","), [3, 2].join(","));
     },
 
     "test get longest line" : function() {
