@@ -190,7 +190,7 @@ var supportedModes = {
     Nginx:       ["nginx|conf"],
     Nim:         ["nim"],
     Nix:         ["nix"],
-    NSIS:        ["nsi|nsh"],
+    NSIS:        ["nsi|nsh|nsdinc"],
     Nunjucks:    ["nunjucks|nunjs|nj|njk"],
     ObjectiveC:  ["m|mm"],
     OCaml:       ["ml|mli"],
