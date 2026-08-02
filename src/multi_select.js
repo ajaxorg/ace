@@ -152,7 +152,8 @@ var EditSession = require("./edit_session").EditSession;
 
         for (var i = removed.length; i--; ) {
             var index = this.ranges.indexOf(removed[i]);
-            this.ranges.splice(index, 1);
+            if (index != -1)
+                this.ranges.splice(index, 1);
         }
 
         this._signal("removeRange", {ranges: removed});
@@ -499,35 +500,37 @@ var Editor = require("./editor").Editor;
         selection._eventRegistry = {};
         var tmpSel = new Selection(session);
         this.inVirtualSelectionMode = true;
-        for (var i = ranges.length; i--;) {
-            if ($byLines) {
-                while (i > 0 && ranges[i].start.row == ranges[i - 1].end.row)
-                    i--;
+        try {
+            for (var i = ranges.length; i--;) {
+                if ($byLines) {
+                    while (i > 0 && ranges[i].start.row == ranges[i - 1].end.row)
+                        i--;
+                }
+                tmpSel.fromOrientedRange(ranges[i]);
+                tmpSel.index = i;
+                this.selection = session.selection = tmpSel;
+                var cmdResult = cmd.exec ? cmd.exec(this, args || {}) : cmd(this, args || {});
+                if (!result && cmdResult !== undefined)
+                    result = cmdResult;
+                tmpSel.toOrientedRange(ranges[i]);
             }
-            tmpSel.fromOrientedRange(ranges[i]);
-            tmpSel.index = i;
-            this.selection = session.selection = tmpSel;
-            var cmdResult = cmd.exec ? cmd.exec(this, args || {}) : cmd(this, args || {});
-            if (!result && cmdResult !== undefined)
-                result = cmdResult;
-            tmpSel.toOrientedRange(ranges[i]);
+            tmpSel.detach();
+        } finally {
+            this.selection = session.selection = selection;
+            this.inVirtualSelectionMode = false;
+            selection._eventRegistry = reg;
+            selection.mergeOverlappingRanges();
+            if (selection.ranges[0])
+                selection.fromOrientedRange(selection.ranges[0]);
+
+            var anim = this.renderer.$scrollAnimation;
+            this.onCursorChange();
+            this.onSelectionChange();
+            if (anim && anim.from == anim.to)
+                this.renderer.animateScrolling(anim.from);
+
+            return result;
         }
-        tmpSel.detach();
-
-        this.selection = session.selection = selection;
-        this.inVirtualSelectionMode = false;
-        selection._eventRegistry = reg;
-        selection.mergeOverlappingRanges();
-        if (selection.ranges[0])
-            selection.fromOrientedRange(selection.ranges[0]);
-
-        var anim = this.renderer.$scrollAnimation;
-        this.onCursorChange();
-        this.onSelectionChange();
-        if (anim && anim.from == anim.to)
-            this.renderer.animateScrolling(anim.from);
-
-        return result;
     };
 
     /**
@@ -570,6 +573,7 @@ var Editor = require("./editor").Editor;
     this.$checkMultiselectChange = function(e, anchor) {
         if (this.inMultiSelectMode && !this.inVirtualSelectionMode) {
             var range = this.multiSelect.ranges[0];
+            if (!range) return;
             if (this.multiSelect.isEmpty() && anchor == this.multiSelect.anchor)
                 return;
             var pos = anchor == this.multiSelect.anchor
