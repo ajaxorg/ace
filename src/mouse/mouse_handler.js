@@ -75,14 +75,14 @@ class MouseHandler {
             var range = editor.session.selection.getRange();
             var renderer = editor.renderer;
 
+            if (renderer.scroller.style.cursor == "crosshair") return;
+
             if (!range.isEmpty() && range.insideStart(character.row, character.column)) {
                 renderer.setCursorStyle("default");
             } else {
                 renderer.setCursorStyle("");
             }
-
-        }, //@ts-expect-error TODO: seems mistyping - should be boolean
-            editor);
+        });
     }
 
     onMouseEvent(name, e) {
