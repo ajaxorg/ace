@@ -54,10 +54,18 @@ exports.getCompletionPrefix = function (editor) {
     var prefix;
     editor.completers.forEach(function(completer) {
         if (completer.identifierRegexps) {
-            completer.identifierRegexps.forEach(function(identifierRegex) {
-                if (!prefix && identifierRegex)
-                    prefix = this.retrievePrecedingIdentifier(line, pos.column, identifierRegex);
-            }.bind(this));
+            var identifierRegexps;
+            if (completer.identifierRegexps instanceof Function) {
+                identifierRegexps = completer.identifierRegexps(editor);
+            } else {
+                identifierRegexps = completer.identifierRegexps;
+            }
+            if (identifierRegexps && Array.isArray(identifierRegexps)) {
+                identifierRegexps.forEach(function(identifierRegex) {
+                    if (!prefix && identifierRegex)
+                        prefix = this.retrievePrecedingIdentifier(line, pos.column, identifierRegex);
+                }.bind(this));
+            }
         }
     }.bind(this));
     return prefix || this.retrievePrecedingIdentifier(line, pos.column);
@@ -73,8 +81,17 @@ exports.triggerAutocomplete = function (editor, previousChar) {
         ? editor.session.getPrecedingCharacter()
         : previousChar;
     return editor.completers.some((completer) => {
-        if (completer.triggerCharacters && Array.isArray(completer.triggerCharacters)) {
-            return completer.triggerCharacters.includes(previousChar);
+        if (completer.triggerCharacters) {
+            var triggerCharacters;
+            if (completer.triggerCharacters instanceof Function) {
+                triggerCharacters = completer.triggerCharacters(editor);
+            } else {
+                triggerCharacters = completer.triggerCharacters;
+            }
+
+            if (triggerCharacters && Array.isArray(triggerCharacters)) {
+                return triggerCharacters.includes(previousChar);
+            }
         }
     });
 };
