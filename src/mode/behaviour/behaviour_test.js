@@ -96,7 +96,15 @@ module.exports = {
         assert.equal(editor.getValue(), "{");
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "{\n    \n}");
-        
+
+        //test bracket indentation
+        editor.setValue("");
+        exec("insertstring", 1, "    ");
+        exec("insertstring", 1, "[");
+        assert.equal(editor.getValue(), "    []");
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "    [\n        \n    ]");
+
         editor.setValue("");
         exec("insertstring", 1, "(");
         exec("insertstring", 1, '"');
