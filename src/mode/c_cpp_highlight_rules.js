@@ -17,24 +17,27 @@ var c_cppHighlightRules = function(extraKeywords) {
     var storageType = (
         "asm|__asm__|auto|bool|_Bool|char|_Complex|double|enum|float|" +
         "_Imaginary|int|int8_t|int16_t|int32_t|int64_t|long|short|signed|size_t|struct|typedef|uint8_t|uint16_t|uint32_t|uint64_t|union|unsigned|void|" +
-        "class|wchar_t|template|char16_t|char32_t"
+        "class|wchar_t|template|char16_t|char32_t|char8_t"
     );
 
     var storageModifiers = (
         "const|extern|register|restrict|static|volatile|inline|private|" +
         "protected|public|friend|explicit|virtual|export|mutable|typename|" +
-        "constexpr|new|delete|alignas|alignof|decltype|noexcept|thread_local"
+        "constexpr|new|delete|alignas|alignof|decltype|noexcept|thread_local|" +
+        "constinit|consteval|concept|contexts|final|override|import|module|" +
+        "pre|post"
     );
 
     var keywordOperators = (
         "and|and_eq|bitand|bitor|compl|not|not_eq|or|or_eq|typeid|xor|xor_eq|" +
-        "const_cast|dynamic_cast|reinterpret_cast|static_cast|sizeof|namespace"
+        "const_cast|dynamic_cast|reinterpret_cast|static_cast|sizeof|namespace|"+
+        "co_yield|co_return|co_await|contract_assert"
     );
 
     var builtinConstants = (
         "NULL|true|false|TRUE|FALSE|nullptr"
     );
-
+    
     var keywordMapper = this.$keywords = this.createKeywordMapper(Object.assign({
         "keyword.control" : keywordControls,
         "storage.type" : storageType,
@@ -105,11 +108,11 @@ var c_cppHighlightRules = function(extraKeywords) {
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b"
             }, {
                 token : "keyword", // pre-compiler directives
-                regex : "#\\s*(?:include|import|pragma|line|define|undef)\\b",
+                regex : "#\\s*(?:include|pragma|line|define|defined|undef|embed|error|warning|__has_include|__has_cpp_attribute|__has_embed)\\b",
                 next  : "directive"
             }, {
                 token : "keyword", // special case pre-compiler directive
-                regex : "#\\s*(?:endif|if|ifdef|else|elif|ifndef)\\b"
+                regex : "#\\s*(?:endif|if|ifdef|else|elif|ifndef|elifdef|elifndef)\\b"
             }, {
                 token : keywordMapper,
                 regex : "[a-zA-Z_$][a-zA-Z0-9_$]*"
