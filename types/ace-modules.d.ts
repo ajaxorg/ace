@@ -3438,6 +3438,13 @@ declare module "ace-code/src/autocomplete" {
          */
         skipFilter?: boolean;
         /**
+         * - the text this completion is filtered and scored against, in place of the text it
+         * displays. Follows the semantics of the language server protocol's `CompletionItem.filterText`, and takes precedence
+         * over the `ignoreCaption` option. An empty string is ignored. The match highlight in the popup is still derived from
+         * the caption, so a completion reached through text that does not occur in its caption is shown without a highlight.
+         */
+        filterText?: string;
+        /**
          * - An object specifying the range of text to be replaced with the new completion value (experimental)
          */
         range?: import("ace-code").Ace.IRange;
