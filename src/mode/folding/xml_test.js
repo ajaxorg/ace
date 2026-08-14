@@ -21,8 +21,8 @@ module.exports = {
         assert.equal(session.getFoldWidget(1), "");
         assert.equal(session.getFoldWidget(2), "end");
         
-        assert.range(session.getFoldWidgetRange(0), 0, 8, 2, 19);
-        assert.range(session.getFoldWidgetRange(2), 0, 8, 2, 19);
+        assert.range(session.getFoldWidgetRange(0), 0, 7, 2, 19);
+        assert.range(session.getFoldWidgetRange(2), 0, 7, 2, 19);
     },
     
     "test: fold should skip self closing elements": function() {
@@ -64,8 +64,8 @@ module.exports = {
         assert.equal(session.getFoldWidget(4), "end");
         
         assert.range(session.getFoldWidgetRange(0), 0, 8, 4, 0);
-        assert.range(session.getFoldWidgetRange(1), 1, 9, 3, 19);
-        assert.range(session.getFoldWidgetRange(3), 1, 9, 3, 19);
+        assert.range(session.getFoldWidgetRange(1), 1, 8, 3, 19);
+        assert.range(session.getFoldWidgetRange(3), 1, 8, 3, 19);
         assert.range(session.getFoldWidgetRange(4), 0, 8, 4, 0);
     },
     "test: fold should handle multi-line comments inside nested elements correctly": function () {
@@ -95,7 +95,30 @@ module.exports = {
         assert.range(session.getFoldWidgetRange(0), 0, 15, 10, 0);
         assert.range(session.getFoldWidgetRange(2), 2, 13, 5, 4);
         assert.equal(session.getFoldWidgetRange(8), "");
+    },
+
+    "test: fold multi-line opening tag from logical line end": function () {
+        var session = new EditSession([
+            '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"', '  version="1.0">',
+            '  <xsl:template match="/">', '  </xsl:template>', '</xsl:stylesheet>'
+        ]);
+
+        session.setMode(new XmlMode());
+        session.setFoldStyle("markbeginend");
+
+        var startColumn = session.getLine(0).length;
+
+        assert.range(session.getFoldWidgetRange(0), 0, startColumn, 4, 0);
+        assert.range(session.getFoldWidgetRange(4), 0, startColumn, 4, 0);
+
+        // The same opening widget must fold and unfold.
+        session.$toggleFoldWidget(0, {});
+        assert.ok(session.getFoldLine(0));
+
+        session.$toggleFoldWidget(0, {});
+        assert.equal(session.getFoldLine(0), undefined);
     }
+
 
 };
 
