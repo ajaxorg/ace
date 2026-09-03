@@ -54,6 +54,7 @@ var DiffProvider = require("./diff/providers/default").DiffProvider;
 /**
  * @typedef {Object} IDiffProvider
  * @property {(originalLines: string[], modifiedLines: string[], opts?: any) => import("./diff/base_diff_view").DiffChunk[]} compute - Computes differences between original and modified lines
+ * @property {(originalLines: string[], modifiedLines: string[], chunk: import("./diff/base_diff_view").DiffChunk, opts?: any) => {charChanges: import("./diff/base_diff_view").DiffChunk[], hitTimeout: boolean}} [refine] - Refines inline changes for an existing line chunk
  */
 
 

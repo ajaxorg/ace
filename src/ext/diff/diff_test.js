@@ -6,6 +6,7 @@ require("../../test/mockdom");
 var {InlineDiffView} = require("./inline_diff_view");
 var {SplitDiffView} = require("./split_diff_view");
 var {DiffProvider} = require("./providers/default");
+var {DiffChunk} = require("./base_diff_view");
 
 var ace = require("../../ace");
 var Range = require("../../range").Range;
@@ -326,7 +327,229 @@ module.exports = {
         var markers = diffView.editorA.renderer.$markerBack.element.childNodes;
         assert.equal(markers[0].className, "ace_diff aligned_diff");
         assert.equal(markers[1].className, "ace_diff aligned_diff");
-        assert.equal(markers.length, 4);
+        // Full-range inline markers are redundant with the line marker.
+        assert.equal(markers.length, 2);
+    },
+
+    "test provider refines one line chunk": function() {
+        var diffProvider = new DiffProvider();
+        var originalLines = ["const answer = 41;"];
+        var modifiedLines = ["const answer = 42;"];
+        var chunks = diffProvider.compute(
+            originalLines,
+            modifiedLines,
+            {maxComputationTimeMs: 0, ignoreTrimWhitespace: false}
+        );
+
+        assert.equal(chunks.length, 1);
+        assert.equal(chunks[0].charChanges, undefined);
+        assert.equal(chunks[0].inlinePending, true);
+
+        var result = diffProvider.refine(
+            originalLines,
+            modifiedLines,
+            chunks[0],
+            {maxComputationTimeMs: 0, ignoreTrimWhitespace: false}
+        );
+
+        assert.equal(result.hitTimeout, false);
+        assert.equal(result.charChanges.length, 1);
+        assert.equal(result.charChanges[0].old.start.column, 15);
+        assert.equal(result.charChanges[0].old.end.column, 17);
+        assert.equal(result.charChanges[0].new.start.column, 15);
+        assert.equal(result.charChanges[0].new.end.column, 17);
+    },
+
+    "test rough diff whitespace and insertion semantics": function() {
+        var diffProvider = new DiffProvider();
+        var whitespaceChange = diffProvider.compute(
+            ["  x"],
+            ["    x"],
+            {maxComputationTimeMs: 0, ignoreTrimWhitespace: false}
+        );
+        var ignoredWhitespaceChange = diffProvider.compute(
+            ["  x"],
+            ["    x"],
+            {maxComputationTimeMs: 0, ignoreTrimWhitespace: true}
+        );
+        var insertion = diffProvider.compute(
+            ["a", "c"],
+            ["a", "b", "c"],
+            {maxComputationTimeMs: 0, ignoreTrimWhitespace: false}
+        );
+
+        assert.equal(whitespaceChange.length, 1);
+        assert.equal(whitespaceChange[0].inlinePending, true);
+        assert.equal(ignoredWhitespaceChange.length, 0);
+        assert.equal(insertion.length, 1);
+        assert.equal(insertion[0].old.isEmpty(), true);
+        assert.equal(insertion[0].inlinePending, false);
+    },
+
+    "test inline changes are refined as chunks enter the viewport": async function() {
+        var originalLines = [];
+        var modifiedLines = [];
+        for (var row = 0; row < 80; row++) {
+            originalLines.push("const value" + row + " = " + row + ";");
+            modifiedLines.push("const value" + row + " = " + row + ";");
+        }
+        modifiedLines[2] = "const value2 = changedAtTop;";
+        modifiedLines[70] = "const value70 = changedAtBottom;";
+
+        editorA.session.setValue(originalLines.join("\n"));
+        editorB.session.setValue(modifiedLines.join("\n"));
+        editorA.renderer.$loop._flush();
+        editorB.renderer.$loop._flush();
+
+        diffView = new SplitDiffView({editorA, editorB, diffProvider: new DiffProvider()});
+        diffView.onInput();
+
+        assert.ok(editorA.getLastVisibleRow() < 70);
+        assert.equal(diffView.chunks.length, 2);
+        assert.equal(diffView.chunks[0].old.start.row, 2);
+        assert.equal(diffView.chunks[0].inlinePending, false);
+        assert.ok(diffView.chunks[0].charChanges.length > 0);
+        assert.equal(diffView.chunks[1].old.start.row, 70);
+        assert.equal(diffView.chunks[1].inlinePending, true);
+        assert.equal(diffView.chunks[1].charChanges, undefined);
+
+        var lineHeight = editorA.renderer.lineHeight;
+        var scrollRender = editorA.renderer.once("afterRender");
+        editorA.session.setScrollTop(lineHeight * 70);
+        await scrollRender;
+        assert.ok(editorA.getFirstVisibleRow() <= 70);
+        assert.ok(editorA.getLastVisibleRow() >= 70);
+
+        // The first render schedules refinement; refinement updates the
+        // markers and causes this second render.
+        await editorA.renderer.once("afterRender");
+        assert.equal(diffView.chunks[1].inlinePending, false);
+        assert.ok(diffView.chunks[1].charChanges.length > 0);
+    },
+
+    "test timed out refinement keeps partial inline changes": function() {
+        editorA.session.setValue("changed value");
+        editorB.session.setValue("modified value");
+        editorA.renderer.$loop._flush();
+        editorB.renderer.$loop._flush();
+
+        var partialInlineChange = new DiffChunk(
+            new Range(0, 0, 0, 7),
+            new Range(0, 0, 0, 8)
+        );
+        var provider = {
+            compute: function() {
+                return [new DiffChunk(
+                    new Range(0, 0, 1, 0),
+                    new Range(0, 0, 1, 0),
+                    undefined,
+                    true
+                )];
+            },
+            refine: function() {
+                return {charChanges: [partialInlineChange], hitTimeout: true};
+            }
+        };
+
+        diffView = new SplitDiffView({editorA, editorB, diffProvider: provider});
+        diffView.onInput();
+
+        assert.equal(diffView.chunks[0].inlinePending, false);
+        assert.equal(diffView.chunks[0].inlineRefineHitTimeout, true);
+        assert.equal(diffView.chunks[0].charChanges.length, 1);
+        assert.equal(diffView.chunks[0].charChanges[0], partialInlineChange);
+    },
+
+    "test: wrap documents with fewer than 1700 combined lines": async function() {
+        var diffProvider = new DiffProvider();
+
+        var neutral = "x".repeat(500) + "\n";
+        var delimiter = "";
+        var valueA = ("aa" + neutral).repeat(100)
+            + neutral.repeat(300)
+            + delimiter
+            + ("bb" + neutral).repeat(100);
+        var valueB = (neutral).repeat(400) + delimiter + ("cc" + neutral).repeat(100);
+        editorA.session.setValue(valueA);
+        editorB.session.setValue(valueB);
+
+        diffView = new SplitDiffView({
+            editorA, editorB,
+            diffProvider,
+            wrap: true,
+        });
+
+        diffView.$maxComputationTimeMs = 0;
+        diffView.$inlineRefineMaxComputationTimeMs = 1000;
+        diffView.setOption("wrap", false);
+        diffView.onInput();
+        diffView.resize(true);
+        await lang.sleep(0); // TODO test is failing without this, probably because rendering not refined diff the first time
+        assert.ok(diffView.sessionA.getLength() + diffView.sessionB.getLength() < 1700);
+        assert.ok(diffView.editorA.renderer.lineHeight > 0);
+        assert.ok(diffView.editorB.renderer.lineHeight > 0);
+        assert.equal(diffView.chunks.length, 2);
+        assert.equal(diffView.chunks[0].old.start.row, 0);
+        assert.equal(diffView.chunks[0].old.end.row, 100);
+        assert.equal(diffView.chunks[0].new.start.row, 0);
+        assert.equal(diffView.chunks[0].new.end.row, 100);
+        assert.equal(diffView.chunks[0].charChanges.length, 100);
+        
+        diffView.resize(true);
+
+        assert.ok(diffView.editorA.container.querySelectorAll(".ace_diff.inline.delete").length > 5);
+        assert.ok(diffView.editorB.container.querySelectorAll(".ace_diff.inline.delete").length > 5);
+
+        diffView.setOption("wrap", true);
+        diffView.resize(true);
+        assert.ok(diffView.editorA.container.querySelectorAll(".ace_diff.inline.delete").length < 5);
+        assert.ok(diffView.editorB.container.querySelectorAll(".ace_diff.inline.delete").length < 5);
+    },
+
+    "test: wrap documents with more than 1700 lines": async function() {
+        var diffProvider = new DiffProvider();
+
+        var changed = "x".repeat(500) + "\n";
+        var neutral = "x\n";
+        var delimiter = "_".repeat(500) + "\n";
+        var valueA = ("aa" + changed).repeat(30)
+            + neutral.repeat(1700)
+            + delimiter
+            + ("bb" + changed).repeat(30);
+        var valueB = changed.repeat(30)
+            + neutral.repeat(1700)
+            + delimiter
+            + ("cc" + changed).repeat(30);
+        editorA.session.setValue(valueA);
+        editorB.session.setValue(valueB);
+
+        diffView = new SplitDiffView({
+            editorA, editorB,
+            diffProvider,
+            wrap: true,
+        });
+
+        diffView.$maxComputationTimeMs = 0;
+        diffView.$inlineRefineMaxComputationTimeMs = 1000;
+        diffView.setOption("wrap", false);
+        diffView.onInput();
+        diffView.resize(true);
+        await lang.sleep(0);
+        assert.ok(diffView.sessionA.getLength() > 1700);
+        assert.ok(diffView.sessionB.getLength() > 1700);
+        assert.ok(diffView.editorA.renderer.lineHeight > 0);
+        assert.ok(diffView.editorB.renderer.lineHeight > 0);
+        assert.equal(diffView.chunks.length, 2);
+
+        diffView.resize(true);
+
+        assert.ok(diffView.editorA.container.querySelectorAll(".ace_diff.inline.delete").length > 5);
+        assert.ok(diffView.editorB.container.querySelectorAll(".ace_diff.inline.delete").length > 5);
+
+        diffView.setOption("wrap", true);
+        diffView.resize(true);
+        assert.ok(diffView.editorA.container.querySelectorAll(".ace_diff.inline.delete").length < 5);
+        assert.ok(diffView.editorB.container.querySelectorAll(".ace_diff.inline.delete").length < 5);
     },
 
     "test: toggle wrap": function() {

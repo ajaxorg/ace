@@ -284,6 +284,7 @@ declare module "ace-code/src/ext/diff/split_diff_view" {
         init(diffModel: any): void;
         onMouseWheel(ev: any): any;
         onScroll(e: any, session: any): void;
+        onAfterRender(): void;
         onChangeWrapLimit(): void;
         syncScroll(renderer: import("ace-code/src/virtual_renderer").VirtualRenderer): void;
         scrollA: any;
@@ -300,7 +301,17 @@ declare module "ace-code/src/ext/diff/providers/default" {
      */
     export class DiffProvider {
         compute(originalLines: any, modifiedLines: any, opts: any): any;
+        /**
+         * Refines one coarse line chunk into character changes. Small character
+         * ranges use dynamic programming for alignment quality; larger ranges use
+         * Myers to avoid a quadratic character matrix.
+         */
+        refine(originalLines: any, modifiedLines: any, chunk: any, opts: any): {
+            charChanges: DiffChunk[];
+            hitTimeout: any;
+        };
     }
+    import { DiffChunk } from "ace-code/src/ext/diff/base_diff_view";
 }
 declare module "ace-code/src/ext/diff" {
     /**
@@ -375,6 +386,13 @@ declare module "ace-code/src/ext/diff" {
          * - Computes differences between original and modified lines
          */
         compute: (originalLines: string[], modifiedLines: string[], opts?: any) => import("ace-code/src/ext/diff/base_diff_view").DiffChunk[];
+        /**
+         * - Refines inline changes for an existing line chunk
+         */
+        refine?: (originalLines: string[], modifiedLines: string[], chunk: import("ace-code/src/ext/diff/base_diff_view").DiffChunk, opts?: any) => {
+            charChanges: import("ace-code/src/ext/diff/base_diff_view").DiffChunk[];
+            hitTimeout: boolean;
+        };
     };
     import { InlineDiffView } from "ace-code/src/ext/diff/inline_diff_view";
     import { SplitDiffView } from "ace-code/src/ext/diff/split_diff_view";
@@ -401,6 +419,7 @@ declare module "ace-code/src/ext/diff" {
      */
     /**
      * @property {(originalLines: string[], modifiedLines: string[], opts?: any) => import("ace-code/src/diff/base_diff_view").DiffChunk[]} compute - Computes differences between original and modified lines
+     * @property {(originalLines: string[], modifiedLines: string[], chunk: import("ace-code/src/diff/base_diff_view").DiffChunk, opts?: any) => {charChanges: import("ace-code/src/diff/base_diff_view").DiffChunk[], hitTimeout: boolean}} [refine] - Refines inline changes for an existing line chunk
      */
     /**
      * Creates a diff view for comparing code.
@@ -434,9 +453,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         /**@type DiffChunk[]*/ chunks: DiffChunk[];
         inlineDiffEditor: boolean;
         currentDiffIndex: number;
-        diffProvider: {
-            compute: (val1: any, val2: any, options: any) => any[];
-        };
+        diffProvider: import("ace-code/src/ext/diff").IDiffProvider;
         container: HTMLElement;
         markerB: DiffHighlight;
         markerA: DiffHighlight;
@@ -474,7 +491,13 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         selectionRangeB: any;
         setupScrollbars(): void;
         updateScrollBarDecorators(): void;
-        setProvider(provider: import("ace-code/src/ext/diff").DiffProvider): void;
+        setProvider(provider: import("ace-code/src/ext/diff").IDiffProvider): void;
+        /**
+         * Refine pending character changes only after their line chunk becomes
+         * visible. One chunk is processed per task so scrolling and input can run
+         * between refinements.
+         */
+        scheduleVisibleInlineRefinement(): void;
         /**
          * scroll locking
          * @abstract
@@ -514,9 +537,11 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
             modifiedStartColumn: number;
             modifiedEndLineNumber: number;
             modifiedEndColumn: number;
-        }[]);
+        }[], inlinePending?: boolean);
         old: Range;
         new: Range;
+        inlinePending: boolean;
+        inlineRefineHitTimeout: boolean;
         charChanges: DiffChunk[];
     }
     export class DiffHighlight {

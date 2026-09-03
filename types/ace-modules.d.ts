@@ -47,7 +47,7 @@ declare module "ace-code/src/layer/font_metrics" {
             bottom: number;
         };
         /**
-         * Calculates the width of the text up to a specific scrrenColumn on a given screen row.
+         * Calculates the width of the text up to a specific screenColumn on a given screen row.
          *
          * @param {number} screenRow - The row index on the screen for which the text width is calculated.
          * @param {number} screenColumn - The column index up to which the text width is measured.
