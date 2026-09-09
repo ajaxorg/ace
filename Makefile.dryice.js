@@ -178,7 +178,19 @@ function ace() {
         buildAce({compress: i & 2, noconflict: i & 1, check: true});
     }
 
+    var xmlWorkerFiles = {};
+    ["src", "src-min", "src-noconflict", "src-min-noconflict"].forEach(function(dir) {
+        var workerPath = BUILD_DIR + "/" + dir + "/worker-xml.js";
+        if (fs.existsSync(workerPath))
+            xmlWorkerFiles[workerPath] = fs.readFileSync(workerPath);
+    });
+
     copy.dirs(ACE_HOME + "/node_modules/ace-legacy-linters/build", BUILD_DIR, ["src", "src-min", "src-noconflict", "src-min-noconflict"]);
+
+    // Keep Ace's XML worker so in-tree locator fixes are not overwritten by ace-legacy-linters.
+    Object.keys(xmlWorkerFiles).forEach(function(workerPath) {
+        fs.writeFileSync(workerPath, xmlWorkerFiles[workerPath]);
+    });
 }
 
 function correctDeclarationsForBuild(path, additionalDeclarations) {
