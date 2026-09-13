@@ -543,11 +543,35 @@ declare module "ace-code/src/layer/marker" {
         i: number;
         update(config: LayerConfig): void;
         config: import("ace-code").Ace.LayerConfig;
+        /**
+         * Draws a marker, which spans a range of text on multiple lines
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawTextMarker(stringBuilder: undefined, range: Range, clazz: string, layerConfig: Partial<LayerConfig>, extraStyle?: string): void;
+        /**
+         * Draws a multi line marker, where lines span the full width
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawMultiLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: LayerConfig, extraStyle?: string): void;
+        /**
+         * Draws a marker which covers part or whole width of a single screen line
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength?: number, extraStyle?: string): void;
+        /**
+         * Draws Bidi marker which covers part or whole width of a single screen line
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawBidiSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength: number, extraStyle: string): void;
+        /**
+         * Draws a marker which covers the full width of the screen lines of the range
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawFullLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
+        /**
+         * Draws a marker which covers the full width of the first screen line of the range
+         * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
+         */
         drawScreenLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
     }
     import { Range } from "ace-code/src/range";
