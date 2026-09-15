@@ -114,10 +114,10 @@ class Marker {
     }
 
 
-    // Draws a marker, which spans a range of text on multiple lines 
     /**
+     * Draws a marker, which spans a range of text on multiple lines
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {Partial<LayerConfig>} layerConfig
      * @param {string} [extraStyle]
@@ -145,10 +145,10 @@ class Marker {
         }
     }
 
-    // Draws a multi line marker, where lines span the full width
     /**
+     * Draws a multi line marker, where lines span the full width
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {LayerConfig} config
      * @param {string} [extraStyle]
@@ -207,10 +207,10 @@ class Marker {
         );
     }
 
-    // Draws a marker which covers part or whole width of a single screen line
     /**
+     * Draws a marker which covers part or whole width of a single screen line
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {Partial<LayerConfig>} config
      * @param {number} [extraLength]
@@ -234,10 +234,10 @@ class Marker {
         );
     }
 
-    // Draws Bidi marker which covers part or whole width of a single screen line
     /**
+     * Draws Bidi marker which covers part or whole width of a single screen line
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {Partial<LayerConfig>} config
      * @param {number} extraLength
@@ -258,8 +258,9 @@ class Marker {
     }
 
     /**
+     * Draws a marker which covers the full width of the screen lines of the range
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {Partial<LayerConfig>} config
      * @param {undefined} [extraStyle]
@@ -279,8 +280,9 @@ class Marker {
     }
 
     /**
+     * Draws a marker which covers the full width of the first screen line of the range
      * @param {undefined} stringBuilder
-     * @param {Range} range
+     * @param {Range} range - range in screen coordinates, e.g. from `range.toScreenRange(session)`
      * @param {string} clazz
      * @param {Partial<LayerConfig>} config
      * @param {undefined} [extraStyle]

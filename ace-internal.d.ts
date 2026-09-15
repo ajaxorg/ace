@@ -765,6 +765,11 @@ export namespace Ace {
         clazz: string;
         inFront?: boolean;
         id?: number;
+        /**
+         * Renders a dynamic marker. The `draw*Marker` methods of the marker layer
+         * expect ranges in screen coordinates, so convert document ranges with
+         * `range.toScreenRange(session)` first.
+         */
         update?: (html: string[],
                   // TODO maybe define Marker class
                   marker: any,
