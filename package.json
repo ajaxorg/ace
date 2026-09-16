@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "amd-loader": "~0.0.4",
-        "architect-build": "https://github.com/c9/architect-build/tarball/43a6fdeffe",
+        "architect-build": "git+https://github.com/c9/architect-build.git#43a6fdeffe",
         "asyncjs": "~0.0.12",
         "c8": "^11.0.0",
         "dryice": "0.4.11",
