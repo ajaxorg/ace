@@ -8,7 +8,7 @@ module.exports = {
 
     "test: fold mixed html and javascript": function() {
         var session = new EditSession([
-            '<script type="text/javascript"> ',
+            '<script type="text/javascript">',
             'function() foo {',
             '    var bar = 1;',
             '}',
