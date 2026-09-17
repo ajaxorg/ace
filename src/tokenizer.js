@@ -203,6 +203,36 @@ class Tokenizer {
             if (lastCapture.end != null && /^\)*$/.test(src.substr(lastCapture.end)))
                 src = src.substring(0, lastCapture.start) + src.substr(lastCapture.end);
         }
+
+        // The splitter only sees the matched text, so a lookbehind at the start
+        // has no preceding text to check. It was already checked by the full
+        // regexp, so remove it, like the trailing lookahead above.
+        var leadingLookbehind;
+        while ((leadingLookbehind = /^(?:\((?:\?:)?)*\(\?<[=!]/.exec(src))) {
+            var start = leadingLookbehind[0].length - 4;
+            var end = -1;
+            var depth = 0;
+            var inClass = false;
+            var re = /\\.|[\[\]()]/g;
+            re.lastIndex = start;
+            var m;
+            while ((m = re.exec(src))) {
+                var ch = m[0];
+                if (ch.length > 1) continue;
+                if (inClass) {
+                    inClass = ch != "]";
+                } else if (ch == "[") {
+                    inClass = true;
+                } else if (ch == "(") {
+                    depth++;
+                } else if (ch == ")" && --depth == 0) {
+                    end = m.index + 1;
+                    break;
+                }
+            }
+            if (end == -1) break;
+            src = src.substring(0, start) + src.substr(end);
+        }
         
         // this is needed for regexps that can match in multiple ways
         if (src.charAt(0) != "^") src = "^" + src;
