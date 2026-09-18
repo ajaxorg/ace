@@ -19,6 +19,7 @@ class SplitDiffView extends BaseDiffView {
         this.onChangeTheme = this.onChangeTheme.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
         this.onScroll = this.onScroll.bind(this);
+        this.onAfterRender = this.onAfterRender.bind(this);
 
         this.$setupModels(diffModel);
 
@@ -85,6 +86,10 @@ class SplitDiffView extends BaseDiffView {
 
     onScroll(e, session) {
         this.syncScroll(this.sessionA === session ? this.editorA.renderer : this.editorB.renderer);
+    }
+
+    onAfterRender() {
+        this.scheduleVisibleInlineRefinement();
     }
 
     /**
@@ -187,6 +192,8 @@ class SplitDiffView extends BaseDiffView {
     $attachEventHandlers() {
         this.editorA.renderer.on("themeChange", this.onChangeTheme);
         this.editorB.renderer.on("themeChange", this.onChangeTheme);
+        this.editorA.renderer.on("afterRender", this.onAfterRender);
+        this.editorB.renderer.on("afterRender", this.onAfterRender);
 
         this.editorA.on("mousewheel", this.onMouseWheel);
         this.editorB.on("mousewheel", this.onMouseWheel);
@@ -201,6 +208,8 @@ class SplitDiffView extends BaseDiffView {
         this.clearSelectionMarkers();
         this.editorA.renderer.off("themeChange", this.onChangeTheme);
         this.editorB.renderer.off("themeChange", this.onChangeTheme);
+        this.editorA.renderer.off("afterRender", this.onAfterRender);
+        this.editorB.renderer.off("afterRender", this.onAfterRender);
         this.$detachEditorEventHandlers(this.editorA);
         this.$detachEditorEventHandlers(this.editorB);
     }
