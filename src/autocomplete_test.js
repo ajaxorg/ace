@@ -201,6 +201,45 @@ module.exports = {
         assert.equal(editor.getValue(), "<dialog");
         done();
     },
+    "test: completions are matched against filterText when it is provided": async function (done) {
+        editor = initEditor("<");
+
+        editor.completers = [
+            {
+                // a language in which "<" is part of the identifier the user is typing
+                identifierRegexps: [/[a-zA-Z_0-9<]/],
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "iframe",
+                            value: "<iframe></iframe>",
+                            filterText: "<iframe"
+                        }, {
+                            caption: "img",
+                            value: "<img>"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        editor.moveCursorTo(0, 1);
+        sendKey("ifra");
+        await lang.sleep(10);
+
+        // the prefix is "<ifra", which is only reachable through the filterText of the first completion,
+        // while the caption of the second one is matched as usual and therefore filtered out
+        var popup = editor.completer && editor.completer.popup;
+        assert.ok(popup && popup.isOpen, "the completion popup should be open");
+        assert.equal(popup.data.length, 1);
+        assert.equal(popup.getData(0).caption, "iframe");
+
+        editor.onCommandKey(null, 0, 13);
+        await lang.sleep(10);
+        assert.equal(editor.getValue(), "<iframe></iframe>");
+        done();
+    },
     "test: symbols after selection are not removed when replacement range is present": async function (done) {
         editor = initEditor("{}");
         editor.completers = [
@@ -873,6 +912,36 @@ module.exports = {
         // Should filter using the value instead.
         user.type(" value");
         assert.equal(completer.popup.isOpen, true);
+    },
+    "test: should filter using filterText even if ignoreCaption true": function() {
+        editor = initEditor("hello world\n");
+
+        var completer = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "caption",
+                        value: "value",
+                        filterText: "filter"
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [completer];
+
+        var autocomplete = Autocomplete.for(editor);
+        autocomplete.ignoreCaption = true;
+
+        // Neither the caption nor the value is matched once the completion carries a filterText.
+        user.type(" val");
+        assert.equal(autocomplete.popup, undefined);
+
+        // Should filter using the filterText instead.
+        user.type(" filt");
+        assert.equal(autocomplete.popup.isOpen, true);
+        assert.equal(autocomplete.popup.data.length, 1);
     },
     "test: should skip filter if skipFilter flag is set to true in completion": function() {
         editor = initEditor("hello world\n");
