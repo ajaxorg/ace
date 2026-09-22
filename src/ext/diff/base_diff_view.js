@@ -1,6 +1,5 @@
 "use strict";
 
-var oop = require("../../lib/oop");
 var Range = require("../../range").Range;
 var dom = require("../../lib/dom");
 var config = require("../../config");
@@ -23,6 +22,7 @@ var EditSession = require("../../edit_session").EditSession;
 
 var MinimalGutterDiffDecorator = require("./gutter_decorator").MinimalGutterDiffDecorator;
 
+/** @type {import("../diff").IDiffProvider} */
 var dummyDiffProvider = {
     compute: function(val1, val2, options) {
         return [];
@@ -61,6 +61,10 @@ class BaseDiffView {
         this.$maxComputationTimeMs = 150;
         this.$syncSelections = false;
         this.$foldUnchangedOnInput = false;
+        this.$inlineRefineTimer = null;
+        this.$inlineRefineMaxComputationTimeMs = 25;
+        this.$diffOriginalLines = null;
+        this.$diffModifiedLines = null;
 
         this.markerB = new DiffHighlight(this, 1);
         this.markerA = new DiffHighlight(this, -1);
@@ -269,14 +273,22 @@ class BaseDiffView {
     }
     onInput() {
         if (this.$onInputTimer) clearTimeout(this.$onInputTimer);
-
+        if (this.$inlineRefineTimer) clearTimeout(this.$inlineRefineTimer);
+        this.$inlineRefineTimer = null;
         var val1 = this.sessionA.doc.getAllLines();
         var val2 = this.sessionB.doc.getAllLines();
+        this.$diffOriginalLines = val1;
+        this.$diffModifiedLines = val2;
 
         this.selectionRangeA = null;
         this.selectionRangeB = null;
 
+        const diffStartTime = Date.now();
         var chunks = this.$diffLines(val1, val2);
+
+        if (chunks && chunks.length <= this.$maxDiffs) {
+            this.$refineVisibleInlineChunks(chunks, val1, val2, diffStartTime);
+        }
 
         this.diffSession.chunks = this.chunks = chunks;
         this.gutterDecoratorA && this.gutterDecoratorA.setDecorations(chunks);
@@ -298,6 +310,7 @@ class BaseDiffView {
         if (this.$foldUnchangedOnInput) {
             this.foldUnchanged();
         }
+
     }
 
     setupScrollbars() {
@@ -402,10 +415,122 @@ class BaseDiffView {
     }
 
     /**
-     * @param {import("./providers/default").DiffProvider} provider
+     * @param {import("../diff").IDiffProvider} provider
      */
     setProvider(provider) {
         this.diffProvider = provider;
+    }
+
+    /**
+     * Refine pending character changes only after their line chunk becomes
+     * visible. One chunk is processed per task so scrolling and input can run
+     * between refinements.
+     */
+    scheduleVisibleInlineRefinement() {
+        if (this.$inlineRefineTimer || !this.diffProvider
+            || typeof this.diffProvider.refine !== "function")
+            return;
+        if (!this.$findVisiblePendingChunk())
+            return;
+
+        this.$inlineRefineTimer = setTimeout(() => {
+            this.$inlineRefineTimer = null;
+            this.$refineVisibleInlineChunk();
+        }, 0);
+    }
+
+    $refineVisibleInlineChunk() {
+        if (!this.sessionA || !this.sessionB)
+            return;
+        const chunk = this.$findVisiblePendingChunk();
+        if (!chunk)
+            return;
+
+        this.$refineInlineChunk(
+            chunk,
+            this.$diffOriginalLines,
+            this.$diffModifiedLines,
+            this.$inlineRefineMaxComputationTimeMs
+        );
+        this.editorA && this.editorA.renderer.updateBackMarkers();
+        this.editorB && this.editorB.renderer.updateBackMarkers();
+    }
+
+    $refineVisibleInlineChunks(chunks, originalLines, modifiedLines, diffStartTime) {
+        if (!chunks || !this.diffProvider
+            || typeof this.diffProvider.refine !== "function")
+            return;
+
+        const roughDiffTime = Date.now() - diffStartTime;
+        const remainingDiffTime = this.$maxComputationTimeMs === 0
+            ? this.$inlineRefineMaxComputationTimeMs
+            : Math.max(0, this.$maxComputationTimeMs - roughDiffTime);
+        const maxComputationTimeMs = Math.min(
+            this.$inlineRefineMaxComputationTimeMs,
+            remainingDiffTime
+        );
+        if (maxComputationTimeMs <= 0)
+            return;
+
+        const deadline = Date.now() + maxComputationTimeMs;
+        let chunk;
+        while ((chunk = this.$findVisiblePendingChunk(chunks))) {
+            const remainingTime = deadline - Date.now();
+            if (remainingTime <= 0)
+                break;
+            this.$refineInlineChunk(chunk, originalLines, modifiedLines, remainingTime);
+        }
+    }
+
+    $refineInlineChunk(chunk, originalLines, modifiedLines, maxComputationTimeMs) {
+        // Claim the chunk before running synchronous provider code. A timed-out
+        // local refinement is kept as its final coarse result instead of being
+        // retried after every render.
+        chunk.inlinePending = false;
+        const result = this.diffProvider.refine(
+            originalLines,
+            modifiedLines,
+            chunk,
+            {
+                ignoreTrimWhitespace: this.$ignoreTrimWhitespace,
+                maxComputationTimeMs: maxComputationTimeMs
+            }
+        );
+
+        if (!result)
+            return;
+        chunk.charChanges = result.charChanges || [];
+        chunk.inlineRefineHitTimeout = result.hitTimeout === true;
+    }
+
+    $findVisiblePendingChunk(chunks = this.chunks) {
+        if (!chunks)
+            return null;
+        const margin = 10;
+        const isVisible = (editor, range) => {
+            if (!editor || !editor.renderer || !editor.renderer.layerConfig)
+                return false;
+            const firstRow = editor.getFirstVisibleRow() - margin;
+            const lastRow = editor.getLastVisibleRow() + margin;
+            const rangeEndRow = range.end.row > range.start.row
+                ? range.end.row - 1
+                : range.start.row;
+            return rangeEndRow >= firstRow && range.start.row <= lastRow;
+        };
+
+        for (const chunk of chunks) {
+            if (!chunk.inlinePending)
+                continue;
+            if (this.inlineDiffEditor) {
+                const range = this.showSideA ? chunk.old : chunk.new;
+                if (isVisible(this.activeEditor, range))
+                    return chunk;
+            }
+            else if (isVisible(this.editorA, chunk.old) || isVisible(this.editorB, chunk.new)) {
+                return chunk;
+            }
+        }
+        return null;
     }
 
     /**
@@ -600,6 +725,10 @@ class BaseDiffView {
             this.$resetDecorators(this.editorB.renderer);
         }
         clearTimeout(this.$onInputTimer);
+        clearTimeout(this.$inlineRefineTimer);
+        this.$inlineRefineTimer = null;
+        this.$diffOriginalLines = null;
+        this.$diffModifiedLines = null;
     }
 
     $removeLineWidgets(session) {
@@ -891,10 +1020,13 @@ class DiffChunk {
      * @param {{originalStartLineNumber: number, originalStartColumn: number,
      * originalEndLineNumber: number, originalEndColumn: number, modifiedStartLineNumber: number,
      * modifiedStartColumn: number, modifiedEndLineNumber: number, modifiedEndColumn: number}[]} [charChanges]
+     * @param {boolean} [inlinePending]
      */
-    constructor(originalRange, modifiedRange, charChanges) {
+    constructor(originalRange, modifiedRange, charChanges, inlinePending = false) {
         this.old = originalRange;
         this.new = modifiedRange;
+        this.inlinePending = inlinePending;
+        this.inlineRefineHitTimeout = false;
         this.charChanges = charChanges && charChanges.map(m => new DiffChunk(
             new Range(m.originalStartLineNumber, m.originalStartColumn,
                 m.originalEndLineNumber, m.originalEndColumn
@@ -902,6 +1034,25 @@ class DiffChunk {
                 m.modifiedEndLineNumber, m.modifiedEndColumn
             )));
     }
+}
+
+function inlineChangeSpansLineChange(changeRange, lineRange, session) {
+    const normalizeDocumentEnd = (position) => {
+        const lineCount = session.getLength();
+        if (position.row >= lineCount) {
+            const lastRow = Math.max(0, lineCount - 1);
+            return {row: lastRow, column: session.getLine(lastRow).length};
+        }
+        return position;
+    };
+    const changeStart = normalizeDocumentEnd(changeRange.start);
+    const changeEnd = normalizeDocumentEnd(changeRange.end);
+    const lineStart = normalizeDocumentEnd(lineRange.start);
+    const lineEnd = normalizeDocumentEnd(lineRange.end);
+    return changeStart.row === lineStart.row
+        && changeStart.column === lineStart.column
+        && changeEnd.row === lineEnd.row
+        && changeEnd.column === lineEnd.column;
 }
 
 class DiffHighlight {
@@ -944,8 +1095,9 @@ class DiffHighlight {
                     var range = new Range(start - lineWidget.rowsAbove, 0, start - 1, Number.MAX_VALUE);
                     markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
                 }
-                let end = start + lineWidget.rowCount - (lineWidget.rowsAbove || 0);
-                var range = new Range(start + 1, 0, end, Number.MAX_VALUE);
+                var offset = session.getRowLength(row) - lineWidget.rowCount;
+                let end = start + offset - 1 + lineWidget.rowCount - (lineWidget.rowsAbove || 0);
+                var range = new Range(start + offset, 0, end, Number.MAX_VALUE);
                 markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
             }
         }
@@ -964,7 +1116,17 @@ class DiffHighlight {
 
             if (lineChange.charChanges) {
                 for (var i = 0; i < lineChange.charChanges.length; i++) {
-                    var changeRange = lineChange.charChanges[i][dir];
+                    var storedChangeRange = lineChange.charChanges[i][dir];
+                    if (storedChangeRange.end.row < config.firstRow || storedChangeRange.start.row > config.lastRow) {
+                        continue;
+                    }
+                    if (inlineChangeSpansLineChange(storedChangeRange, lineChange[dir], session)) {
+                        continue;
+                    }
+                    // Rendering must not rewrite provider-owned ranges. In
+                    // particular, a second render still needs the exclusive
+                    // line-end form to recognize whole-chunk changes.
+                    var changeRange = storedChangeRange.clone();
                     if (changeRange.end.column == 0 && changeRange.end.row > changeRange.start.row && changeRange.end.row == lineChange[dir].end.row ) {
                         changeRange.end.row --;
                         changeRange.end.column = Number.MAX_VALUE;
@@ -1011,7 +1173,7 @@ class DiffHighlight {
                         );
                         var screenRange = range.toScreenRange(session);
                         let cssClass = "inline " + operation;
-                        if (range.isEmpty() && changeRange.start.column !== 0) {
+                        if (range.isEmpty()) {
                             cssClass = "inline empty " + opOperation;
                         }
 
