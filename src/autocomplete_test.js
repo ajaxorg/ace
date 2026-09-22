@@ -925,6 +925,49 @@ module.exports = {
         assert.equal(completer.popup.isOpen, true);
         assert.equal(completer.popup.data.length, 1);
     },
+    "test: duplicate completions are removed regardless of their position": function() {
+        editor = initEditor("");
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "foo",
+                            meta: "higher",
+                            score: 5
+                        }, {
+                            value: "bar",
+                            score: 3
+                        }, {
+                            value: "foo",
+                            meta: "lower",
+                            score: 1
+                        }, {
+                            caption: "snippet a",
+                            snippet: "shared body"
+                        }, {
+                            caption: "snippet b",
+                            snippet: "shared body"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        editor.execCommand('startAutocomplete');
+        var data = editor.completer.popup.data;
+
+        // sorting by score keeps the two identical completions apart, while the two snippets
+        // read differently in the popup and are therefore not duplicates of each other
+        assert.jsonEquals(data.map(function(item) {
+            return item.caption || item.value;
+        }), ["foo", "bar", "snippet a", "snippet b"]);
+
+        // of a set of duplicates the first one after sorting survives, which is the highest scored
+        assert.equal(data[0].meta, "higher");
+    },
 
     "test: should add inline preview content to aria-describedby": function() {
         editor = initEditor("fun");
