@@ -274,12 +274,27 @@ class Autocomplete {
 
         var lineHeight = renderer.layerConfig.lineHeight;
         var pos = renderer.$cursorLayer.getPixelPosition(this.base, true);
-        pos.left -= this.popup.getTextLeftOffset();
+        var cursorLeft = pos.left;
+        var textLeftOffset = this.popup.getTextLeftOffset();
+        pos.left -= textLeftOffset;
 
-        var rect = editor.container.getBoundingClientRect();
-        pos.top += rect.top - renderer.layerConfig.offset;
-        pos.left += rect.left - editor.renderer.scrollLeft;
-        pos.left += renderer.gutterWidth;
+        var localTop, localLeft;
+        if (renderer.$hasCssTransforms) {
+            localTop = pos.top - renderer.layerConfig.offset;
+            localLeft = cursorLeft + renderer.gutterWidth + renderer.margin.left - renderer.scrollLeft;
+
+            var screenPos = renderer.$fontMetrics.transformCoordinates(null, [localTop, localLeft]);
+            pos.top = screenPos[1];
+            pos.left = screenPos[0] - textLeftOffset;
+
+            var lineBottom = renderer.$fontMetrics.transformCoordinates(null, [localTop + lineHeight, localLeft]);
+            lineHeight = Math.abs(lineBottom[1] - screenPos[1]) || lineHeight;
+        } else {
+            var rect = editor.container.getBoundingClientRect();
+            pos.top += rect.top - renderer.layerConfig.offset;
+            pos.left += rect.left - editor.renderer.scrollLeft;
+            pos.left += renderer.gutterWidth;
+        }
 
         var posGhostText = {
             top: pos.top,
@@ -288,7 +303,12 @@ class Autocomplete {
 
         if (renderer.$ghostText && renderer.$ghostTextWidget) {
             if (this.base.row === renderer.$ghostText.position.row) {
-                posGhostText.top += renderer.$ghostTextWidget.el.offsetHeight;
+                var ghostTextHeight = renderer.$ghostTextWidget.el.offsetHeight;
+                if (renderer.$hasCssTransforms) {
+                    var ghostBottom = renderer.$fontMetrics.transformCoordinates(null, [localTop + ghostTextHeight, localLeft]);
+                    ghostTextHeight = Math.abs(ghostBottom[1] - pos.top) || ghostTextHeight;
+                }
+                posGhostText.top += ghostTextHeight;
             }
         }
 
