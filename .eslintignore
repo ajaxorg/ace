@@ -6,6 +6,9 @@ lib/ace/mode/json/*
 lib/ace/mode/lua/*
 lib/ace/mode/php/*
 lib/ace/mode/xml/*
+src/mode/xml/sax.js
+src/mode/xml/dom.js
+src/mode/xml/dom-parser.js
 lib/ace/mode/xquery/*
 lib/ace/mode/xquery.js
 lib/ace/mode/yaml/*
