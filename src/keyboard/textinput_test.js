@@ -149,6 +149,49 @@ module.exports = {
         assert.equal(editor.getValue(), "y");
     },
     
+    "test: mobile text deletion is dispatched as a command": function() {
+        editor.setValue("x      x", -1);
+        editor.execCommand("gotoright", {times: 4});
+        editor.resize(true);
+        var commands = [];
+        editor.commands.on("exec", function(e) {
+            commands.push(e.command.name);
+        });
+        [
+            { _: "keydown", range: [4,4], value: "x      x\n\n"},
+            { _: "input", range: [3,3], value: "x     x\n\n"},
+            { _: "keyup", range: [3,3], value: "x     x\n\n"},
+            { _: "keydown", range: [3,3], value: "x     x\n\n"},
+            { _: "input", range: [3,3], value: "x    x\n\n"},
+            { _: "keyup", range: [3,3], value: "x    x\n\n"}
+        ].forEach(function(data) {
+            sendEvent(data._, data);
+        });
+        editor.resize(true);
+        assert.equal(editor.getValue(), "x    x");
+        assert.deepEqual(commands, ["backspace", "backspace"]);
+    },
+
+    "test: mobile forward deletion is dispatched as a command": function() {
+        editor.setValue("abXcd", -1);
+        editor.execCommand("gotoright", {times: 2});
+        editor.resize(true);
+        var commands = [];
+        editor.commands.on("exec", function(e) {
+            commands.push(e.command.name);
+        });
+        [
+            { _: "keydown", range: [2,2], value: "abXcd\n\n"},
+            { _: "input", range: [2,2], value: "abcd\n\n"},
+            { _: "keyup", range: [2,2], value: "abcd\n\n"}
+        ].forEach(function(data) {
+            sendEvent(data._, data);
+        });
+        editor.resize(true);
+        assert.equal(editor.getValue(), "abcd");
+        assert.deepEqual(commands, ["del"]);
+    },
+
     "test: composition with visible textarea": function() {
         var data = [
             // select ll
