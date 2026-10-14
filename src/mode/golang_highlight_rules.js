@@ -10,8 +10,8 @@ var oop = require("../lib/oop");
             "select|type|var"
         );
         var builtinTypes = (
-            "string|uint8|uint16|uint32|uint64|int8|int16|int32|int64|float32|" +
-            "float64|complex64|complex128|byte|rune|uint|int|uintptr|bool|error"
+            "any|string|uint8|uint16|uint32|uint64|int8|int16|int32|int64|float32|" +
+            "float64|complex64|complex128|byte|rune|uint|int|uintptr|bool|error|comparable"
         );
         var builtinFunctions = (
             "new|close|cap|copy|panic|panicln|print|println|len|make|delete|real|recover|imag|append"
