@@ -618,6 +618,7 @@ declare module "ace-code/src/layer/text" {
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     type TextMarkersMixin = {
+        setRenderWhitespaceMarkers(render: boolean): void;
     };
     import dom = require("ace-code/src/lib/dom");
     import { Lines } from "ace-code/src/layer/lines";
@@ -3841,6 +3842,12 @@ declare module "ace-code/src/layer/text_markers" {
         afterSelection: number;
     };
     export namespace textMarkerMixin {
+        /**
+         * Pre-renders whitespace glyphs so text markers can reveal them without
+         * changing the text layout as the marker range changes.
+         *
+         */
+        function setRenderWhitespaceMarkers(render: boolean): void;
         function $removeClass(this: Text, className: string): void;
         function $applyTextMarkers(this: Text): void;
         /**
@@ -3854,7 +3861,7 @@ declare module "ace-code/src/layer/text_markers" {
          * Process text nodes for invisible markers (whitespace visualization)
          * @param {Node} node - The DOM node to process
          * @param {Node} parentNode - The parent node
-         * @param {object} marker - The marker being applied
+        * @param {object} marker - The marker being applied
          */
         function $processInvisibleMarker(node: Node, parentNode: Node, selectionSegment: SelectionSegment, marker: object): void;
         /**

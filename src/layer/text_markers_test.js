@@ -8,7 +8,6 @@ var assert = require("../test/assertions");
 var EditSession = require("../edit_session").EditSession;
 var TextLayer = require("./text").Text;
 var JavaScriptMode = require("../mode/javascript").Mode;
-var dom = require("../lib/dom");
 var Range = require("../range").Range;
 
 require("./text_markers");
@@ -185,6 +184,7 @@ module.exports = {
     "test: invisible marker with mixed whitespace and complete cleanup verification": function() {
         var value = "function\t  test() { //test     comment\n    var x = 1;\n}";
         this.session.setValue(value);
+        this.textLayer.setRenderWhitespaceMarkers(true);
 
         this.textLayer.update(this.textLayer.config);
 
@@ -202,18 +202,17 @@ module.exports = {
         assert.ok(hasTabSymbol, "Should contain TAB_CHAR symbol");
         assert.ok(hasSpaceSymbol, "Should contain SPACE_CHAR symbol");
 
-        var result = normalize(`<span class="ace_storage ace_type">function</span>
-            <span class="invisible-marker" data-whitespace="    ">————</span>
-            <span class="invisible-marker" data-whitespace="  ">··</span>
-            <span class="ace_entity ace_name ace_function"><span>test</span></span>
-            <span class="ace_paren ace_lparen"><span>(</span></span>
-            <span class="ace_paren ace_rparen"><span>)</span></span>
-            <span class="invisible-marker" data-whitespace=" ">·</span><span class="ace_paren ace_lparen">
-            <span>{</span></span><span class="invisible-marker" data-whitespace=" ">·</span>
-            <span class="ace_comment"><span>//test</span>
-            <span class="invisible-marker" data-whitespace="    ">····</span> comment</span>`);
-        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
-        assert.equal(actual, result);
+        markerElements.forEach(element => {
+            assert.ok(element.classList.contains("ace_invisible"));
+            assert.ok(!element.classList.contains("ace_invisible_hidden"));
+        });
+
+        var tabMarker = line.querySelector(".ace_invisible_tab.invisible-marker");
+        assert.ok(tabMarker, "Tab marker should be applied");
+        assert.equal(tabMarker["charCount"], 1, "Tab marker should preserve its logical length");
+
+        var hiddenElements = line.querySelectorAll(".ace_invisible_hidden");
+        assert.ok(hiddenElements.length > 0, "Whitespace outside the marker should remain hidden");
 
         this.session.removeTextMarker(markerId);
         this.textLayer.$applyTextMarkers();
@@ -222,13 +221,96 @@ module.exports = {
         assert.equal(markerElements.length, 0, "Marker class should be removed");
 
         var finalLine = this.textLayer.element.childNodes[0];
-        assert.ok(!finalLine.innerHTML.includes(this.textLayer.TAB_CHAR),
-            "TAB_CHAR should be removed from DOM");
-        assert.ok(!finalLine.innerHTML.includes(this.textLayer.SPACE_CHAR),
-            "SPACE_CHAR should be removed from DOM");
+        assert.ok(finalLine.innerHTML.includes(this.textLayer.TAB_CHAR),
+            "TAB_CHAR should remain in the stable DOM");
+        assert.ok(finalLine.innerHTML.includes(this.textLayer.SPACE_CHAR),
+            "SPACE_CHAR should remain in the stable DOM");
 
-        var elementsWithWhitespace = this.textLayer.element.querySelectorAll('[data-whitespace]');
-        assert.equal(elementsWithWhitespace.length, 0, "No data-whitespace attributes should remain");
+        var visibleWhitespace = Array.from(finalLine.querySelectorAll(".ace_invisible")).filter(element => {
+            return !element.classList.contains("ace_invisible_hidden")
+                && (element.classList.contains("ace_invisible_space")
+                    || element.classList.contains("ace_invisible_tab"));
+        });
+        assert.equal(visibleWhitespace.length, 0, "All whitespace glyphs should be hidden after cleanup");
+    },
+
+    "test: invisible marker splits a pre-rendered whitespace run": function() {
+        this.session.setValue("//a     b");
+        this.textLayer.setRenderWhitespaceMarkers(true);
+        this.textLayer.update(this.textLayer.config);
+
+        this.session.addTextMarker(new Range(0, 5, 0, 7), "invisible-marker", "invisible");
+        this.textLayer.$applyTextMarkers();
+
+        var line = this.textLayer.element.childNodes[0];
+        var markerElements = line.querySelectorAll(".invisible-marker");
+        assert.equal(markerElements.length, 1);
+        assert.equal(markerElements[0].textContent, this.textLayer.SPACE_CHAR.repeat(2));
+
+        var hiddenElements = line.querySelectorAll(".ace_invisible_hidden");
+        assert.equal(hiddenElements.length, 2);
+        assert.equal(hiddenElements[0].textContent, this.textLayer.SPACE_CHAR.repeat(2));
+        assert.equal(hiddenElements[1].textContent, this.textLayer.SPACE_CHAR);
+    },
+
+    "test: splitting an indent guide preserves one guide decoration": function() {
+        this.session.setValue("      value");
+        this.textLayer.setRenderWhitespaceMarkers(true);
+        this.textLayer.update(this.textLayer.config);
+
+        this.session.addTextMarker(new Range(0, 1, 0, 3), "invisible-marker", "invisible");
+        this.textLayer.$applyTextMarkers();
+
+        var line = this.textLayer.element.childNodes[0];
+        assert.equal(line.querySelectorAll(".ace_indent-guide").length, 1);
+        assert.equal(
+            line.querySelector(".invisible-marker").textContent,
+            this.textLayer.SPACE_CHAR.repeat(2)
+        );
+        this.textLayer.$setIndentGuideActive(this.textLayer.$lines.cells[0], 1);
+        assert.equal(line.querySelectorAll(".ace_indent-guide-active").length, 1);
+    },
+
+    "test: invisible marker does not modify globally visible whitespace": function() {
+        this.session.setValue("a  b");
+        this.textLayer.setRenderWhitespaceMarkers(true);
+        this.textLayer.setShowInvisibles(true);
+        this.textLayer.update(this.textLayer.config);
+
+        this.session.addTextMarker(new Range(0, 1, 0, 3), "invisible-marker", "invisible");
+        this.textLayer.$applyTextMarkers();
+
+        var line = this.textLayer.element.childNodes[0];
+        assert.equal(line.querySelectorAll(".invisible-marker").length, 0);
+        assert.equal(line.querySelectorAll(".ace_invisible_hidden").length, 0);
+        assert.equal(
+            line.querySelector(".ace_invisible_space").textContent,
+            this.textLayer.SPACE_CHAR.repeat(2)
+        );
+
+        this.textLayer.setShowInvisibles(false);
+        this.textLayer.update(this.textLayer.config);
+        this.textLayer.$applyTextMarkers();
+
+        assert.equal(
+            this.textLayer.element.querySelectorAll(".invisible-marker").length,
+            1,
+            "The retained marker should reveal whitespace when global invisibles are hidden"
+        );
+    },
+
+    "test: invisible marker supports pre-rendered CJK spaces": function() {
+        this.session.setValue("a　b");
+        this.textLayer.setRenderWhitespaceMarkers(true);
+        this.textLayer.update(this.textLayer.config);
+
+        this.session.addTextMarker(new Range(0, 1, 0, 2), "invisible-marker", "invisible");
+        this.textLayer.$applyTextMarkers();
+
+        var marker = this.textLayer.element.querySelector(".invisible-marker");
+        assert.ok(marker);
+        assert.equal(marker.textContent, this.textLayer.CJK_SPACE_CHAR);
+        assert.ok(!marker.classList.contains("ace_invisible_hidden"));
     },
 };
 
