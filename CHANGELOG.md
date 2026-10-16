@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.45.0](https://github.com/ajaxorg/ace/compare/v1.44.0...v1.45.0) (2026-10-16)
+
+### Features
+
+* better support of variable width fonts
+
+### Bug Fixes
+
+* allow string modes in createEditSession types ([#5972](https://github.com/ajaxorg/ace/issues/5972)) ([64f5ed4](https://github.com/ajaxorg/ace/commit/64f5ed482fae3aac127153cd90a8553bff270063))
+* avoid repeated document reads during search highlighting ([#5994](https://github.com/ajaxorg/ace/issues/5994)) ([078a211](https://github.com/ajaxorg/ace/commit/078a211aa1b1df8f57fd27ee2eb32274dbe2db16))
+* support a leading lookbehind in rules with token arrays ([#6007](https://github.com/ajaxorg/ace/issues/6007)) ([80fe26a](https://github.com/ajaxorg/ace/commit/80fe26ae91206ffc7993263053451dbbe9590f06)), closes [#6001](https://github.com/ajaxorg/ace/issues/6001)
+* V-001 security vulnerability ([#6009](https://github.com/ajaxorg/ace/issues/6009)) ([62d5ffd](https://github.com/ajaxorg/ace/commit/62d5ffd789b4eb29ef7c1acc17554c91c745a307))
+
 ## [1.44.0](https://github.com/ajaxorg/ace/compare/v1.43.6...v1.44.0) (2026-05-11)
 
 
