@@ -29,6 +29,10 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
  * @property {boolean} [skipFilter] - a boolean value to decide if the popup item is going to skip the filtering process done using prefix text.
+ * @property {string} [filterText] - the text this completion is filtered and scored against, in place of the text it
+ * displays. Follows the semantics of the language server protocol's `CompletionItem.filterText`, and takes precedence
+ * over the `ignoreCaption` option. An empty string is ignored. The match highlight in the popup is still derived from
+ * the caption, so a completion reached through text that does not occur in its caption is shown without a highlight.
  * @property {import("../ace-internal").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
  * @property {any} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
@@ -1085,28 +1089,29 @@ class FilteredList {
             }
             var caption = (!this.ignoreCaption && item.caption) || item.value || item.snippet;
             if (!caption) continue;
+            var matchText = item.filterText || caption;
             var lastIndex = -1;
             var matchMask = 0;
             var penalty = 0;
             var index, distance;
 
             if (this.exactMatch) {
-                if (needle !== caption.substr(0, needle.length))
+                if (needle !== matchText.substr(0, needle.length))
                     continue loop;
             } else {
                 /**
                  * It is for situation then, for example, we find some like 'tab' in item.value="Check the table"
                  * and want to see "Check the TABle" but see "Check The tABle".
                  */
-                var fullMatchIndex = caption.toLowerCase().indexOf(lower);
+                var fullMatchIndex = matchText.toLowerCase().indexOf(lower);
                 if (fullMatchIndex > -1) {
                     penalty = fullMatchIndex;
                 } else {
-                    // caption char iteration is faster in Chrome but slower in Firefox, so lets use indexOf
+                    // char iteration is faster in Chrome but slower in Firefox, so lets use indexOf
                     for (var j = 0; j < needle.length; j++) {
                         // TODO add penalty on case mismatch
-                        var i1 = caption.indexOf(lower[j], lastIndex + 1);
-                        var i2 = caption.indexOf(upper[j], lastIndex + 1);
+                        var i1 = matchText.indexOf(lower[j], lastIndex + 1);
+                        var i2 = matchText.indexOf(upper[j], lastIndex + 1);
                         index = (i1 >= 0) ? ((i2 < 0 || i1 < i2) ? i1 : i2) : i2;
                         if (index < 0)
                             continue loop;
