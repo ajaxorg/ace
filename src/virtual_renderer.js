@@ -1010,6 +1010,7 @@ class VirtualRenderer {
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
             }
+            this.$updateContentTransformAndSize(config, changes);
         }
         else if (changes & this.CHANGE_TEXT || changes & this.CHANGE_GUTTER) {
             if (this.$showGutter)

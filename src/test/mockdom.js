@@ -999,7 +999,8 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
                 if (this.endContainer.nodeType == 3) {
                     rect2.right = rect2.left + this.endOffset * CHAR_WIDTH;
                 } else {
-                    var child = this.endContainer.childNodes[this.endOffset];
+                    var child = this.endContainer.childNodes[this.endOffset] ||
+                        this.endContainer.childNodes[this.endOffset - 1];
                     if (child) {
                         rect2.right = getBoundingClientRect(child, false, true).right;
                     }

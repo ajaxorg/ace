@@ -11,6 +11,7 @@ var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
 var lang = require("./lib/lang");
+var user = require("./test/user");
 
 function setScreenPosition(node, rect) {
     node.style.left = rect[0] + "px";
@@ -242,6 +243,26 @@ module.exports = {
         editor.renderer.$loop._flush();
         editor.resize(true);
         assert.equal(renderCount, 2);
+    },
+
+    "test autosize with newlines": function() {
+        editor.setOptions({
+            maxLines: 20, 
+            showGutter: false,
+        });
+        editor.setValue("function f() {\n  if (true) \n}", 1);
+        editor.gotoLine(2, 12);
+        editor.focus();
+        editor.resize(true);
+        var renderer = editor.renderer;
+        for (var i = 0; i < 10; i++) {
+            assert.equal(renderer.$loop.changes, 0);
+            user.type("\n");
+            assert.equal(renderer.$loop.changes, renderer.CHANGE_LINES ^ 
+                renderer.CHANGE_MARKER_BACK ^ renderer.CHANGE_CURSOR);
+            renderer.$loop._flush();
+            assert.equal(renderer.content.style.height, (6 + i) * renderer.lineHeight + "px");
+        }
     },
     
     "test invalid valus of minLines": function() {
