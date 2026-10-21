@@ -1080,6 +1080,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.45.1";
+    export var version: "1.45.2";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }
