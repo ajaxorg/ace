@@ -24,13 +24,23 @@ class Tokenizer {
             var matchTotal = 0;
             var mapping = this.matchMappings[key] = {defaultToken: "text"};
             var flag = "g";
+            var unicode = state.some(function(rule) { return rule.unicode; });
+            // The whole state is compiled to one regexp, so `caseInsensitive` on one
+            // rule applies to all of them. Rules that opt out with
+            // `caseInsensitive: false` need the `i` flag off, so then the other
+            // rules spell out both cases of their letters instead.
+            var foldCase = state.some(function(rule) {
+                return rule.caseInsensitive;
+            }) && state.some(function(rule) {
+                return rule.caseInsensitive === false && rule.regex != null;
+            });
 
             var splitterRurles = [];
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
                 if (rule.defaultToken)
                     mapping.defaultToken = rule.defaultToken;
-                if (rule.caseInsensitive && flag.indexOf("i") === -1)
+                if (rule.caseInsensitive && !foldCase && flag.indexOf("i") === -1)
                     flag += "i";
                 if (rule.unicode && flag.indexOf("u") === -1)
                     flag += "u";
@@ -40,9 +50,13 @@ class Tokenizer {
                 if (rule.regex instanceof RegExp)
                     rule.regex = rule.regex.toString().slice(1, -1);
 
+                var ruleRegex = rule.regex;
+                if (foldCase && rule.caseInsensitive !== false)
+                    ruleRegex = this.caseInsensitiveRegex(ruleRegex, unicode);
+
                 // Count number of matching groups. 2 extra groups from the full match
                 // And the catch-all on the end (used to force a match);
-                var adjustedregex = rule.regex;
+                var adjustedregex = ruleRegex;
                 var matchcount = new RegExp("(?:(" + adjustedregex + ")|(.))").exec("a").length - 2;
                 if (Array.isArray(rule.token)) {
                     if (rule.token.length == 1 || matchcount == 1) {
@@ -66,17 +80,17 @@ class Tokenizer {
                 }
 
                 if (matchcount > 1) {
-                    if (/\\\d/.test(rule.regex)) {
+                    if (/\\\d/.test(ruleRegex)) {
                         // Replace any backreferences and offset appropriately.
-                        adjustedregex = rule.regex.replace(/\\([0-9]+)/g, function(match, digit) {
+                        adjustedregex = ruleRegex.replace(/\\([0-9]+)/g, function(match, digit) {
                             return "\\" + (parseInt(digit, 10) + matchTotal + 1);
                         });
                     } else {
                         matchcount = 1;
-                        adjustedregex = this.removeCapturingGroups(rule.regex);
+                        adjustedregex = this.removeCapturingGroups(ruleRegex);
                     }
                     if (!rule.splitRegex && typeof rule.token != "string")
-                        splitterRurles.push(rule); // flag will be known only at the very end
+                        splitterRurles.push([rule, ruleRegex]); // flag will be known only at the very end
                 }
 
                 mapping[matchTotal] = i;
@@ -94,8 +108,8 @@ class Tokenizer {
                 ruleRegExps.push("$");
             }
 
-            splitterRurles.forEach(function(rule) {
-                rule.splitRegex = this.createSplitterRegexp(rule.regex, flag);
+            splitterRurles.forEach(function(item) {
+                item[0].splitRegex = this.createSplitterRegexp(item[1], flag);
             }, this);
 
             this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
@@ -166,6 +180,87 @@ class Tokenizer {
             function(x, y) {return y ? "(?:" : x;}
         );
         return r;
+    }
+
+    /**
+     * Rewrites a regexp source so that it matches its letters in either case
+     * without the `i` flag, e.g. `a[b-d]` becomes `[aA][B-Db-d]`.
+     * Backreferences still match case-sensitively.
+     * @param {string} src
+     * @param {boolean} [unicode] whether the regexp is used with the `u` flag
+     * @returns {string}
+     */
+    caseInsensitiveRegex(src, unicode) {
+        var otherCase = function(ch) {
+            var lower = ch.toLowerCase();
+            var other = lower == ch ? ch.toUpperCase() : lower;
+            return other != ch && other.length == 1 ? other : "";
+        };
+        var swapRange = function(from, to, start, end) {
+            var lo = Math.max(from, start.charCodeAt(0));
+            var hi = Math.min(to, end.charCodeAt(0));
+            if (lo > hi) return "";
+            var delta = start == "a" ? -32 : 32;
+            var range = String.fromCharCode(lo + delta);
+            if (hi > lo) range += "-" + String.fromCharCode(hi + delta);
+            return range;
+        };
+        var escape = unicode
+            ? /^\\(?:[pP]\{[^}]*\}|u\{[0-9a-fA-F]+\}|k<[^>]*>|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|c[a-zA-Z]|[\s\S])/
+            : /^\\(?:k<[^>]*>|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|c[a-zA-Z]|[\s\S])/;
+        var result = "";
+        var i = 0;
+        while (i < src.length) {
+            var rest = src.slice(i);
+            var m = escape.exec(rest) || /^\(\?(?:<[=!]|<[^>]*>|[:=!])/.exec(rest);
+            if (m) {
+                result += m[0];
+                i += m[0].length;
+            } else if (src[i] == "[") {
+                var open = src[i + 1] == "^" ? "[^" : "[";
+                var body = "";
+                var extra = "";
+                i += open.length;
+                while (i < src.length && src[i] != "]") {
+                    rest = src.slice(i);
+                    m = escape.exec(rest);
+                    if (m) {
+                        body += m[0];
+                        i += m[0].length;
+                        continue;
+                    }
+                    m = /^([^\\])-([^\\\]])/.exec(rest);
+                    if (m) {
+                        var from = m[1].charCodeAt(0);
+                        var to = m[2].charCodeAt(0);
+                        extra += swapRange(from, to, "A", "Z") + swapRange(from, to, "a", "z");
+                        body += m[0];
+                        i += m[0].length;
+                        continue;
+                    }
+                    body += src[i];
+                    extra += otherCase(src[i]);
+                    i++;
+                }
+                i++;
+                // add the letters where they can't join a range of the class
+                if (!extra)
+                    result += open + body + "]";
+                else if (body[0] != "-")
+                    result += open + extra + body + "]";
+                else if (body[body.length - 1] != "-")
+                    result += open + body + extra + "]";
+                else if (open == "[^")
+                    result += "(?:(?![" + extra + "])[^" + body + "])";
+                else
+                    result += "(?:[" + body + "]|[" + extra + "])";
+            } else {
+                var other = otherCase(src[i]);
+                result += other ? "[" + src[i] + other + "]" : src[i];
+                i++;
+            }
+        }
+        return result;
     }
 
     /**
