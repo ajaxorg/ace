@@ -1072,7 +1072,7 @@ class Editor {
             }
             this.selection.setRange(r);
             if (!text && !r.isEmpty())
-                this.remove();
+                this.execCommand(composition.extendLeft ? "backspace" : "del");
         }
         if (text || !this.selection.isEmpty())
             this.insert(text, true);
