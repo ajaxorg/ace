@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.45.1](https://github.com/ajaxorg/ace/compare/v1.45.0...v1.45.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* dispatch soft keyboard deletions through the command manager ([#6010](https://github.com/ajaxorg/ace/issues/6010)) ([cf883e3](https://github.com/ajaxorg/ace/commit/cf883e36a399cae1491a87d60d86e4d9be9fcf8e)), closes [#5304](https://github.com/ajaxorg/ace/issues/5304)
+
 ### [1.45.0](https://github.com/ajaxorg/ace/compare/v1.44.0...v1.45.0) (2026-10-16)
 
 ### Features
