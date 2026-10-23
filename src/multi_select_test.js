@@ -113,6 +113,25 @@ module.exports = {
         assert.ok(!editor.inMultiSelectMode);
     },
 
+    "test: restores multiselect state when moving lines throws": function() {
+        var session = new EditSession(["one", "two", "three"]);
+        editor = new Editor(new MockRenderer(), session);
+        editor.selectMoreLines(1);
+        var rangeList = editor.selection.rangeList;
+        var error = new Error("synthetic change listener failure");
+        session.once("change", function() {
+            throw error;
+        });
+
+        assert.throws(function() {
+            editor.moveLinesDown();
+        }, function(err) {
+            return err === error;
+        });
+        assert.equal(editor.inVirtualSelectionMode, false);
+        assert.equal(rangeList.session, session);
+    },
+
     "test: multiselect session change": function() {
         var doc = new EditSession([
             "w1.w2",
