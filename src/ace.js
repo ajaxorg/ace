@@ -51,7 +51,7 @@ exports.edit = function(el, options) {
         oldNode.parentNode.replaceChild(el, oldNode);
     } else if (el) {
         value = el.textContent;
-        el.innerHTML = "";
+        el.textContent = "";
     }
 
     var doc = exports.createEditSession(value);

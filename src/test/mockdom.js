@@ -541,7 +541,9 @@ function Node(name) {
     });
     this.__defineSetter__("textContent", function(v) {
         removeAllChildren(this);
-        this.appendChild(new TextNode(v));
+        // like the DOM, an empty string leaves no text node behind
+        if (v != null && v !== "")
+            this.appendChild(new TextNode(v));
     });
     this.__defineGetter__("innerText", function() {
         if (!this.documentElement)

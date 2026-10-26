@@ -95,7 +95,7 @@ exports.createElement = function(tag, ns) {
  * @param {HTMLElement} element
  */
 exports.removeChildren = function(element) {
-    element.innerHTML = "";
+    element.textContent = "";
 };
 
 /**

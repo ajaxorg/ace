@@ -40,6 +40,7 @@ module.exports = [
     "ace/layer/text_markers_test",
     "ace/layer/text_test",
     "ace/lib/event_emitter_test",
+    "ace/lib/trusted_types_test",
     "ace/marker_group_test",
     "ace/mode/_test/highlight_rules_test",
     "ace/mode/ada_test",

@@ -30,6 +30,7 @@ var snippetManager = require("../snippets").snippetManager;
 var Autocomplete = require("../autocomplete").Autocomplete;
 var config = require("../config");
 var lang = require("../lib/lang");
+var trustedTypes = require("../lib/trusted_types");
 var util = require("../autocomplete/util");
 
 var MarkerGroup = require("../marker_group").MarkerGroup;
@@ -93,10 +94,10 @@ var snippetCompleter = {
     },
     getDocTooltip: function(item) {
         if (item.snippet && !item.docHTML) {
-            item.docHTML = [
+            item.docHTML = trustedTypes.createHTML([
                 "<b>", lang.escapeHTML(item.caption), "</b>", "<hr></hr>",
                 lang.escapeHTML(transformSnippetTooltip(item.snippet))
-            ].join("");
+            ].join(""));
         }
     },
     id: "snippetCompleter"
