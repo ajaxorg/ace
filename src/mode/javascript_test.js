@@ -160,6 +160,24 @@ module.exports = {
         var session = new EditSession(["  function foo()", "    bla", "    }"]);
         this.mode.autoOutdent("start", session, 2);
         assert.equal("    }", session.getLine(2));
+    },
+
+    "test: numeric separators in exponents are one numeric token" : function() {
+        var tokenizer = this.mode.getTokenizer();
+        var cases = [
+            ["let x = 1e1_0;", "1e1_0"],
+            ["let y = 1_000e1_0;", "1_000e1_0"],
+            ["let z = .5_5e1_0;", ".5_5e1_0"],
+            ["let w = 1E+1_0;", "1E+1_0"],
+            ["let v = 1_000_000;", "1_000_000"],
+            ["let u = 1e10;", "1e10"]
+        ];
+        cases.forEach(function(c) {
+            var tokens = tokenizer.getLineTokens(c[0], "start").tokens;
+            var numeric = tokens.filter(function(t) { return t.type == "constant.numeric"; });
+            assert.equal(1, numeric.length);
+            assert.equal(c[1], numeric[0].value);
+        });
     }
 };
 

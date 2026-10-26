@@ -371,7 +371,7 @@ var JavaScriptHighlightRules = function(options) {
                 regex : /0(?:[xX][0-9a-fA-F_]+|[oO][0-7_]+|[bB][01_]+)\b/
             }, {
                 token : "constant.numeric", // decimal integers and floats
-                regex : /(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?\d+\b)?/
+                regex : /(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?\d[\d_]*\b)?/
             },
         ]
     };
