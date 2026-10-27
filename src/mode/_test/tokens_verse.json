@@ -1,0 +1,1026 @@
+[[
+   "start",
+  ["comment.line","# Coin rush: players press buttons to collect coins until time runs out."]
+],[
+   "start",
+  ["keyword","using"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["constant.language.path","/Fortnite.com/Devices"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","using"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["constant.language.path","/Verse.org/Simulation"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","using"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["constant.language.path","/UnrealEngine.com/Temporary/Diagnostics"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "block_comment",
+  ["comment.block","<# Block comments can span lines"]
+],[
+   "start",
+  ["comment.block","   <# and they nest #> #>"]
+],[
+   "start"
+],[
+   ["indented_comment",0],
+  ["comment.block","<#>"]
+],[
+   ["indented_comment",0],
+  ["comment.block","    An indented comment covers every line"]
+],[
+   ["indented_comment",0],
+  ["comment.block","    that is indented below the marker."]
+],[
+   ["indented_comment",0]
+],[
+   "start",
+  ["identifier","coin_kind"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword","enum"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Bronze"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Silver"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Gold"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","coin"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword","struct"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Kind"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","coin_kind"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Bronze"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","TargetPoints"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0x64"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","# A char is one UTF-8 code unit, a char32 one Unicode code point."]
+],[
+   "start",
+  ["identifier","Separator"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","char"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'|'"]
+],[
+   "start",
+  ["identifier","Tab"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","char"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'"],
+  ["constant.language.escape","\\t"],
+  ["string","'"]
+],[
+   "start",
+  ["identifier","LineFeed"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","char"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","0o0A"]
+],[
+   "start",
+  ["identifier","CoinIcon"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","char32"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","0u1FA99"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function","PointsFor"],
+  ["storage.modifier","<public>"],
+  ["paren.lparen","("],
+  ["identifier","Kind"],
+  ["keyword.operator",":"],
+  ["identifier","coin_kind"],
+  ["paren.rparen",")"],
+  ["storage.modifier","<computes>"],
+  ["keyword.operator",":"],
+  ["storage.type","int"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","case"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Kind"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Gold"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["constant.numeric","10"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Silver"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["constant.numeric","5"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Bronze"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","wallet"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword","class"],
+  ["storage.modifier","<concrete>"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","Points"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","Collected"],
+  ["storage.modifier","<private>"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["identifier","coin"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","array"],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Collect"],
+  ["storage.modifier","<public>"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["keyword.operator",":"],
+  ["identifier","coin"],
+  ["paren.rparen",")"],
+  ["storage.modifier","<transacts>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","Points"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["entity.name.function","PointsFor"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["punctuation.operator","."],
+  ["identifier","Kind"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","Collected"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["storage.type","array"],
+  ["paren.lparen","{"],
+  ["identifier","Item"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Spend"],
+  ["storage.modifier","<public>"],
+  ["paren.lparen","("],
+  ["identifier","Amount"],
+  ["keyword.operator",":"],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["storage.modifier","<transacts><decides>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","Amount"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword.operator","and"],
+  ["text"," "],
+  ["identifier","Points"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["identifier","Amount"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","Points"],
+  ["text"," "],
+  ["keyword.operator","-="],
+  ["text"," "],
+  ["identifier","Amount"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Describe"],
+  ["storage.modifier","<public>"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["storage.modifier","<reads>"],
+  ["keyword.operator",":"],
+  ["storage.type","string"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","Golds"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","Collected"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Item"],
+  ["punctuation.operator","."],
+  ["identifier","Kind"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Gold"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","Item"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["string","\""],
+  ["paren.quasi.start","{"],
+  ["identifier","Points"],
+  ["paren.quasi.end","}"],
+  ["string"," points ("],
+  ["paren.quasi.start","{"],
+  ["identifier","Golds"],
+  ["punctuation.operator","."],
+  ["identifier","Length"],
+  ["paren.quasi.end","}"],
+  ["string"," gold)\""]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","# Counts silver and gold coins twice."]
+],[
+   "start",
+  ["identifier","bonus_wallet"],
+  ["storage.modifier","<public>"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword","class"],
+  ["storage.modifier","<concrete>"],
+  ["paren.lparen","("],
+  ["identifier","wallet"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Collect"],
+  ["storage.modifier","<override>"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["keyword.operator",":"],
+  ["identifier","coin"],
+  ["paren.rparen",")"],
+  ["storage.modifier","<transacts>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["variable.language","(super:)"],
+  ["entity.name.function","Collect"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["punctuation.operator","."],
+  ["identifier","Kind"],
+  ["text"," "],
+  ["keyword.operator","<>"],
+  ["text"," "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Bronze"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["variable.language","(super:)"],
+  ["entity.name.function","Collect"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","coin_rush_device"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["keyword","class"],
+  ["paren.lparen","("],
+  ["identifier","creative_device"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.annotation","@editable"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","GoldButton"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","button_device"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","button_device"],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.annotation","@editable"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","BronzeButton"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","button_device"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","button_device"],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.annotation","@editable"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","RoundSeconds"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","float"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","60.0"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.annotation","@editable"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","AnnounceWinner"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","logic"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language.boolean","true"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","Wallets"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["identifier","player"],
+  ["paren.rparen","]"],
+  ["identifier","wallet"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","map"],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","OnBegin"],
+  ["storage.modifier","<override>"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["storage.modifier","<suspends>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","GoldButton"],
+  ["punctuation.operator","."],
+  ["identifier","InteractedWithEvent"],
+  ["punctuation.operator","."],
+  ["entity.name.function","Subscribe"],
+  ["paren.lparen","("],
+  ["identifier","OnGoldPressed"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","BronzeButton"],
+  ["punctuation.operator","."],
+  ["identifier","InteractedWithEvent"],
+  ["punctuation.operator","."],
+  ["entity.name.function","Subscribe"],
+  ["paren.lparen","("],
+  ["identifier","OnBronzePressed"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["entity.name.function","CountDown"],
+  ["paren.lparen","("],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["entity.name.function","RunRound"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","OnGoldPressed"],
+  ["paren.lparen","("],
+  ["identifier","Agent"],
+  ["keyword.operator",":"],
+  ["identifier","agent"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["entity.name.function","Award"],
+  ["paren.lparen","("],
+  ["identifier","Agent"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","coin"],
+  ["paren.lparen","{"],
+  ["identifier","Kind"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","coin_kind"],
+  ["punctuation.operator","."],
+  ["identifier","Gold"],
+  ["paren.rparen","})"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","OnBronzePressed"],
+  ["paren.lparen","("],
+  ["identifier","Agent"],
+  ["keyword.operator",":"],
+  ["identifier","agent"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["entity.name.function","Award"],
+  ["paren.lparen","("],
+  ["identifier","Agent"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","coin"],
+  ["paren.lparen","{"],
+  ["paren.rparen","})"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Award"],
+  ["paren.lparen","("],
+  ["identifier","Agent"],
+  ["keyword.operator",":"],
+  ["identifier","agent"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Item"],
+  ["keyword.operator",":"],
+  ["identifier","coin"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Player"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","player"],
+  ["paren.lparen","["],
+  ["identifier","Agent"],
+  ["paren.rparen","])"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Wallet"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","Wallets"],
+  ["paren.lparen","["],
+  ["identifier","Player"],
+  ["paren.rparen","])"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","Wallet"],
+  ["punctuation.operator","."],
+  ["entity.name.function","Collect"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.control","else"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","NewWallet"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","bonus_wallet"],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","NewWallet"],
+  ["punctuation.operator","."],
+  ["entity.name.function","Collect"],
+  ["paren.lparen","("],
+  ["identifier","Item"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","Wallets"],
+  ["paren.lparen","["],
+  ["identifier","Player"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","NewWallet"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","CountDown"],
+  ["paren.lparen","("],
+  ["identifier","Seconds"],
+  ["keyword.operator",":"],
+  ["storage.type","int"],
+  ["paren.rparen",")"],
+  ["storage.modifier","<suspends>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Elapsed"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["keyword.operator",".."],
+  ["identifier","Seconds"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","Print"],
+  ["paren.lparen","("],
+  ["string","\""],
+  ["paren.quasi.start","{"],
+  ["identifier","Seconds"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["identifier","Elapsed"],
+  ["paren.quasi.end","}"],
+  ["string","...\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","Sleep"],
+  ["paren.lparen","("],
+  ["constant.numeric","1.0"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["entity.name.function","Print"],
+  ["paren.lparen","("],
+  ["string","\"Press "],
+  ["constant.language.escape","\\\""],
+  ["string","Gold"],
+  ["constant.language.escape","\\\""],
+  ["string"," or "],
+  ["constant.language.escape","\\\""],
+  ["string","Bronze"],
+  ["constant.language.escape","\\\""],
+  ["string"," to collect coins!\""],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","RunRound"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["storage.modifier","<suspends>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","defer"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","Print"],
+  ["paren.lparen","("],
+  ["string","\"Round over!"],
+  ["constant.language.escape","\\n"],
+  ["string","\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","race"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","Sleep"],
+  ["paren.lparen","("],
+  ["identifier","RoundSeconds"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","WaitForWinner"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","WaitForWinner"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["storage.modifier","<suspends>"],
+  ["keyword.operator",":"],
+  ["storage.type","void"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","loop"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","            "],
+  ["entity.name.function","Sleep"],
+  ["paren.lparen","("],
+  ["constant.numeric","0.5"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","Winner"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","Leader"],
+  ["paren.lparen","["],
+  ["paren.rparen","])"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","AnnounceWinner"],
+  ["keyword.operator","?"],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"]
+],[
+   "start",
+  ["text","                    "],
+  ["entity.name.function","Print"],
+  ["paren.lparen","("],
+  ["string","\"Winner: "],
+  ["paren.quasi.start","{"],
+  ["identifier","Winner"],
+  ["punctuation.operator","."],
+  ["entity.name.function","Describe"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["paren.quasi.end","}"],
+  ["string","\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.control","break"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","Leader"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["storage.modifier","<reads><decides>"],
+  ["keyword.operator",":"],
+  ["identifier","wallet"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","first"],
+  ["paren.lparen","("],
+  ["identifier","Wallet"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","Wallets"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Wallet"],
+  ["punctuation.operator","."],
+  ["identifier","Points"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["identifier","TargetPoints"],
+  ["paren.rparen",")"],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["identifier","Wallet"]
+],[
+   "start"
+]]

@@ -259,6 +259,7 @@ var supportedModes = {
     VBScript:    ["vbs|vb"],
     Velocity:    ["vm"],
     Verilog:     ["v|vh|sv|svh"],
+    Verse:       ["verse"],
     VHDL:        ["vhd|vhdl"],
     Visualforce: ["vfp|component|page"],
     Vue: ["vue"],

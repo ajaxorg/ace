@@ -1727,6 +1727,14 @@ declare module "ace-code/src/mode/verilog" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/verse_highlight_rules" {
+    export const VerseHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/verse" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/vhdl_highlight_rules" {
     export const VHDLHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
