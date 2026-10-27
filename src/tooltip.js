@@ -349,7 +349,7 @@ class HoverTooltip extends Tooltip {
         if (position.pageX < rect.left) position.pageX = rect.left;
 
         var element = this.getElement();
-        element.innerHTML = "";
+        element.textContent = "";
         element.appendChild(domNode);
 
         element.style.maxHeight = "";

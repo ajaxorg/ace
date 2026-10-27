@@ -24,6 +24,7 @@
 var event = require("../lib/event");
 var UA = require("../lib/useragent");
 var ace = require("../ace");
+var trustedTypes = require("../lib/trusted_types");
 
 module.exports = exports = ace;
 
@@ -487,7 +488,7 @@ function setupSettingPanel(settingDiv, settingOpener, editor) {
         table.push("</td></tr>");
     }
     table.push("</table>");
-    settingDiv.innerHTML = table.join("");
+    settingDiv.innerHTML = trustedTypes.createHTML(table.join(""));
 
     var onChange = function(e) {
         var select = e.currentTarget;
