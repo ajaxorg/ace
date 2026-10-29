@@ -85,6 +85,88 @@ module.exports = {
         ]);
     },
 
+    "test: caseInsensitive: false keeps a rule case-sensitive in a case-insensitive state" : function() {
+        var t = new Tokenizer({
+            start: [{
+                token: "keyword",
+                regex: /FOO/,
+                caseInsensitive: false
+            }, {
+                token: "keyword",
+                regex: /BAR/,
+                caseInsensitive: true
+            }, {
+                token: ["kw", "text", "name"],
+                regex: /(SET)(\s+)([a-z]+)/
+            }, {
+                defaultToken: "text"
+            }]
+        });
+        var tokens = t.getLineTokens("foo FOO bar BAR set X", "start").tokens;
+        assert.deepEqual(tokens, [
+            {type: "text", value: "foo "},
+            {type: "keyword", value: "FOO"},
+            {type: "text", value: " "},
+            {type: "keyword", value: "bar"},
+            {type: "text", value: " "},
+            {type: "keyword", value: "BAR"},
+            {type: "text", value: " "},
+            {type: "kw", value: "set"},
+            {type: "text", value: " "},
+            {type: "name", value: "X"}
+        ]);
+    },
+
+    "test: caseInsensitive on one rule still applies to the rules without the option" : function() {
+        var t = new Tokenizer({
+            start: [{
+                token: "keyword",
+                regex: /FOO/
+            }, {
+                token: "keyword",
+                regex: /BAR/,
+                caseInsensitive: true
+            }, {
+                defaultToken: "text"
+            }]
+        });
+        var tokens = t.getLineTokens("foo bar", "start").tokens;
+        assert.deepEqual(tokens, [
+            {type: "keyword", value: "foo"},
+            {type: "text", value: " "},
+            {type: "keyword", value: "bar"}
+        ]);
+    },
+
+    "test: caseInsensitiveRegex" : function() {
+        var t = new Tokenizer({});
+        assert.equal(t.caseInsensitiveRegex("ab1"), "[aA][bB]1");
+        // escapes and group syntax are left alone
+        assert.equal(t.caseInsensitiveRegex("\\bx\\w+\\x4a\\u004a\\cJ\\1"), "\\b[xX]\\w+\\x4a\\u004a\\cJ\\1");
+        assert.equal(t.caseInsensitiveRegex("(?:a)(?=b)(?!c)(?<=d)(?<!e)(?<name>f)\\k<name>"),
+            "(?:[aA])(?=[bB])(?![cC])(?<=[dD])(?<![eE])(?<name>[fF])\\k<name>");
+        assert.equal(t.caseInsensitiveRegex("\\p{Lu}\\u{61}x", true), "\\p{Lu}\\u{61}[xX]");
+        // character classes get the other case of their letters and letter ranges
+        assert.equal(t.caseInsensitiveRegex("[a-f0-9_]"), "[A-Fa-f0-9_]");
+        assert.equal(t.caseInsensitiveRegex("[^xY\\]]"), "[^XyxY\\]]");
+        assert.equal(t.caseInsensitiveRegex("[-a]"), "[-aA]");
+        assert.equal(t.caseInsensitiveRegex("[a-]"), "[Aa-]");
+        assert.equal(t.caseInsensitiveRegex("[X-c]"), "[x-zA-CX-c]");
+        assert.equal(t.caseInsensitiveRegex("[-a-]"), "(?:[-a-]|[A])");
+        assert.equal(t.caseInsensitiveRegex("[^-a-]"), "(?:(?![A])[^-a-])");
+        assert.equal(t.caseInsensitiveRegex("[\\x41-\\x43]"), "[\\x41-\\x43]");
+
+        var re = new RegExp("^(?:" + t.caseInsensitiveRegex("[X-c]+") + ")$");
+        assert.ok(re.test("XYZ[\\]^_`abcxyzABC"));
+        assert.notOk(re.test("d"));
+        re = new RegExp("^(?:" + t.caseInsensitiveRegex("[^a-c]+") + ")$");
+        assert.ok(re.test("dD-"));
+        assert.notOk(re.test("dB"));
+        re = new RegExp("^(?:" + t.caseInsensitiveRegex("[^-a-]+") + ")$");
+        assert.ok(re.test("bB"));
+        assert.notOk(re.test("bA"));
+    },
+
     "test: removeCapturingGroups" : function() {
         var t = new Tokenizer({});
         var re = t.removeCapturingGroups("(ax(by))[()]");
