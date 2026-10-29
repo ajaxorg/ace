@@ -16,6 +16,19 @@ pause() {
 
 cd `dirname $0`/..
 SOURCE=`pwd`
+# check if we are at the remote master
+git fetch origin
+if [ "$(git rev-parse --revs-only HEAD)" != "$(git rev-parse --revs-only refs/remotes/origin/master)" ]; then
+    echo "Can't publish since you are not on the remote master branch";
+    exit 1
+fi
+# check if working directory is clean
+if [ "$(git status --porcelain)" ]; then
+    echo "Working directory is not clean";
+    git status --porcelain
+    pause "do you want to build anyway? [y/n]"
+    exit 1
+fi
 
 # check if build dir is clean
 if ! [ -f build/.git/HEAD ]; then

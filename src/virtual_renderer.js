@@ -42,6 +42,8 @@ class VirtualRenderer {
         var _self = this;
         this.container = container || dom.createElement("div");
 
+        this.container.setAttribute("translate", "no");
+
         dom.addCssClass(this.container, "ace_editor");
         if (dom.HI_DPI) dom.addCssClass(this.container, "ace_hidpi");
 
