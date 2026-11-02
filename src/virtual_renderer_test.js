@@ -308,6 +308,30 @@ module.exports = {
         assert.equal(lines[0].style.height, lines[1].style.top);
     },
     
+    "test cursor at the start of a wrapped row without indent": function() {
+        var renderer = editor.renderer;
+        editor.setValue("one two three th", -1);
+        editor.setOptions({wrap: true, indentedSoftWrap: false});
+        editor.session.setWrapLimitRange(14, 14);
+        renderer.$loop._flush();
+
+        // in browsers a collapsed range inside an empty text node has an all-zero rect
+        var range = renderer.$fontMetrics.$scratchRange;
+        var getBoundingClientRect = range.getBoundingClientRect;
+        range.getBoundingClientRect = function() {
+            if (this.startContainer.nodeType == 3 && !this.startContainer.nodeValue)
+                return {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0};
+            return getBoundingClientRect.call(this);
+        };
+        try {
+            assert.position(editor.session.documentToScreenPosition(0, 14), 1, 0);
+            var pos = renderer.$cursorLayer.getPixelPosition({row: 0, column: 14}, true);
+            assert.equal(pos.left, renderer.$padding);
+        } finally {
+            range.getBoundingClientRect = getBoundingClientRect;
+        }
+    },
+
     "test resize": function() {
         editor.setValue("Juhu kinners!");
         editor.resize(true);

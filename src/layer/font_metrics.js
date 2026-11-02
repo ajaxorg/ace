@@ -359,6 +359,9 @@ class FontMetrics {
         while (node = walker.nextNode()) {
             var nodeText = node.nodeValue;
             var nodeLength = nodeText.length;
+            // skip empty text nodes (e.g. the indent of a wrapped row when it is 0):
+            // a collapsed range inside them has no client rects
+            if (!nodeLength) continue;
 
             if (currentColumn + nodeLength >= screenColumn) {
                 return {
