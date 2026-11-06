@@ -3043,6 +3043,13 @@ declare module "ace-code/src/tokenizer" {
         regExps: {};
         matchMappings: {};
         removeCapturingGroups(src: string): string;
+        /**
+         * Rewrites a regexp source so that it matches its letters in either case
+         * without the `i` flag, e.g. `a[b-d]` becomes `[aA][B-Db-d]`.
+         * Backreferences still match case-sensitively.
+         * @param {boolean} [unicode] whether the regexp is used with the `u` flag
+         */
+        caseInsensitiveRegex(src: string, unicode?: boolean): string;
         createSplitterRegexp(src: string, flag: string): RegExp;
         /**
          * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
