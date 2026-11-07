@@ -128,6 +128,14 @@ class Text {
         this.$highlightIndentGuides = highlight;
         return highlight;
     }
+
+    /**
+     * change control character check, this is useful for RTL mode
+     * @param {null|((number, string) => boolean)} check
+     */
+    setControlCharacterChecker(check) {
+        this.$controlCharacterChecker = check;
+    }
     
     $computeTabString() {
         var tabSize = this.session.getTabSize();
@@ -348,6 +356,13 @@ class Text {
         lines.push(this.$renderLinesFragment(config, firstRow, lastRow));
     }
 
+    /**
+     * @param {HTMLElement} parent 
+     * @param {number} screenColumn 
+     * @param {*} token 
+     * @param {string} value 
+     * @returns 
+     */
     $renderToken(parent, screenColumn, token, value) {
         var self = this;
         // \u200D (zero width joiner) is excluded to keep emoji sequences intact
@@ -389,7 +404,7 @@ class Text {
                 } else {
                     valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
-            } else if (controlCharacter) {
+            } else if (controlCharacter && (!this.$controlCharacterChecker || !this.$controlCharacterChecker(m.index, controlCharacter))) {
                 var span = this.dom.createElement("span");
                 span.className = "ace_invisible ace_invisible_space ace_invalid";
                 span.textContent = lang.stringRepeat(self.SPACE_CHAR, controlCharacter.length);
@@ -793,6 +808,7 @@ Text.prototype.showSpaces = false;
 Text.prototype.showTabs = false;
 Text.prototype.showEOL = false;
 Text.prototype.displayIndentGuides = true;
+Text.prototype.$controlCharacterChecker = null;
 Text.prototype.$highlightIndentGuides = true;
 Text.prototype.$tabStrings = [];
 Text.prototype.destroy = {};
