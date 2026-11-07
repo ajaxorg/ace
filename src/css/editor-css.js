@@ -705,4 +705,8 @@ module.exports = `
 
 .ace_hidden_token {
     display: none;
+}
+
+.ace_invisible_hidden {
+    color: transparent !important;
 }`;

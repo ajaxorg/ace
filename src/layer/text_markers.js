@@ -1,5 +1,4 @@
 var Text = require("./text").Text;
-var lang = require("../lib/lang");
 /**
  * @typedef TextMarker
  * @property {import("../../ace-internal").Ace.IRange} range
@@ -17,6 +16,20 @@ var lang = require("../lib/lang");
 
 var textMarkerMixin = {
     /**
+     * Pre-renders whitespace glyphs so text markers can reveal them without
+     * changing the text layout as the marker range changes.
+     *
+     * @param {boolean} render
+     */
+    setRenderWhitespaceMarkers(render) {
+        render = !!render;
+        if (this.$renderWhitespaceMarkers === render)
+            return;
+
+        this.$renderWhitespaceMarkers = render;
+        this.$computeTabString();
+    },
+    /**
      * @param {string} className
      * @this {Text}
      */
@@ -27,12 +40,10 @@ var textMarkerMixin = {
             var element = selectedElements[i];
             element.classList.remove(className);
 
-            if (element.hasAttribute('data-whitespace')) {
-                var originalWhitespace = element.getAttribute('data-whitespace');
-                var textNode = this.dom.createTextNode(originalWhitespace, this.element);
-                textNode["charCount"] = element["charCount"];
-                element.parentNode.replaceChild(textNode, element);
-            }
+            if (element.classList.contains("ace_invisible_tab") && !this.showTabs)
+                element.classList.add("ace_invisible_hidden");
+            else if (element.classList.contains("ace_invisible_space") && !this.showSpaces)
+                element.classList.add("ace_invisible_hidden");
         }
     },
     /**
@@ -150,59 +161,50 @@ var textMarkerMixin = {
      * @param {Node} node - The DOM node to process
      * @param {Node} parentNode - The parent node
      * @param {SelectionSegment} selectionSegment
-     * @param {object} marker - The marker being applied
+    * @param {object} marker - The marker being applied
      */
     $processInvisibleMarker(node, parentNode, selectionSegment, marker) {
-        var nodeText = node.textContent || '';
-        if (node.nodeType === 3) { // Text node
-            var fragment = this.dom.createFragment(this.element);
+        var element = /** @type {HTMLElement} */ (node.nodeType === 1 ? node : parentNode);
+        if (!element.classList || !element.classList.contains("ace_invisible_hidden"))
+            return;
 
-            if (selectionSegment.beforeSelection > 0) {
-                fragment.appendChild(
-                    this.dom.createTextNode(nodeText.substring(0, selectionSegment.beforeSelection), this.element));
-            }
-
-            if (selectionSegment.selectionLength > 0) {
-                var selectedText = selectionSegment.beforeSelection === 0 && selectionSegment.afterSelection === 0
-                    ? nodeText : nodeText.substring(
-                        selectionSegment.beforeSelection,
-                        selectionSegment.beforeSelection + selectionSegment.selectionLength
-                    );
-
-                var segments = selectedText.match(/\s+|[^\s]+/g) || [];
-
-                for (let k = 0; k < segments.length; k++) {
-                    var segment = segments[k];
-                    let span;
-                    if (/^\s+$/.test(segment)) {
-                        span = this.dom.createElement("span");
-                        span.className = marker.className;
-                        span.textContent = 
-                            node["charCount"] ? this.TAB_CHAR.repeat(segment.length) 
-                            : segment.replace(/\u3000/g, this.CJK_SPACE_CHAR).replace(/ /g, this.SPACE_CHAR);
-                        span.setAttribute("data-whitespace", segment);
-                        fragment.appendChild(span);
-                    }
-                    else {
-                        span = this.dom.createElement("span");
-                        span.textContent = segment;
-                    }
-                    if (node["charCount"] && segments.length === 1) { //this is for real tabs
-                        span["charCount"] = node["charCount"];
-                    }
-                    fragment.appendChild(span);
-                }
-            }
-
-            if (selectionSegment.afterSelection > 0) {
-                fragment.appendChild(this.dom.createTextNode(
-                    nodeText.substring(selectionSegment.beforeSelection + selectionSegment.selectionLength),
-                    this.element
-                ));
-            }
-
-            parentNode.replaceChild(fragment, node);
+        if (selectionSegment.beforeSelection === 0 && selectionSegment.afterSelection === 0) {
+            element.classList.remove("ace_invisible_hidden");
+            element.classList.add(marker.className);
+            return;
         }
+
+        var elementText = element.textContent || "";
+        var fragment = this.dom.createFragment(this.element);
+        var appendSegment = (start, length, selected) => {
+            if (length <= 0)
+                return;
+
+            var segment = /** @type {HTMLElement} */ (element.cloneNode(false));
+            segment.textContent = elementText.substring(start, start + length);
+            if (element.classList.contains("ace_indent-guide") && start + length < elementText.length) {
+                segment.classList.remove("ace_indent-guide");
+                segment.classList.remove("ace_indent-guide-active");
+            }
+            if (selected) {
+                segment.classList.remove("ace_invisible_hidden");
+                segment.classList.add(marker.className);
+            }
+            fragment.appendChild(segment);
+        };
+
+        appendSegment(0, selectionSegment.beforeSelection, false);
+        appendSegment(
+            selectionSegment.beforeSelection,
+            selectionSegment.selectionLength,
+            true
+        );
+        appendSegment(
+            selectionSegment.beforeSelection + selectionSegment.selectionLength,
+            selectionSegment.afterSelection,
+            false
+        );
+        element.parentNode.replaceChild(fragment, element);
     },
 
     /**
