@@ -1918,39 +1918,41 @@ class Editor {
             // @ts-expect-error TODO: possible bug, no args in parameters
             selection.rangeList.detach(this.session);
             this.inVirtualSelectionMode = true;
+            try {
+                var diff = 0;
+                var totalDiff = 0;
+                var l = ranges.length;
+                for (var i = 0; i < l; i++) {
+                    var rangeIndex = i;
+                    ranges[i].moveBy(diff, 0);
+                    rows = this.$getSelectedRows(ranges[i]);
+                    var first = rows.first;
+                    var last = rows.last;
+                    while (++i < l) {
+                        if (totalDiff) ranges[i].moveBy(totalDiff, 0);
+                        var subRows = this.$getSelectedRows(ranges[i]);
+                        if (copy && subRows.first != last)
+                            break;
+                        else if (!copy && subRows.first > last + 1)
+                            break;
+                        last = subRows.last;
+                    }
+                    i--;
+                    diff = this.session.$moveLines(first, last, copy ? 0 : dir);
+                    if (copy && dir == -1) rangeIndex = i + 1;
+                    while (rangeIndex <= i) {
+                        ranges[rangeIndex].moveBy(diff, 0);
+                        rangeIndex++;
+                    }
+                    if (!copy) diff = 0;
+                    totalDiff += diff;
+                }
 
-            var diff = 0;
-            var totalDiff = 0;
-            var l = ranges.length;
-            for (var i = 0; i < l; i++) {
-                var rangeIndex = i;
-                ranges[i].moveBy(diff, 0);
-                rows = this.$getSelectedRows(ranges[i]);
-                var first = rows.first;
-                var last = rows.last;
-                while (++i < l) {
-                    if (totalDiff) ranges[i].moveBy(totalDiff, 0);
-                    var subRows = this.$getSelectedRows(ranges[i]);
-                    if (copy && subRows.first != last)
-                        break;
-                    else if (!copy && subRows.first > last + 1)
-                        break;
-                    last = subRows.last;
-                }
-                i--;
-                diff = this.session.$moveLines(first, last, copy ? 0 : dir);
-                if (copy && dir == -1) rangeIndex = i + 1;
-                while (rangeIndex <= i) {
-                    ranges[rangeIndex].moveBy(diff, 0);
-                    rangeIndex++;
-                }
-                if (!copy) diff = 0;
-                totalDiff += diff;
+                selection.fromOrientedRange(selection.ranges[0]);
+            } finally {
+                selection.rangeList.attach(this.session);
+                this.inVirtualSelectionMode = false;
             }
-
-            selection.fromOrientedRange(selection.ranges[0]);
-            selection.rangeList.attach(this.session);
-            this.inVirtualSelectionMode = false;
         }
     }
 
