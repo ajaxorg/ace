@@ -546,7 +546,12 @@ class Autocomplete {
             this.base = this.editor.session.doc.createAnchor(pos.row, pos.column);
             this.base.$insertRight = true;
             this.completions = new FilteredList(options.matches);
-            this.getCompletionProvider().completions = this.completions;
+            // the range of a completion is applied relative to the cursor, the same reference
+            // point the regular path uses, which is not the start of a non-empty selection
+            this.getCompletionProvider({
+                prefix: "",
+                pos: this.editor.getCursorPosition()
+            }).completions = this.completions;
             return this.openPopup(this.editor, "", keepPopupPosition);
         }
 
@@ -885,7 +890,7 @@ class CompletionProvider {
 
             var replaceBefore = this.completions.filterText.length;
             var replaceAfter = 0;
-            if (data.range && data.range.start.row === data.range.end.row) {
+            if (this.initialPosition && data.range && data.range.start.row === data.range.end.row) {
                 replaceBefore -= this.initialPosition.prefix.length;
                 replaceBefore += this.initialPosition.pos.column - data.range.start.column;
                 replaceAfter += data.range.end.column - this.initialPosition.pos.column;

@@ -1447,6 +1447,30 @@ module.exports = {
 
         assert.equal(editor.getValue(), "example value<b2-b2>");
     },
+    "test: replacement range of matches passed to execCommand is applied": function() {
+        editor = initEditor("abcdefGHI");
+
+        // the cursor sits inside the range, so text is replaced on both sides of it
+        editor.moveCursorTo(0, 3);
+        editor.execCommand('startAutocomplete', {
+            matches: [
+                { value: 'xyz', range: new Range(0, 0, 0, 6) }
+            ]
+        });
+        user.type("\n");
+        assert.equal(editor.getValue(), "xyzGHI");
+
+        // a selection must not widen the replacement beyond the range
+        editor.setValue("abcdefGHI", -1);
+        editor.selection.setRange(new Range(0, 1, 0, 4));
+        editor.execCommand('startAutocomplete', {
+            matches: [
+                { value: 'xyz', range: new Range(0, 0, 0, 6) }
+            ]
+        });
+        user.type("\n");
+        assert.equal(editor.getValue(), "xyzGHI");
+    },
     "test: should close popup if backspacing until input is fully deleted": function() {
         editor = initEditor("");
 
