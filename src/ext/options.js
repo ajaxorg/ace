@@ -261,7 +261,7 @@ class OptionPanel {
 
   
     render() {
-        this.container.innerHTML = "";
+        this.container.textContent = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
             this.renderOptionGroup(optionGroups.Main),
             ["tr", null, ["td", {colspan: 2},

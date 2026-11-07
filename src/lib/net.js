@@ -8,6 +8,7 @@
 
 "use strict";
 var dom = require("./dom");
+var trustedTypes = require("./trusted_types");
 
 exports.get = function (url, callback) {
     var xhr = new XMLHttpRequest();
@@ -27,7 +28,7 @@ exports.loadScript = function(path, callback) {
     /**@type {HTMLScriptElement & {onload?: Function, onreadystatechange?: Function, readyState?: string}}*/
     var s = document.createElement('script');
 
-    s.src = path;
+    s.src = trustedTypes.createScriptURL(path);
     head.appendChild(s);
 
     s.onload = s.onreadystatechange = function(_, isAbort) {

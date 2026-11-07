@@ -23,6 +23,7 @@ var baseStyles = require("./static-css");
 var config = require("../config");
 var dom = require("../lib/dom");
 var escapeHTML = require("../lib/lang").escapeHTML;
+var trustedTypes = require("../lib/trusted_types");
 
 class Element {
     /**
@@ -133,7 +134,7 @@ var highlight = function(el, opts, callback) {
 
     highlight.render(data, mode, theme, opts.firstLineNumber, !opts.showGutter, function (highlighted) {
         dom.importCssString(highlighted.css, "ace_highlight", true);
-        el.innerHTML = highlighted.html;
+        el.innerHTML = trustedTypes.createHTML(highlighted.html);
         /**
          * TODO: check if child exists
          * @type {any}

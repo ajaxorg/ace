@@ -16,6 +16,7 @@
 "use strict";
 
 var Editor = require("../editor").Editor;
+var trustedTypes = require("../lib/trusted_types");
 
 /**
  * Generates a menu which displays the keyboard shortcuts.
@@ -38,7 +39,7 @@ function showKeyboardShortcuts(editor) {
         }, '');
 
         el.id = 'kbshortcutmenu';
-        el.innerHTML = '<h1>Keyboard Shortcuts</h1>' + commands + '</div>';
+        el.innerHTML = trustedTypes.createHTML('<h1>Keyboard Shortcuts</h1>' + commands + '</div>');
         overlayPage(editor, el);
     }
 }
