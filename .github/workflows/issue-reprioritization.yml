@@ -9,14 +9,14 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     steps:
-      - uses: kaizencc/issue-reprioritization-manager@main
+      - uses: kaizencc/issue-reprioritization-manager@22649736f385c446eb14f947ab8230a194f3664c # main
         id: reprioritization-manager
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           original-label: p2
           new-label: p1
           reprioritization-threshold: 5
-      - uses: kaizencc/pr-triage-manager@main
+      - uses: kaizencc/pr-triage-manager@3a2558737a4d072feaaa4c1768b92f51abfde53b # main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           on-pulls: ${{ steps.reprioritization-manager.outputs.linked-pulls }}
