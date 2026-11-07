@@ -1061,12 +1061,13 @@ class FilteredList {
                 || (a.caption || a.value).localeCompare(b.caption || b.value);
         });
 
-        // make unique
-        var prev = null;
+        // make unique: completions are the same only when they read the same in the popup
+        // and insert the same text, and duplicates need not be next to each other
+        var seen = new Set();
         matches = matches.filter(function(item){
-            var caption = item.snippet || item.caption || item.value;
-            if (caption === prev) return false;
-            prev = caption;
+            var key = (item.caption || item.value || item.snippet) + "\0" + (item.snippet || item.value);
+            if (seen.has(key)) return false;
+            seen.add(key);
             return true;
         });
 
