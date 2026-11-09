@@ -19,6 +19,21 @@ module.exports = {
         assert.equal("string", tokens[0].type);
     },
 
+    "test: first argument of a call can be a regexp or a JSX element" : function() {
+        var tokenizer = this.mode.getTokenizer();
+
+        var tokens = tokenizer.getLineTokens("assert(/x/.test(s));", "start").tokens;
+        assert.equal("string.regexp", tokens[2].type);
+        assert.equal("/x/", tokens[2].value);
+
+        tokens = tokenizer.getLineTokens("fn(/'/);", "start").tokens;
+        assert.equal("string.regexp", tokens[2].type);
+
+        tokens = tokenizer.getLineTokens("render(<Button>ok</Button>);", "start").tokens;
+        assert.equal("meta.tag.punctuation.tag-open.xml", tokens[2].type);
+        assert.equal("meta.tag.tag-name.xml", tokens[3].type);
+    },
+
     "test: toggle comment lines should prepend '//' to each line" : function() {
         var session = new EditSession(["  abc", "cde", "fg"]);
         session.setTabSize(1);

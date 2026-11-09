@@ -57,7 +57,10 @@ var JavaScriptHighlightRules = function(options) {
 
     var functionCallStartRule = { //just simple function call
         token: ["identifier", "text", "paren.lparen"],
-        regex: "(\\b(?!" + Object.values(keywords).join("|") + "\\b)" + identifierRe + ")(\\s*)(\\()"
+        regex: "(\\b(?!" + Object.values(keywords).join("|") + "\\b)" + identifierRe + ")(\\s*)(\\()",
+        // An argument list starts an expression, so a regexp literal or a JSX
+        // element is valid as the first argument.
+        next: "start"
     };
 
     this.$rules = {
