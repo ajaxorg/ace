@@ -49,6 +49,21 @@ module.exports = {
         assert.equal("meta.tag.punctuation.tag-open.xml", line.tokens[6].type);
         assert.equal("meta.tag.tag-name.xml", line.tokens[7].type);
         assert.equal("Button", line.tokens[7].value);
+
+        // `extends` is a valid attribute name, so it does not by itself make the
+        // tag a TypeScript type parameter list.
+        line = tokenizer.getLineTokens("const el = <Button extends={true} />;", "start");
+        assert.equal("meta.tag.punctuation.tag-open.xml", line.tokens[6].type);
+        assert.equal("meta.tag.tag-name.xml", line.tokens[7].type);
+        assert.equal("entity.other.attribute-name.xml", line.tokens[9].type);
+        assert.equal("extends", line.tokens[9].value);
+        assert.equal("meta.tag.punctuation.tag-close.xml", line.tokens[15].type);
+
+        line = tokenizer.getLineTokens("const el = <A extends />;", "start");
+        assert.equal("meta.tag.tag-name.xml", line.tokens[7].type);
+        assert.equal("entity.other.attribute-name.xml", line.tokens[9].type);
+        assert.equal("extends", line.tokens[9].value);
+        assert.equal("meta.tag.punctuation.tag-close.xml", line.tokens[11].type);
     },
 
     "test: toggle comment lines should prepend '//' to each line" : function() {
