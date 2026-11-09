@@ -480,7 +480,9 @@ function JSX() {
                 value: val.substr(offset)
             }];
         },
-        regex : "</?(?:" + tagRegex + "|(?=>))",
+        // `<T,>` and `<T extends U>` are TypeScript type parameter lists, not
+        // JSX tags, so do not treat them as the start of a tag.
+        regex : "</?(?:" + tagRegex + "(?![\\w$-])(?!\\s*(?:,|extends\\b))|(?=>))",
         next: "jsxAttributes",
         nextState: "jsx"
     };

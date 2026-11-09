@@ -19,6 +19,38 @@ module.exports = {
         assert.equal("string", tokens[0].type);
     },
 
+    "test: tsx generic arrow functions are not JSX tags" : function() {
+        var tokenizer = new (require("./tsx").Mode)().getTokenizer();
+
+        var line = tokenizer.getLineTokens("const f = <P,>(p: P) => p;", "start");
+        assert.equal("start", line.state);
+        assert.equal("keyword.operator", line.tokens[6].type);
+        assert.equal("<", line.tokens[6].value);
+        assert.equal("identifier", line.tokens[7].type);
+        assert.equal("P", line.tokens[7].value);
+        assert.equal(-1, line.tokens.map(function(t) {
+            return t.type;
+        }).indexOf("string.xml"));
+
+        line = tokenizer.getLineTokens("const g = <T extends object>(p: T) => p;", "start");
+        assert.equal("start", line.state);
+        assert.equal("<", line.tokens[6].value);
+        assert.equal("keyword", line.tokens[9].type);
+        assert.equal("extends", line.tokens[9].value);
+        assert.equal(-1, line.tokens.map(function(t) {
+            return t.type;
+        }).indexOf("string.xml"));
+    },
+
+    "test: tsx still tokenizes JSX elements as JSX" : function() {
+        var tokenizer = new (require("./tsx").Mode)().getTokenizer();
+
+        var line = tokenizer.getLineTokens("const el = <Button disabled />;", "start");
+        assert.equal("meta.tag.punctuation.tag-open.xml", line.tokens[6].type);
+        assert.equal("meta.tag.tag-name.xml", line.tokens[7].type);
+        assert.equal("Button", line.tokens[7].value);
+    },
+
     "test: toggle comment lines should prepend '//' to each line" : function() {
         var session = new EditSession(["  abc", "cde", "fg"]);
         session.setTabSize(1);
