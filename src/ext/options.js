@@ -140,6 +140,9 @@ var optionGroups = {
         "Enable Auto Indent": {
             path: "enableAutoIndent"
         },
+		"Enable Double Find to Replace": {
+			path: "enableDoubleFindToReplace"
+		},
         "Full Line Selection": {
             type: "checkbox",
             values: "text|line",
