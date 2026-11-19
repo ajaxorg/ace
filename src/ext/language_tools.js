@@ -37,6 +37,16 @@ var MarkerGroup = require("../marker_group").MarkerGroup;
 var textCompleter = require("../autocomplete/text_completer");
 /**@type {import("../../ace-internal").Ace.Completer}*/
 var keyWordCompleter = {
+    identifierRegexps(editor) {
+        var completer = editor.session.$mode.completer;
+        if (completer) {
+            if (completer.identifierRegexps instanceof Function) {
+                return completer.identifierRegexps(editor);
+            } else {
+                return completer.identifierRegexps;
+            }
+        }
+    },
     getCompletions: function(editor, session, pos, prefix, callback) {
         if (session.$mode.completer) {
             return session.$mode.completer.getCompletions(editor, session, pos, prefix, callback);
@@ -49,7 +59,17 @@ var keyWordCompleter = {
         });
         callback(null, completions);
     },
-    id: "keywordCompleter"
+    id: "keywordCompleter",
+    triggerCharacters(editor) {
+        var completer = editor.session.$mode.completer;
+        if (completer) {
+            if (completer.triggerCharacters instanceof Function) {
+                return completer.triggerCharacters(editor);
+            } else {
+                return completer.triggerCharacters;
+            }
+        }
+    }
 };
 
 var transformSnippetTooltip = function(str) {
