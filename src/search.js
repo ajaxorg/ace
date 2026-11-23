@@ -118,10 +118,14 @@ class Search {
         } else {
             for (var matches, i = 0; i < lines.length; i++) {
                 if (this.$isMultilineSearch(options)) {
-                    var lng = lines.length - 1;
-                    matches = this.$multiLineForward(session, re, i, lng);
+                    var offset = range ? range.start.row : 0;
+                    var lng = offset + lines.length - 1;
+                    matches = this.$multiLineForward(session, re, offset + i, lng);
                     if (matches) {
-                        var end_row = matches.endRow <= lng ? matches.endRow - 1 : lng;
+                        // Range filtering below uses rows relative to the selected lines.
+                        matches.startRow -= offset;
+                        matches.endRow -= offset;
+                        var end_row = matches.endRow - 1;
                         if (end_row > i)
                             i = end_row;
                         ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
@@ -141,11 +145,11 @@ class Search {
             var startColumn = range.start.column;
             var endColumn = range.end.column;
             var i = 0, j = ranges.length - 1;
-            while (i < j && ranges[i].start.column < startColumn && ranges[i].start.row == 0)
+            while (i <= j && ranges[i].start.column < startColumn && ranges[i].start.row == 0)
                 i++;
 
             var endRow = range.end.row - range.start.row;
-            while (i < j && ranges[j].end.column > endColumn && ranges[j].end.row == endRow)
+            while (i <= j && ranges[j].end.column > endColumn && ranges[j].end.row == endRow)
                 j--;
 
             ranges = ranges.slice(i, j + 1);
