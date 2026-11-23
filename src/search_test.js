@@ -633,6 +633,79 @@ module.exports = {
         assert.position(ranges[2].end, 2, 7);
     },
 
+    "test: find all multiline regexp matches in selected rows" : function() {
+        var session = new EditSession(["header", "foo", "bar", "foo", "bar", "footer"]);
+        var range = new Range(1, 0, 4, 3);
+        var search = new Search().set({
+            needle: "foo\\nbar",
+            regExp: true,
+            range: range
+        });
+
+        var ranges = search.findAll(session);
+        assert.equal(ranges.length, 2);
+        assert.range(ranges[0], 1, 0, 2, 3);
+        assert.range(ranges[1], 3, 0, 4, 3);
+        assert.range(range, 1, 0, 4, 3);
+    },
+
+    "test: multiline regexp matches outside selected rows are ignored" : function() {
+        var session = new EditSession(["foo", "bar", "other", "text", "foo", "bar"]);
+        var search = new Search().set({
+            needle: "foo\\nbar",
+            regExp: true,
+            range: new Range(2, 0, 3, 4)
+        });
+
+        assert.equal(search.findAll(session).length, 0);
+    },
+
+    "test: multiline regexp matches respect selection columns" : function() {
+        var session = new EditSession(["header", "xfoo", "barx"]);
+        var search = new Search().set({
+            needle: "foo\\nbar",
+            regExp: true,
+            range: new Range(1, 1, 2, 3)
+        });
+
+        var ranges = search.findAll(session);
+        assert.equal(ranges.length, 1);
+        assert.range(ranges[0], 1, 1, 2, 3);
+        search.set({range: new Range(1, 2, 2, 3)});
+        assert.equal(search.findAll(session).length, 0);
+        search.set({range: new Range(1, 1, 2, 2)});
+        assert.equal(search.findAll(session).length, 0);
+    },
+
+    "test: replace all does not change a multiline match crossing the selection boundary" : function() {
+        var session = new EditSession(["xfoo", "barx"]);
+        var editor = new Editor(new MockRenderer(), session);
+        var replaced = editor.replaceAll("baz", {
+            needle: "foo\\nbar",
+            regExp: true,
+            range: new Range(0, 2, 1, 3)
+        });
+
+        assert.equal(replaced, 0);
+        assert.equal(session.getValue(), "xfoo\nbarx");
+        session.destroy();
+    },
+
+    "test: replace all multiline regexp matches in a selection" : function() {
+        var session = new EditSession("outside\r\nheader\r\nfoo\r\nbar\r\nfooter\r\nfoo\r\nbar");
+        var editor = new Editor(new MockRenderer(), session);
+        var range = new Range(2, 0, 3, 3);
+        var replaced = editor.replaceAll("baz", {
+            needle: "foo\\nbar",
+            regExp: true,
+            range: range
+        });
+
+        assert.equal(replaced, 1);
+        assert.equal(session.getValue(), "outside\r\nheader\r\nbaz\r\nfooter\r\nfoo\r\nbar");
+        session.destroy();
+    },
+
     "test: find all line breaks (\\r\\n, \\n) using regular expression" : function() {
         var session = new EditSession('\nfunction foo(items, nada) {\n    for (var i=0; i<items.length; i++) {\n        alert(items[i] + "juhu\\n");\n    }\t/* Real Tab */\n\n\n\n\n}\n\n\n// test search/replace line break with regexp\r\n\r\n\t\t\t\t\n');
 
